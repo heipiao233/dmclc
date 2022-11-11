@@ -1,0 +1,47 @@
+{
+  "name": "dtsmclc",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Dolphin TypeScript Minecraft Launcher Core",
+  "devDependencies": {
+    "@types/follow-redirects": "^1.14.1",
+    "@types/got": "^9.6.12",
+    "@types/iconv": "^3.0.1",
+    "@types/iconv-lite": "^0.0.1",
+    "@types/node": "^18.11.3",
+    "@types/qs": "^6.9.7",
+    "@types/uuid": "^8.3.4",
+    "@types/xml2js": "^0.4.11",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.27.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-typescript": "^0.14.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4",
+    "typescript-eslint-parser": "^22.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "eslint": "eslint src --ext .ts --fix"
+  },
+  "keywords": [
+    "Minecraft"
+  ],
+  "author": "HeiPiao",
+  "license": "MIT",
+  "dependencies": {
+    "compressing": "^1.6.2",
+    "follow-redirects": "^1.15.2",
+    "got": "^12.5.2",
+    "iconv": "^3.0.1",
+    "iconv-lite": "^0.6.3",
+    "node-stream-zip": "^1.15.0",
+    "qs": "^6.11.0",
+    "uuid": "^9.0.0",
+    "xml2js": "^0.4.23"
+  }
+}
