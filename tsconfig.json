@@ -6,7 +6,7 @@
     "allowJs": true,
     "declaration": true,
     "sourceMap": true,
-    "outDir": "./out.js",
+    "outDir": "./dist",
     "declarationDir": "./declarations",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

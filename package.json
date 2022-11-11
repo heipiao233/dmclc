@@ -9,7 +9,6 @@
     "@types/iconv": "^3.0.1",
     "@types/iconv-lite": "^0.0.1",
     "@types/node": "^18.11.3",
-    "@types/qs": "^6.9.7",
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.11",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
@@ -40,7 +39,6 @@
     "iconv": "^3.0.1",
     "iconv-lite": "^0.6.3",
     "node-stream-zip": "^1.15.0",
-    "qs": "^6.11.0",
     "uuid": "^9.0.0",
     "xml2js": "^0.4.23"
   }
