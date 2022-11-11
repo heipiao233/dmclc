@@ -2,5 +2,4 @@ node_modules
 test
 .vscode
 run
-declarations
-dist
+lib

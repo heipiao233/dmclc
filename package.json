@@ -30,6 +30,9 @@
   "keywords": [
     "Minecraft"
   ],
+  "files": [
+    "lib"
+  ],
   "author": "HeiPiao",
   "license": "MIT",
   "dependencies": {
