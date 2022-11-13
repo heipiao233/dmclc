@@ -14,7 +14,7 @@ import StreamZip from "node-stream-zip";
 
 export class ForgeModule implements ModuleType {
     private readonly launcher: Launcher;
-    private readonly metadata = "https://bmclapi2.bangbang93.com/maven/net/minecraftforge/forge/maven-metadata.xml";
+    private readonly metadata = "https://maven.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.xml";
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
@@ -28,7 +28,7 @@ export class ForgeModule implements ModuleType {
 
     async install (MCVersion: string, MCName: string, version: string): Promise<void> {
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
-        await download(`https://bmclapi2.bangbang93.com/maven/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path);
+        await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher.mirror);
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata: InstallerProfile = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
