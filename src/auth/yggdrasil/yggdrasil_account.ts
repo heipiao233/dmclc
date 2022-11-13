@@ -16,7 +16,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
       const at = await this.getAccessToken();
       map.set("auth_access_token", at);
       map.set("auth_session", at);
-      map.set("auth_player_name", this.data.name);
+      map.set("auth_player_name", this.data.name!);
       map.set("user_type", "mojang");
       map.set("user_properties", "{}");
       return map;
@@ -72,7 +72,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
   }
 
   getUUID (): string {
-      return this.data.uuid;
+      return this.data.uuid??"";
   }
 
   async getAccessToken (): Promise<string> {
@@ -96,6 +96,6 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
               req.end();
           });
       }
-      return this.data.accessToken;
+      return this.data.accessToken!;
   }
 }

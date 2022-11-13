@@ -12,7 +12,7 @@ export class OfflineAccount implements Account {
         const map: Map<string, string> = new Map();
         map.set("auth_access_token", "IT_WORKS");
         map.set("auth_session", "IT_WORKS");
-        map.set("auth_player_name", this.data.name);
+        map.set("auth_player_name", this.data.name!);
         map.set("user_type", "mojang");
         map.set("user_properties", "{}");
         return map;
@@ -39,7 +39,7 @@ export class OfflineAccount implements Account {
     }
 
     getUUID (): string {
-        return this.data.uuid === undefined ? genUUID("OfflinePlayer:".concat(this.data.name)) : this.data.uuid;
+        return this.data.uuid === undefined ? genUUID("OfflinePlayer:".concat(this.data.name!)) : this.data.uuid;
     }
 }
 

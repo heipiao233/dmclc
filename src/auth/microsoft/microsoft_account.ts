@@ -114,7 +114,7 @@ export class MicrosoftAccount implements Account {
     }
 
     getUUID (): string {
-        return this.data.uuid;
+        return this.data.uuid!;
     }
 
     getUserExtraContent (): string[] {
@@ -149,10 +149,10 @@ export class MicrosoftAccount implements Account {
 
     async getLaunchGameArgs (): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
-        const at = this.data.accessToken;
+        const at = this.data.accessToken!;
         map.set("auth_access_token", at);
         map.set("auth_session", at);
-        map.set("auth_player_name", this.data.name);
+        map.set("auth_player_name", this.data.name!);
         map.set("user_type", "mojang");
         map.set("user_properties", "{}");
         return map;
