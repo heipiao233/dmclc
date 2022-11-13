@@ -14,12 +14,12 @@ export class RunMinecraft {
     }
 
     getInstalledVersions (): string[] {
-        if (!fs.existsSync("./versions")) {
-            mkdirs("./versions");
+        if (!fs.existsSync(`${this.launcher.rootPath}/versions`)) {
+            mkdirs(`${this.launcher.rootPath}/versions`);
             return [];
         }
-        const value = fs.readdirSync("./versions").filter((value) => {
-            return fs.existsSync(`./versions/${value}/${value}.json`);
+        const value = fs.readdirSync(`${this.launcher.rootPath}/versions`).filter((value) => {
+            return fs.existsSync(`${this.launcher.rootPath}/versions/${value}/${value}.json`);
         });
         return value;
     }
