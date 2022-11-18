@@ -112,8 +112,8 @@ export class ModuleInstaller {
         return module_.getSuitableModuleVersions(extras.version);
     }
     async install(name: string, versionID: string, moduleVersion: string): Promise<void> {
-        const extras: DMCLCExtraVersionInfo = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`).toString());
-        const module_ = this.launcher.moduleTypes.get(name);
+        
+        const module_ = this.launcher.moduleTypes.get(name);const extras: DMCLCExtraVersionInfo = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`).toString());
         if(module_==undefined){
             throw new Error(`Module not found: ${module_}`);
         }
