@@ -21,6 +21,7 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
             .replaceAll("piston-data.mojang.com", mirror);
     }
     const file = fs.createWriteStream(filename);
-    (await got(url)).pipe(file);
-    file.close();
+    const req = await got(url);
+    req.pipe(file);
+    req.on("end", ()=>file.close());
 }
