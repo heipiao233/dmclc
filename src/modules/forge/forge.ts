@@ -57,12 +57,12 @@ export class ForgeModule implements ModuleType {
     }
 
     transformArguments (arg: string, MCName: string, metadata: InstallerProfile): string {
-        return arg.replaceAll(/\{(.+?)\}/, (v, a) => {
+        return arg.replaceAll(/\{(.+?)\}/g, (v, a) => {
             if (a === "SIDE") return "client";
             if (a === "MINECRAFT_JAR") return `${this.launcher.rootPath}/versions/${MCName}/${MCName}.jar`;
             if (a === "BINPATCH") return `${tmpdir()}/${this.launcher.name}_forge_installer/data/client.lzma`;
             return metadata.data[a].client;
-        }).replaceAll(/\[(.+?)\]/, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
+        }).replaceAll(/\[(.+?)\]/g, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
     }
 }
 async function getMainClass (jar: string): Promise<string> {
