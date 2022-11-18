@@ -1,11 +1,10 @@
 import os from "os";
-import { Installer } from "./install.js";
+import { Installer, ModuleInstaller } from "./install.js";
 import { ModuleType } from "./modules/mc_module.js";
 import { RunMinecraft } from "./run.js";
 import { FabricModule } from "./modules/fabric.js";
 import { QuiltModule } from "./modules/quilt/quilt.js";
 import { ForgeModule } from "./modules/forge/forge.js";
-import { ModuleInstaller } from "./install";
 export class Launcher {
     rootPath: string;
     systemType = os.platform();
