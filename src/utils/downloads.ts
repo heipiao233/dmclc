@@ -1,5 +1,5 @@
 import fs from "fs";
-import got from "got";
+import * as https from "https";
 export async function downloadAll(files: Map<string, fs.PathLike>, mirror?: string): Promise<void> {
     const promises: Array<Promise<void>> = new Array<Promise<void>>();
     files.forEach((v, k) => {
@@ -21,6 +21,12 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
             .replaceAll("piston-data.mojang.com", mirror);
     }
     const file = fs.createWriteStream(filename);
-    const req = await got(url);
-    file.write(req.read());
+    const req = https.get(url);
+    return new Promise(resolve=>{
+        req.on("response", res => {
+            res.pipe(file);
+        }).on("close", ()=>{
+            resolve();
+        });
+    });
 }
