@@ -8,6 +8,7 @@ export async function downloadAll(files: Map<string, fs.PathLike>, mirror?: stri
     await Promise.all(promises);
 }
 export async function download(url: string, filename: fs.PathLike, mirror?: string): Promise<void> {
+    if(url.length===0)return;
     if (mirror !== undefined) {
         url = url.replaceAll("launchermeta.mojang.com", mirror)
             .replaceAll("launcher.mojang.com", mirror)
