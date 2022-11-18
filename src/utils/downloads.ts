@@ -22,4 +22,5 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
     }
     const file = fs.createWriteStream(filename);
     (await got(url)).pipe(file);
+    file.close();
 }
