@@ -24,6 +24,9 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
     const req = https.get(url);
     return new Promise(resolve=>{
         req.on("response", res => {
+            if(res.statusCode!=undefined&&res.statusCode>=300&&res.statusCode<400){
+                return download(res.headers.location!, filename, mirror);
+            }
             res.pipe(file);
         }).on("close", ()=>{
             resolve();
