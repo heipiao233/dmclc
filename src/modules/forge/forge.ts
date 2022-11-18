@@ -14,7 +14,7 @@ import StreamZip from "node-stream-zip";
 
 export class ForgeModule implements ModuleType {
     private readonly launcher: Launcher;
-    private readonly metadata = "https://maven.minecraftforge.net/maven/net/minecraftforge/forge/maven-metadata.xml";
+    private readonly metadata = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
