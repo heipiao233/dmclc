@@ -5,6 +5,7 @@ import { RunMinecraft } from "./run.js";
 import { FabricModule } from "./modules/fabric.js";
 import { QuiltModule } from "./modules/quilt/quilt.js";
 import { ForgeModule } from "./modules/forge/forge.js";
+import { ModuleInstaller } from "./install";
 export class Launcher {
     rootPath: string;
     systemType = os.platform();
@@ -13,6 +14,7 @@ export class Launcher {
     mirror = "bmclapi2.bangbang93.com";
     usingJava = "C:\\Program Files\\Microsoft\\jdk-17.0.2.8-hotspot\\bin\\java.exe";
     installer: Installer = new Installer(this);
+    moduleInstaller: ModuleInstaller = new ModuleInstaller(this);
     runner: RunMinecraft = new RunMinecraft(this);
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();

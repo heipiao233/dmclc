@@ -13,8 +13,6 @@ export class FabricLikeModule<T extends FabricLikeVersionInfo> implements Module
         this.launcher = launcher;
     }
 
-    declare name: string;
-
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
     async getSuitableModuleVersions (MCVersion: string): Promise<string[]> {
         const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}`)).body);

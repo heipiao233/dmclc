@@ -9,6 +9,7 @@ import { AssetIndexInfo, McInstallation, Library, VersionInfo, VersionInfos, che
 import { Launcher } from "./launcher.js";
 import { checkFile } from "./utils/check_file.js";
 import { expandMavenId } from "./utils/maven.js";
+import { DMCLCExtraVersionInfo } from "./version.js";
 export class Installer {
     launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -80,6 +81,11 @@ export class Installer {
         await downloads.download(versionObject.downloads.client.url, `${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);
         await this.installAssets(versionObject.assetIndex);
         await this.installLibs(versionObject.libraries);
+        const extras: DMCLCExtraVersionInfo = {
+            version: ver.id,
+            modules: []
+        };
+        fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
     }
 
     async install_json (versionName: string, versionObject: McInstallation): Promise<void> {
@@ -89,5 +95,33 @@ export class Installer {
         }
         await this.installAssets(versionObject.assetIndex);
         await this.installLibs(versionObject.libraries);
+    }
+}
+
+export class ModuleInstaller {
+    launcher: Launcher;
+    constructor (launcher: Launcher) {
+        this.launcher = launcher;
+    }
+    async getSuitableModuleVersions(name: string, versionID: string): Promise<string[]> {
+        const extras: DMCLCExtraVersionInfo = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`).toString());
+        const module_ = this.launcher.moduleTypes.get(name);
+        if(module_==undefined){
+            throw new Error(`Module not found: ${module_}`);
+        }
+        return module_.getSuitableModuleVersions(extras.version);
+    }
+    async install(name: string, versionID: string, moduleVersion: string): Promise<void> {
+        const extras: DMCLCExtraVersionInfo = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`).toString());
+        const module_ = this.launcher.moduleTypes.get(name);
+        if(module_==undefined){
+            throw new Error(`Module not found: ${module_}`);
+        }
+        await module_.install(extras.version, versionID, moduleVersion);
+        extras.modules.push({
+            name: name,
+            version: moduleVersion
+        });
+        fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`, JSON.stringify(extras));
     }
 }

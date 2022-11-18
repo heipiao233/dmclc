@@ -64,8 +64,6 @@ export class ForgeModule implements ModuleType {
             return metadata.data[a].client;
         }).replaceAll(/\[(.+?)\]/, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
     }
-
-    name = "forge";
 }
 async function getMainClass (jar: string): Promise<string> {
     /* eslint-disable new-cap */
