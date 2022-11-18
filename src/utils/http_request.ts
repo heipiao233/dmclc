@@ -9,5 +9,5 @@ export async function get (url: string, mirror: string): Promise<string> {
         .replaceAll("meta.fabricmc.net", mirror + "/fabric-meta")
         .replaceAll("maven.fabricmc.net", mirror + "/maven")
         .replaceAll("piston-meta.mojang.com", mirror);
-    return (await got(url)).read();
+    return (await got(url)).body;
 }
