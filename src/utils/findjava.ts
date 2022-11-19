@@ -40,9 +40,12 @@ function findForLinux(): Map<string, string> {
     return ret;
 }
 
-function getJavaVersion(javaExec: string): string {
-    const out = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]).stderr?.read();
-    if(out === null)return "Unknown Version";
-    return out[1];
+async function getJavaVersion(javaExec: string): Promise<string> {
+    return new Promise(resolve=>{
+        const proc = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]);
+        proc.stderr?.on("readable", ()=>{
+            const val = proc.stderr?.toString().match(/java\.version = (.+)/)??["", "Unknown Version"];
+            resolve(val[1]??"Unknown Version");
+        });
+    });
 }
-
