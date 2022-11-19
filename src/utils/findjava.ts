@@ -43,9 +43,10 @@ async function findForLinux(): Promise<Map<string, string>> {
 async function getJavaVersion(javaExec: string): Promise<string> {
     return new Promise(resolve=>{
         const proc = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]);
-        proc.stderr?.on("readable", ()=>{
-            const val = proc.stderr?.read().toString().match(/java\.version = (.+)/)??["", "Unknown Version"];
-            resolve(val[1]??"Unknown Version");
+        let stderr = "";
+        proc.stderr?.on("data", (data)=>{
+            stderr+=data;
         });
+        resolve((stderr.toString().match(/java\.version = (.+)/)??["", "Unknown Version"])[0]);
     });
 }
