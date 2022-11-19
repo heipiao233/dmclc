@@ -44,7 +44,7 @@ async function getJavaVersion(javaExec: string): Promise<string> {
     return new Promise(resolve=>{
         const proc = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]);
         proc.stderr?.on("readable", ()=>{
-            const val = proc.stderr?.toString().match(/java\.version = (.+)/)??["", "Unknown Version"];
+            const val = proc.stderr?.read().toString().match(/java\.version = (.+)/)??["", "Unknown Version"];
             resolve(val[1]??"Unknown Version");
         });
     });
