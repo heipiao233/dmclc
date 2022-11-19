@@ -41,6 +41,8 @@ function findForLinux(): Map<string, string> {
 }
 
 function getJavaVersion(javaExec: string): string {
-    return cp.execFileSync(javaExec, ["-XshowSettings:properties", "-version"]).toString().match(/java\.version = (.+)/)![1];
+    const out = cp.execFileSync(javaExec, ["-XshowSettings:properties", "-version"]).toString();
+    if(out === null)return "Unknown Version";
+    return out[1];
 }
 
