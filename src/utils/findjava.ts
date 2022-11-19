@@ -4,36 +4,36 @@ import * as cp from "child_process";
 import os from "os";
 import fs from "fs";
 
-export function findAllJava(): Map<string, string> {
+export async function findAllJava(): Promise<Map<string, string>> {
     const res = new Map<string, string>();
     switch (os.platform()) {
     case "win32":
-        return readFromRegister();
+        return await readFromRegister();
     case "linux":
-        return findForLinux();
+        return await findForLinux();
     default:
         break;
     }
     return res;
 }
 
-function readFromRegister(): Map<string, string> {
+async function readFromRegister(): Promise<Map<string, string>> {
     const lines = cp.execSync("reg query \"HKCR\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\MuiCache\" /f \"java.exe.ApplicationCompany\"").toString().split("\n");
     const ret = new Map<string, string>();
-    lines.filter(i=>i.includes("java.exe")).map(i=>{
+    lines.filter(i=>i.includes("java.exe")).map(async i=>{
         const javaExec = i.match("[A-Z]:.+?\\.exe")![0];
-        ret.set(javaExec, getJavaVersion(javaExec));
+        ret.set(javaExec, await getJavaVersion(javaExec));
     });
     return ret;
 }
-function findForLinux(): Map<string, string> {
+async function findForLinux(): Promise<Map<string, string>> {
     const dirs = ["/usr/java", "/usr/lib/jvm", "/usr/lib32/jvm"];
     const ret = new Map<string, string>();
     for (const i of dirs) {
         for (const j of fs.readdirSync(i)) {
             const exec = `${i}/${j}/bin/java`;
             if(fs.existsSync(exec)){
-                ret.set(exec, getJavaVersion(exec));
+                ret.set(exec, await getJavaVersion(exec));
             }
         }
     }
