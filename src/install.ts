@@ -78,12 +78,7 @@ export class Installer {
         const versionObject: McInstallation = JSON.parse(content);
         mkdirs.mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, content);
-        if (!fs.existsSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`) ||
-            !checkFile(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`, versionObject.downloads.client.sha1)) {
-            await downloads.download(versionObject.downloads.client.url, `${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);
-        }
-        await this.installAssets(versionObject.assetIndex);
-        await this.installLibs(versionObject.libraries);
+        await this.install_json(versionName, versionObject);
         const extras: DMCLCExtraVersionInfo = {
             version: ver.id,
             modules: []
@@ -98,6 +93,10 @@ export class Installer {
         }
         await this.installAssets(versionObject.assetIndex);
         await this.installLibs(versionObject.libraries);
+        if (!fs.existsSync(`${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file}.xml`) ||
+            !checkFile(`${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file}.xml`, versionObject.logging.client.file.sha1)) {
+            await downloads.download(versionObject.logging.client.file.url, `${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file}.xml`);
+        }
     }
 }
 
