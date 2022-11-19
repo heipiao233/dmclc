@@ -5,6 +5,7 @@ import { got } from "got";
 import { download } from "../../utils/downloads.js";
 import { tmpdir } from "os";
 import fs from "fs";
+import fsextra from "fs-extra";
 import { InstallerProfile } from "./install_profile.js";
 import compressing from "compressing";
 import { McInstallation } from "../../schemas.js";
@@ -32,6 +33,7 @@ export class ForgeModule implements ModuleType {
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata: InstallerProfile = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
+        await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
         await this.launcher.installer.installLibs(metadata.libraries);
         const target: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`).toString());
         const source: McInstallation = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
@@ -40,6 +42,7 @@ export class ForgeModule implements ModuleType {
         target.mainClass = source.mainClass;
         target.libraries.push(...source.libraries);
         await this.launcher.installer.installLibs(source.libraries);
+        
         for (const item of metadata.processors) {
             if (item.sides === undefined || item.sides.includes("client")) {
                 const jar = `${this.launcher.rootPath}/libraries/${expandMavenId(item.jar)}`;

@@ -78,7 +78,10 @@ export class Installer {
         const versionObject: McInstallation = JSON.parse(content);
         mkdirs.mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, content);
-        await downloads.download(versionObject.downloads.client.url, `${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);
+        if (!fs.existsSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`) ||
+            !checkFile(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`, versionObject.downloads.client.sha1)) {
+            await downloads.download(versionObject.downloads.client.url, `${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);
+        }
         await this.installAssets(versionObject.assetIndex);
         await this.installLibs(versionObject.libraries);
         const extras: DMCLCExtraVersionInfo = {
