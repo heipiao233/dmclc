@@ -11,15 +11,16 @@ export class Launcher {
     separator: string;
     natives: "natives-linux" | "natives-macos" | "natives-osx" | "natives-windows";
     mirror = "bmclapi2.bangbang93.com";
-    usingJava = "C:\\Program Files\\Microsoft\\jdk-17.0.2.8-hotspot\\bin\\java.exe";
     installer: Installer = new Installer(this);
     moduleInstaller: ModuleInstaller = new ModuleInstaller(this);
     runner: RunMinecraft = new RunMinecraft(this);
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
-    constructor (rootPath: string, name: string) {
+    usingJava: string;
+    constructor (rootPath: string, name: string, javaExec: string) {
         this.name = name;
         this.rootPath = rootPath;
+        this.usingJava = javaExec;
         if (this.systemType === "win32") {
             this.separator = ";";
             this.natives = "natives-windows";
