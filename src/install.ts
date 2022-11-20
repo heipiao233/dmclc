@@ -93,12 +93,6 @@ export class Installer {
         }
         await this.installAssets(versionObject.assetIndex);
         await this.installLibs(versionObject.libraries);
-        if(versionObject.logging.client!==undefined){
-            if (!fs.existsSync(`${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file.id}`) ||
-                !checkFile(`${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file.id}`, versionObject.logging.client.file.sha1)) {
-                await downloads.download(versionObject.logging.client.file.url, `${this.launcher.rootPath}/versions/${versionName}/${versionObject.logging.client.file.id}`);
-            }
-        }
     }
 }
 
