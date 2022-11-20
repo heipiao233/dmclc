@@ -47,6 +47,8 @@ async function getJavaVersion(javaExec: string): Promise<string> {
         proc.stderr?.on("data", (data)=>{
             stderr+=data;
         });
-        resolve((stderr.toString().match(/java\.version = (.+)/)??["", "Unknown Version"])[1]);
+        proc.stderr?.on("end", ()=>{
+            resolve((stderr.toString().match(/java\.version = (.+)/)??["", "Unknown Version"])[1]);
+        });
     });
 }
