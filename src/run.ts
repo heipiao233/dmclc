@@ -73,7 +73,7 @@ export class RunMinecraft {
                     res.push(this.parseArgument(i, versionObject, versionName, account, args));
                 }
             });
-            res.push(versionObject.logging.client.argument.replaceAll("${path}", `./versions/${versionName}/${versionObject.logging.client.file.id}`));
+            if(versionObject.logging.client!==undefined)res.push(versionObject.logging.client.argument.replaceAll("${path}", `./versions/${versionName}/${versionObject.logging.client.file.id}`));
             res.push(versionObject.mainClass);
             versionObject.arguments.game.map(async i => {
                 if (typeof (i) === "string") {

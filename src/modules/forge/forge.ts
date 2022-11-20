@@ -12,6 +12,7 @@ import { McInstallation } from "../../schemas.js";
 import { expandMavenId } from "../../utils/maven.js";
 import { execFileSync } from "child_process";
 import StreamZip from "node-stream-zip";
+import { merge } from "../../utils/mergeversionjson.js";
 
 export class ForgeModule implements ModuleType {
     private readonly launcher: Launcher;
@@ -37,10 +38,7 @@ export class ForgeModule implements ModuleType {
         await this.launcher.installer.installLibs(metadata.libraries);
         const target: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`).toString());
         const source: McInstallation = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
-        target.arguments.game.push(...source.arguments.game);
-        target.arguments.jvm.push(...source.arguments.jvm);
-        target.mainClass = source.mainClass;
-        target.libraries.push(...source.libraries);
+        const result = merge(target, source);
         await this.launcher.installer.installLibs(source.libraries);
         
         for (const item of metadata.processors) {
@@ -56,7 +54,7 @@ export class ForgeModule implements ModuleType {
                 console.log(execFileSync(this.launcher.usingJava, args).toString());
             }
         }
-        fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`, JSON.stringify(target));
+        fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`, JSON.stringify(result));
     }
 
     transformArguments (arg: string, MCName: string, metadata: InstallerProfile): string {

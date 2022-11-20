@@ -4,6 +4,7 @@ import { FabricLikeVersionInfo } from "./fabriclike_version_info.js";
 import { Launcher } from "../../launcher.js";
 import { McInstallation } from "../../schemas.js";
 import fs from "fs";
+import { merge } from "../../utils/mergeversionjson.js";
 export class FabricLikeModule<T extends FabricLikeVersionInfo> implements ModuleType {
     declare loaderMaven: string;
     declare metaURL: string;
@@ -26,26 +27,10 @@ export class FabricLikeModule<T extends FabricLikeVersionInfo> implements Module
 
     async install (MCVersion: string, MCName: string, version: string): Promise<void> {
         const versionInfo: T = this.cachedLoaderVersions.get(`${MCVersion}-${version}`) ??
-      JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}/${encodeURIComponent(version)}`)).body);
-        let mcVersion: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`).toString());
+            await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}/${encodeURIComponent(version)}`).json();
+        const mcVersion: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`).toString());
         if (mcVersion.mainClass === versionInfo.launcherMeta.mainClass.client) return;
-        mcVersion.libraries.push(...versionInfo.launcherMeta.libraries.client);
-        mcVersion.libraries.push(...versionInfo.launcherMeta.libraries.common);
-        mcVersion.libraries.push({
-            name: versionInfo.loader.maven,
-            url: this.loaderMaven
-        });
-        mcVersion.libraries.push({
-            name: versionInfo.intermediary.maven,
-            url: this.intermediaryMaven
-        });
-        mcVersion = this.writeMore(mcVersion, versionInfo);
-        mcVersion.mainClass = versionInfo.launcherMeta.mainClass.client;
-        fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`, JSON.stringify(mcVersion));
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    writeMore (mcVersion: McInstallation, versionInfo: T): McInstallation {
-        return mcVersion;
+        const newVersion: McInstallation = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}/${encodeURIComponent(version)}/profile/json`).json();
+        fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`, JSON.stringify(merge(mcVersion, newVersion)));
     }
 }

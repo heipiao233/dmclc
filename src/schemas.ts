@@ -97,7 +97,7 @@ export declare class McInstallation {
     javaVersion: JavaInfo;
     libraries: Library[];
     logging: {
-        client: LoggingInfo
+        client?: LoggingInfo
     };
 
     mainClass: string;
