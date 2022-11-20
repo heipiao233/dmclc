@@ -6,6 +6,5 @@ export function merge(a: McInstallation, b: McInstallation): McInstallation {
     c.arguments.jvm.push(...b.arguments.jvm);
     c.libraries.push(...b.libraries);
     c.mainClass = b.mainClass;
-    if(b.logging.client===undefined)c.logging = {};
     return c;
 }
