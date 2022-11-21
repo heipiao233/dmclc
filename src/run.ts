@@ -78,7 +78,7 @@ export class RunMinecraft {
                 }
             });
         } else {
-            res.push("-Djava.library.path", `./versions/${versionName}/natives`);
+            res.push(`-Djava.library.path=./versions/${versionName}/natives`);
             res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
             res.push(versionObject.mainClass);
             versionObject.minecraftArguments!.split(" ").map(async i => {
