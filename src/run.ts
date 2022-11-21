@@ -29,7 +29,7 @@ export class RunMinecraft {
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
             if (i.downloads === undefined) {
                 res.push(`./libraries/${expandMavenId(i.name)}`);
-            } else if (typeof (i.downloads.artifact) === "object"){
+            } else if (i.downloads.artifact !== undefined){
                 res.push(`./libraries/${i.downloads.artifact.path}`);
             }
         });

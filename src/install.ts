@@ -54,17 +54,19 @@ export class Installer {
                 mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
                 allDownloads.set(`${i.url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
             } else {
-                let artifact: LibraryArtifact;
+                const artifacts: LibraryArtifact[]=[];
                 if (typeof (i.downloads.artifact) === "object") {
-                    artifact = i.downloads.artifact;
+                    artifacts.push(i.downloads.artifact);
                 } else {
-                    artifact = i.downloads.classifiers[this.launcher.natives];
+                    artifacts.push(i.downloads.classifiers[this.launcher.natives]);
                 }
-                if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
-                    mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
-                    console.log(i.name);
-                    allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
-                }
+                artifacts.forEach(artifact=>{
+                    if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
+                        mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
+                        console.log(i.name);
+                        allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
+                    }
+                });
             }
         });
         await downloads.downloadAll(allDownloads, this.launcher.mirror);
