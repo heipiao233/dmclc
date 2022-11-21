@@ -111,12 +111,13 @@ export class RunMinecraft {
         });
     }
     private extractNative(version: McInstallation){
-        version.libraries.filter(lib=>lib.downloads?.classifiers!=undefined).forEach(
-            lib=>{
-                const native = lib.downloads?.classifiers[this.launcher.natives];
-                const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
-                compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/natives`);
-            }
-        );
+        version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
+            .filter(lib=>lib.downloads?.classifiers!=undefined).forEach(
+                lib=>{
+                    const native = lib.downloads?.classifiers[this.launcher.natives];
+                    const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
+                    compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/natives`);
+                }
+            );
     }
 }
