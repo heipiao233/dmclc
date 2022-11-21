@@ -9,7 +9,7 @@ export class Launcher {
     rootPath: string;
     systemType = os.platform();
     separator: string;
-    natives: "natives-linux" | "natives-macos" | "natives-osx" | "natives-windows";
+    natives: "linux" | "osx" | "windows";
     mirror = "bmclapi2.bangbang93.com";
     installer: Installer = new Installer(this);
     moduleInstaller: ModuleInstaller = new ModuleInstaller(this);
@@ -23,13 +23,15 @@ export class Launcher {
         this.usingJava = javaExec;
         if (this.systemType === "win32") {
             this.separator = ";";
-            this.natives = "natives-windows";
+            this.natives = "windows";
         } else {
             this.separator = ":";
             if (this.systemType === "linux") {
-                this.natives = "natives-linux";
-            } else {
-                this.natives = "natives-macos";
+                this.natives = "linux";
+            } else if(this.systemType === "darwin") {
+                this.natives = "osx";
+            }else{
+                throw new Error("Unsupported platform");
             }
         }
         this.moduleTypes.set("fabric", new FabricModule(this));

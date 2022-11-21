@@ -8,6 +8,7 @@ import { Launcher } from "./launcher.js";
 import { checkFile } from "./utils/check_file.js";
 import { expandMavenId } from "./utils/maven.js";
 import { DMCLCExtraVersionInfo } from "./version.js";
+import os from "os";
 export class Installer {
     launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -59,7 +60,7 @@ export class Installer {
                     artifacts.push(i.downloads.artifact);
                 }
                 if(i.downloads.classifiers!==undefined) {
-                    artifacts.push(i.downloads.classifiers[this.launcher.natives]);
+                    artifacts.push(i.downloads.classifiers[i.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?64:32)]);
                 }
                 artifacts.forEach(artifact=>{
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){

@@ -1,6 +1,7 @@
 import os from "os";
+type OSType = "linux"|"windows"|"osx";
 export declare class OSPlatform {
-    name: string;
+    name: OSType;
     version: string;
     arch: string;
 }
@@ -8,7 +9,7 @@ export function isCurrent(platform: OSPlatform): boolean {
     if (platform === undefined) return true;
     switch (os.platform()) {
     case "darwin":
-        return platform.name === "macos";
+        return platform.name === "osx";
     case "win32":
         return platform.name === "windows";
     default:
@@ -59,18 +60,16 @@ export declare class Library {
     downloads?: {
         artifact: LibraryArtifact
         classifiers: {
-            "natives-linux": LibraryArtifact
-            "natives-macos": LibraryArtifact
-            "natives-osx": LibraryArtifact
-            "natives-windows": LibraryArtifact
-            javadoc: LibraryArtifact
-            sources: LibraryArtifact
+            [index: string]: LibraryArtifact
         }
     };
 
     name: string;
     rules?: Rule[];
     url: string;
+    natives?: {
+        [index in OSType]: string;
+    };
 }
 export declare class LoggingInfo {
     argument: string;
