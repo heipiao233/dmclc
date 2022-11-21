@@ -3,9 +3,7 @@ import * as mkdirs from "./utils/mkdirs.js";
 import * as http_request from "./utils/http_request.js";
 import * as downloads from "./utils/downloads.js";
 import * as path from "path";
-import { tmpdir } from "os";
-import { dirname } from "path";
-import { AssetIndexInfo, McInstallation, Library, VersionInfo, VersionInfos, checkRules, AssetsIndex, Asset } from "./schemas.js";
+import { AssetIndexInfo, McInstallation, Library, VersionInfo, VersionInfos, checkRules, AssetsIndex, Asset, LibraryArtifact } from "./schemas.js";
 import { Launcher } from "./launcher.js";
 import { checkFile } from "./utils/check_file.js";
 import { expandMavenId } from "./utils/maven.js";
@@ -56,17 +54,16 @@ export class Installer {
                 mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
                 allDownloads.set(`${i.url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
             } else {
-                if (typeof (i.downloads.artifact) === "object" && (!fs.existsSync(`${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`) ||
-                !checkFile(`${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`, i.downloads.artifact.sha1))
-                ) {
-                    mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(i.downloads.artifact.path)}`);
-                    console.log(i.name);
-                    allDownloads.set(i.downloads.artifact.url, `${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`);
+                let artifact: LibraryArtifact;
+                if (typeof (i.downloads.artifact) === "object") {
+                    artifact = i.downloads.artifact;
+                } else {
+                    artifact = i.downloads.classifiers[this.launcher.natives];
                 }
-                if (typeof (i.downloads.classifiers) === "object" && this.launcher.natives in i.downloads.classifiers) {
-                    const pth = `${tmpdir()}/${this.launcher.name}_natives/${i.downloads.classifiers[this.launcher.natives].path}`;
-                    mkdirs.mkdirs(dirname(pth));
-                    allDownloads.set(i.downloads.classifiers[this.launcher.natives].url, pth);
+                if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
+                    mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
+                    console.log(i.name);
+                    allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                 }
             }
         });

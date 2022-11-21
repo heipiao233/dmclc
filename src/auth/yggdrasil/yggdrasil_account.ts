@@ -44,8 +44,8 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
           });
           req.setHeader("Content-Type", "application/json");
           req.write(`{
-                "username":"${content.get("username") ?? ""}",
-                "password":"${content.get("password") ?? ""}",
+                "username":"${content.get("username")}",
+                "password":"${content.get("password")}",
                 "requestUser":true,
                 "agent":{
                     "name":"Minecraft",
@@ -72,7 +72,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
   }
 
   getUUID (): string {
-      return this.data.uuid??"";
+      return this.data.uuid!;
   }
 
   async getAccessToken (): Promise<string> {

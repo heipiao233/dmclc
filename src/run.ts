@@ -3,10 +3,10 @@ import cp from "child_process";
 import iconv from "iconv-lite";
 import { Argument, checkRules, McInstallation } from "./schemas.js";
 import { mkdirs } from "./utils/mkdirs.js";
-import { tmpdir } from "os";
 import { Launcher } from "./launcher.js";
 import { Account } from "./auth/account.js";
 import { expandMavenId } from "./utils/maven.js";
+import compressing from "compressing";
 export class RunMinecraft {
     launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -29,11 +29,8 @@ export class RunMinecraft {
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
             if (i.downloads === undefined) {
                 res.push(`./libraries/${expandMavenId(i.name)}`);
-            } else {
-                if (typeof (i.downloads.artifact) === "object")res.push(`./libraries/${i.downloads.artifact.path}`);
-                if (typeof (i.downloads.classifiers) === "object" && this.launcher.natives in i.downloads.classifiers) {
-                    res.push(`${tmpdir()}/${this.launcher.name}_natives/${i.downloads.classifiers[this.launcher.natives].path}`);
-                }
+            } else if (typeof (i.downloads.artifact) === "object"){
+                res.push(`./libraries/${i.downloads.artifact.path}`);
             }
         });
         if (!versionObject.mainClass.startsWith("cpw"))res.push(`./versions/${versionName}/${versionName}.jar`);// Forge
@@ -82,6 +79,11 @@ export class RunMinecraft {
         } else {
             res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
             res.push(versionObject.mainClass);
+            versionObject.minecraftArguments!.split(" ").map(async i => {
+                if (typeof (i) === "string") {
+                    res.push(this.parseArgument(i, versionObject, versionName, account, args));
+                }
+            });
         }
         return res;
     }
@@ -90,15 +92,16 @@ export class RunMinecraft {
         await account.prepareLaunch();
         const versionObject: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath.toString()}/versions/${name}/${name}.json`).toString());
         await this.launcher.installer.install_json(name, versionObject);
+        this.extractNative(versionObject);
         const args = await this.getArguments(versionObject, name, account);
         const allArguments = (await account.getLaunchJVMArgs()).concat(args);
         console.log(allArguments.join(" "));
         const proc = cp.execFile(this.launcher.usingJava, allArguments, { cwd: this.launcher.rootPath.toString(), encoding: "base64" });
-        proc.stdout?.on("data", (chunk) => {
-            console.log(iconv.decode(Buffer.from(chunk, "base64"), "gbk"));
+        proc.stdout!.on("data", (chunk) => {
+            process.stdout.write(iconv.decode(Buffer.from(chunk, "base64"), "gbk"));
         });
-        proc.stderr?.on("data", (chunk) => {
-            console.error(iconv.decode(Buffer.from(chunk, "base64"), "gbk"));
+        proc.stderr!.on("data", (chunk) => {
+            process.stderr.write(iconv.decode(Buffer.from(chunk, "base64"), "gbk"));
         });
         await new Promise<void>((resolve, reject) => {
             proc.on("close", (code) => {
@@ -106,5 +109,14 @@ export class RunMinecraft {
                 reject(code);
             });
         });
+    }
+    private extractNative(version: McInstallation){
+        version.libraries.filter(lib=>lib.downloads?.classifiers!=undefined).forEach(
+            lib=>{
+                const native = lib.downloads?.classifiers[this.launcher.natives];
+                const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
+                compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/natives`);
+            }
+        );
     }
 }

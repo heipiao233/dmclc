@@ -78,7 +78,7 @@ export declare class LoggingInfo {
     type: string;
 }
 export declare class McInstallation {
-    arguments: {
+    arguments?: {
         game: Array<string | Argument>
         jvm: Array<string | Argument>
     };
@@ -105,6 +105,7 @@ export declare class McInstallation {
     releaseTime: string;
     time: string;
     type: "snapshot" | "release" | "old_beta" | "old_alpha";
+    minecraftArguments?: string;
 }
 export declare class VersionInfo {
     id: string;
