@@ -55,9 +55,10 @@ export class Installer {
                 allDownloads.set(`${i.url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
             } else {
                 const artifacts: LibraryArtifact[]=[];
-                if (typeof (i.downloads.artifact) === "object") {
+                if (i.downloads.artifact!==undefined) {
                     artifacts.push(i.downloads.artifact);
-                } else {
+                }
+                if(i.downloads.classifiers!==undefined) {
                     artifacts.push(i.downloads.classifiers[this.launcher.natives]);
                 }
                 artifacts.forEach(artifact=>{
