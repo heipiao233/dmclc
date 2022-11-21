@@ -7,6 +7,7 @@ import { Launcher } from "./launcher.js";
 import { Account } from "./auth/account.js";
 import { expandMavenId } from "./utils/maven.js";
 import compressing from "compressing";
+import os from "os";
 export class RunMinecraft {
     launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -112,9 +113,9 @@ export class RunMinecraft {
     }
     private extractNative(version: McInstallation, name: string){
         version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
-            .filter(lib=>lib.downloads?.classifiers!=undefined).forEach(
+            .filter(lib=>lib.downloads?.classifiers!==undefined).forEach(
                 lib=>{
-                    const native = lib.downloads?.classifiers[this.launcher.natives];
+                    const native = lib.downloads!.classifiers[lib.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")];
                     const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
                     compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/versions/${name}/natives`);
                 }
