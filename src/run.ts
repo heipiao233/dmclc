@@ -49,7 +49,7 @@ export class RunMinecraft {
             .replaceAll("${assets_index_name}", versionObject.assets)
             .replaceAll("${auth_uuid}", `${account.getUUID()}`)
             .replaceAll("${version_type}", `${this.launcher.name}`)
-            .replaceAll("${natives_directory}", "./natives")
+            .replaceAll("${natives_directory}", `./versions/${versionName}/natives`)
             .replaceAll("${launcher_name}", `${this.launcher.name}`)
             .replaceAll("${launcher_version}", "0.1")
             .replaceAll("${library_directory}", "./libraries/")
