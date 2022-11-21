@@ -93,7 +93,7 @@ export class RunMinecraft {
         await account.prepareLaunch();
         const versionObject: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath.toString()}/versions/${name}/${name}.json`).toString());
         await this.launcher.installer.install_json(name, versionObject);
-        this.extractNative(versionObject, name);
+        await this.extractNative(versionObject, name);
         const args = await this.getArguments(versionObject, name, account);
         const allArguments = (await account.getLaunchJVMArgs()).concat(args);
         console.log(allArguments.join(" "));
@@ -111,14 +111,14 @@ export class RunMinecraft {
             });
         });
     }
-    private extractNative(version: McInstallation, name: string){
-        version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
-            .filter(lib=>lib.downloads?.classifiers!==undefined).forEach(
-                lib=>{
+    private async extractNative(version: McInstallation, name: string){
+        Promise.all(version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
+            .filter(lib=>lib.downloads?.classifiers!==undefined).map(
+                async lib=>{
                     const native = lib.downloads!.classifiers[lib.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")];
                     const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
-                    compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/versions/${name}/natives`);
+                    await compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/versions/${name}/natives`);
                 }
-            );
+            ));
     }
 }
