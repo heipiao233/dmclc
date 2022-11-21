@@ -80,7 +80,7 @@ export class RunMinecraft {
                 }
             });
         } else {
-            res.push("-cp " + this.getClassPath(versionObject, versionName).join(this.launcher.separator));
+            res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
             res.push(versionObject.mainClass);
         }
         return res;
