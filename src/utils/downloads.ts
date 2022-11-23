@@ -28,8 +28,9 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
     return new Promise(resolve=>{
         req.on("response", res => {
             res.pipe(file);
-        }).on("close", ()=>{
-            resolve();
+            res.on("close", ()=>{
+                resolve();
+            });
         });
     });
 }
