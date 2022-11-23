@@ -8,6 +8,7 @@ import { Account } from "./auth/account.js";
 import { expandMavenId } from "./utils/maven.js";
 import compressing from "compressing";
 import os from "os";
+import { merge } from "./utils/mergeversionjson.js";
 export class RunMinecraft {
     launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -92,7 +93,11 @@ export class RunMinecraft {
 
     async runInstalledVersion (name: string, account: Account): Promise<void> {
         await account.prepareLaunch();
-        const versionObject: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath.toString()}/versions/${name}/${name}.json`).toString());
+        let versionObject: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${name}/${name}.json`).toString());
+        if(versionObject.inheritsFrom!==undefined){
+            const original = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${versionObject.inheritsFrom}/${versionObject.inheritsFrom}.json`).toString());
+            versionObject = merge(original, versionObject);
+        }
         await this.launcher.installer.install_json(name, versionObject);
         await this.extractNative(versionObject, name);
         const args = await this.getArguments(versionObject, name, account);

@@ -53,7 +53,10 @@ export class Installer {
             if (i.downloads === undefined) {
                 const filePath = expandMavenId(i.name);
                 mkdirs.mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
-                allDownloads.set(`${i.url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
+                let url: string;
+                if(i.url===undefined)url = "https://libraries.minecraft.net/";
+                else url = i.url;
+                allDownloads.set(`${url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
             } else {
                 const artifacts: LibraryArtifact[]=[];
                 if (i.downloads.artifact!==undefined) {

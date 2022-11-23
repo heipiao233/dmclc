@@ -65,8 +65,11 @@ export declare class Library {
     };
 
     name: string;
+    serverreq?: boolean;
+    clientreq?: boolean;
+    checksum: string[];
     rules?: Rule[];
-    url: string;
+    url?: string;
     natives?: {
         [index in OSType]: string;
     };
@@ -77,6 +80,7 @@ export declare class LoggingInfo {
     type: string;
 }
 export declare class McInstallation {
+    inheritsFrom?: string;
     arguments?: {
         game: Array<string | Argument>
         jvm: Array<string | Argument>
