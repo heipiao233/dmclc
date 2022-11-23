@@ -1,5 +1,6 @@
 import fs from "fs";
-import * as https from "https";
+import * as fr from "follow-redirects";
+const https = fr.https;
 export async function downloadAll(files: Map<string, fs.PathLike>, mirror?: string): Promise<void> {
     const promises: Array<Promise<void>> = new Array<Promise<void>>();
     files.forEach((v, k) => {
@@ -26,9 +27,6 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
     const req = https.get(url);
     return new Promise(resolve=>{
         req.on("response", res => {
-            if(res.statusCode!=undefined&&res.statusCode>=300&&res.statusCode<400){
-                resolve(download(res.headers.location!, filename, mirror));
-            }
             res.pipe(file);
         }).on("close", ()=>{
             resolve();

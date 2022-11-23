@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "type": "module",
   "description": "Dolphin Minecraft Launcher Core",
   "devDependencies": {
