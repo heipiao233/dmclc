@@ -22,6 +22,7 @@ export class Installer {
     }
 
     private async installAssets (asset: AssetIndexInfo): Promise<void> {
+        const allDownloads: Map<string, PathLike> = new Map();
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
         let assetJson: string;
         if (!fs.existsSync(indexPath)) {
@@ -39,9 +40,10 @@ export class Installer {
                 !checkFile(`${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
                 mkdirs.mkdirs(`${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}`);
                 console.log(assid);
-                await downloads.download(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`, this.launcher.mirror);
+                allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
+        downloads.downloadAll(allDownloads, this.launcher.mirror);
     }
 
     async installLibs (liblist: Library[]): Promise<void> {
