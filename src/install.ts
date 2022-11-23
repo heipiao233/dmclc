@@ -43,7 +43,7 @@ export class Installer {
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
-        downloads.downloadAll(allDownloads, this.launcher.mirror);
+        await downloads.downloadAll(allDownloads, this.launcher.mirror);
     }
 
     async installLibs (liblist: Library[]): Promise<void> {
