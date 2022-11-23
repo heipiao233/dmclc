@@ -21,6 +21,7 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
             .replaceAll("piston-meta.mojang.com", mirror)
             .replaceAll("piston-data.mojang.com", mirror);
     }
+    url = url.replaceAll("http://", "https://");
     const file = fs.createWriteStream(filename);
     const req = https.get(url);
     return new Promise(resolve=>{
