@@ -1,9 +1,9 @@
 import { Library } from "../../schemas.js";
 
-export declare class InstallerProfile {
+export declare class InstallerProfileNew {
     data: {
-    [index: string]: { "client": string, "server": string }
-  };
+        [index: string]: { "client": string, "server": string }
+    };
 
     processors: Processor[];
     libraries: Library[];
@@ -14,6 +14,6 @@ declare class Processor {
     classpath: string[];
     args: string[];
     output: {
-    [index: string]: string
-  };
+        [index: string]: string
+    };
 }
