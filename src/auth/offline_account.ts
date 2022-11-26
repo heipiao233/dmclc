@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import { Account } from "./account.js";
 import { UserData } from "./user_data.js";
 export class OfflineAccount implements Account<UserData> {
-    private data: UserData;
+    data: UserData;
     constructor (data: UserData) {
         this.data = data;
     }

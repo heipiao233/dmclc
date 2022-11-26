@@ -14,7 +14,7 @@ declare class STEP6 {
     name: string;
 }
 export class MicrosoftAccount implements Account<MicrosoftUserData> {
-    private data: MicrosoftUserData;
+    data: MicrosoftUserData;
     constructor (data: MicrosoftUserData) {
         this.data = data;
     }

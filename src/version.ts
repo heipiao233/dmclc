@@ -46,7 +46,7 @@ export class Version {
         await this.completeVersionInstall();
         await this.extractNative(this.versionObject, this.name);
         const args = await this.getArguments(this.versionObject, this.name, account);
-        const allArguments = (await account.getLaunchJVMArgs()).concat(args);
+        const allArguments = (await account.getLaunchJVMArgs(this)).concat(args);
         console.log(allArguments.join(" "));
         return cp.execFile(this.launcher.usingJava, allArguments, {
             cwd: this.extras.enableIndependentGameDir
@@ -173,7 +173,7 @@ export class Version {
                 }
             });
         } else {
-            res.push(`-Djava.library.path=./versions/${versionName}/natives`);
+            res.push(`-Djava.library.path=${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/natives`);
             res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
             res.push(versionObject.mainClass);
             versionObject.minecraftArguments!.split(" ").map(async i => {

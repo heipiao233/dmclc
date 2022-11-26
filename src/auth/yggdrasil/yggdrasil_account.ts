@@ -1,8 +1,9 @@
 import { Account } from "../account.js";
 import { YggdrasilUserData } from "./yggdrasil_data.js";
 import * as https from "https";
+import { Version } from "../../version.js";
 export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements Account<T> {
-    protected data: T;
+    data: T;
     protected root: string;
     constructor(data: T, root: string) {
         this.data = data;
@@ -10,7 +11,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     abstract prepareLaunch(): Promise<void>
-    abstract getLaunchJVMArgs(): Promise<string[]>
+    abstract getLaunchJVMArgs(mc: Version): Promise<string[]>
     async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
         const at = await this.getAccessToken();
