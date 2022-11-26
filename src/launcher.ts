@@ -17,7 +17,7 @@ export class Launcher {
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
     usingJava: string;
-    installedVersions: Version[];
+    installedVersions: Map<string, Version>;
     constructor (rootPath: string, name: string, javaExec: string) {
         this.name = name;
         this.rootPath = rootPath;
@@ -40,14 +40,15 @@ export class Launcher {
         this.moduleTypes.set("forge", new ForgeModule(this));
         this.installedVersions = this.getInstalledVersions();
     }
-    getInstalledVersions(): Version[] {
+    getInstalledVersions(): Map<string, Version> {
+        const value = new Map<string, Version>();
         if (!fs.existsSync(`${this.rootPath}/versions`)) {
             mkdirsSync(`${this.rootPath}/versions`);
-            return [];
+            return new Map();
         }
-        const value = fs.readdirSync(`${this.rootPath}/versions`)
+        fs.readdirSync(`${this.rootPath}/versions`)
             .filter(value=>fs.existsSync(`${this.rootPath}/versions/${value}/${value}.json`))
-            .map(value=>Version.fromVersionName(this, value));
+            .forEach(name=>value.set(name, Version.fromVersionName(this, name)));
         return value;
     }
 }
