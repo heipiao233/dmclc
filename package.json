@@ -24,6 +24,7 @@
     "typescript-eslint-parser": "^22.0.0",
     "@types/fs-extra": "^9.0.13"
   },
+  "repository": "github:heipiao233/dmclc",
   "scripts": {
     "build": "tsc",
     "eslint": "eslint src --ext .ts --fix"
