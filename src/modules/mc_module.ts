@@ -1,4 +1,6 @@
+import { Version } from "../version.js";
+
 export interface ModuleType {
-  getSuitableModuleVersions: (MCVersion: string) => Promise<string[]>
-  install: (MCVersion: string, MCName: string, version: string) => Promise<void>
+  getSuitableModuleVersions: (MCVersion: Version) => Promise<string[]>
+  install: (MCVersion: Version, version: string) => Promise<void>
 }

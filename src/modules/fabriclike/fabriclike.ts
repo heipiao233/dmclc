@@ -5,6 +5,7 @@ import { Launcher } from "../../launcher.js";
 import { McInstallation } from "../../schemas.js";
 import fs from "fs";
 import { merge } from "../../utils/mergeversionjson.js";
+import { Version } from "../../version.js";
 export class FabricLikeModule<T extends FabricLikeVersionInfo> implements ModuleType {
     declare loaderMaven: string;
     declare metaURL: string;
@@ -15,8 +16,8 @@ export class FabricLikeModule<T extends FabricLikeVersionInfo> implements Module
     }
 
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
-    async getSuitableModuleVersions (MCVersion: string): Promise<string[]> {
-        const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}`)).body);
+    async getSuitableModuleVersions (MCVersion: Version): Promise<string[]> {
+        const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}`)).body);
         const result: string[] = [];
         versions.forEach(v => {
             this.cachedLoaderVersions.set(`${MCVersion}-${v.loader.version}`, v);
@@ -25,12 +26,12 @@ export class FabricLikeModule<T extends FabricLikeVersionInfo> implements Module
         return result;
     }
 
-    async install (MCVersion: string, MCName: string, version: string): Promise<void> {
+    async install (MCVersion: Version, version: string): Promise<void> {
         const versionInfo: T = this.cachedLoaderVersions.get(`${MCVersion}-${version}`) ??
-            await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}/${encodeURIComponent(version)}`).json();
-        const mcVersion: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`).toString());
+            await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}`).json();
+        const mcVersion: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
         if (mcVersion.mainClass === versionInfo.launcherMeta.mainClass.client) return;
-        const newVersion: McInstallation = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion)}/${encodeURIComponent(version)}/profile/json`).json();
-        fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCName}/${MCName}.json`, JSON.stringify(merge(mcVersion, newVersion)));
+        const newVersion: McInstallation = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.name)}/${encodeURIComponent(version)}/profile/json`).json();
+        fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(merge(mcVersion, newVersion)));
     }
 }

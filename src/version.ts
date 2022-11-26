@@ -88,7 +88,7 @@ export class Version {
         await downloadAll(allDownloads, this.launcher.mirror);
     }
 
-    private async installLibraries (liblist: Library[]): Promise<void> {
+    async installLibraries (liblist: Library[]): Promise<void> {
         const allDownloads: Map<string, PathLike> = new Map();
         liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
@@ -200,7 +200,7 @@ export class Version {
         if (module_ == undefined) {
             throw new Error(`Module not found: ${module_}`);
         }
-        return module_.getSuitableModuleVersions(this.extras.version);
+        return module_.getSuitableModuleVersions(this);
     }
     async installModule(name: string, versionID: string, moduleVersion: string): Promise<void> {
 
@@ -208,7 +208,7 @@ export class Version {
         if (module_ == undefined) {
             throw new Error(`Module not found: ${module_}`);
         }
-        await module_.install(this.extras.version, versionID, moduleVersion);
+        await module_.install(this, moduleVersion);
         this.extras.modules.push({
             name: name,
             version: moduleVersion
