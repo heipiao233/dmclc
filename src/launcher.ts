@@ -4,7 +4,7 @@ import { ModuleType } from "./modules/mc_module.js";
 import { FabricModule } from "./modules/fabric.js";
 import { QuiltModule } from "./modules/quilt/quilt.js";
 import { ForgeModule } from "./modules/forge/forge.js";
-import { Version } from "./version";
+import { Version } from "./version.js";
 import fs from "fs";
 import { mkdirsSync } from "fs-extra";
 export class Launcher {
