@@ -202,7 +202,7 @@ export class Version {
         }
         return module_.getSuitableModuleVersions(this);
     }
-    async installModule(name: string, versionID: string, moduleVersion: string): Promise<void> {
+    async installModule(name: string, moduleVersion: string): Promise<void> {
 
         const module_ = this.launcher.moduleTypes.get(name);
         if (module_ == undefined) {
@@ -213,6 +213,6 @@ export class Version {
             name: name,
             version: moduleVersion
         });
-        fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionID}/dmclc_extras.json`, JSON.stringify(this.extras));
+        fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
     }
 }
