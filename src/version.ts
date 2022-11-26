@@ -51,8 +51,7 @@ export class Version {
         return cp.execFile(this.launcher.usingJava, allArguments, {
             cwd: this.extras.enableIndependentGameDir
                 ? this.versionRoot
-                : this.launcher.rootPath.toString(),
-            encoding: "base64"
+                : this.launcher.rootPath.toString()
         });
     }
     async completeVersionInstall() {
