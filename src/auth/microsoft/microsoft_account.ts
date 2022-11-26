@@ -1,6 +1,6 @@
 import { Account } from "../account.js";
-import { MicrosoftUserData } from "./microsoft_data.js";
 import { got } from "got";
+import { MicrosoftUserData } from "./microsoft_user_data.js";
 declare class STEP1 {
     access_token: string;
     refresh_token: string;
@@ -13,30 +13,44 @@ declare class STEP6 {
     id: string;
     name: string;
 }
-export class MicrosoftAccount implements Account {
+export class MicrosoftAccount implements Account<MicrosoftUserData> {
     private data: MicrosoftUserData;
     constructor (data: MicrosoftUserData) {
         this.data = data;
     }
 
-    async step1 (code: string): Promise<STEP1> {
-        const res = await got("https://login.live.com/oauth20_token.srf", {
+    private async step1_new(code: string): Promise<STEP1> {
+        return await got("https://login.live.com/oauth20_token.srf", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: genQS({
                 client_id: "00000000402b5328",
-                code,
+                code: code,
                 grant_type: "authorization_code",
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
                 scope: "service::user.auth.xboxlive.com::MBI_SSL"
             })
-        });
-        return JSON.parse(res.body);
+        }).json();
     }
 
-    async step2_xbl (accessToken: string): Promise<STEP2> {
+    private async step1_refresh(): Promise<string> {
+        const res: {access_token: string} = await (got("https://login.live.com/oauth20_token.srf", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: genQS({
+                client_id: "00000000402b5328",
+                grant_type: "refresh_token",
+                refresh_token: this.data.refresh_token!
+            })
+        }).json());
+        return res.access_token;
+    }
+
+    private async step2_xbl (accessToken: string): Promise<STEP2> {
         const reqBody = {
             Properties: {
                 AuthMethod: "RPS",
@@ -46,23 +60,29 @@ export class MicrosoftAccount implements Account {
             RelyingParty: "http://auth.xboxlive.com",
             TokenType: "JWT"
         };
-        const res = await got("https://user.auth.xboxlive.com/user/authenticate", {
+        const res: {
+            Token: string,
+            DisplayClaims: {
+                xui: {
+                    uhs: string
+                }[]
+            }
+        } = await got("https://user.auth.xboxlive.com/user/authenticate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(reqBody)
-        });
-        const obj = JSON.parse(res.body);
+        }).json();
         return (
             {
-                token: obj.Token,
-                uhs: obj.DisplayClaims.xui[0].uhs
+                token: res.Token,
+                uhs: res.DisplayClaims.xui[0].uhs
             }
         );
     }
 
-    async step3_xsts (xblToken: string): Promise<string> {
+    private async step3_xsts (xblToken: string): Promise<string> {
         const reqBody = {
             Properties: {
                 SandboxId: "RETAIL",
@@ -71,27 +91,25 @@ export class MicrosoftAccount implements Account {
             RelyingParty: "rp://api.minecraftservices.com/",
             TokenType: "JWT"
         };
-        const res = await got("https://xsts.auth.xboxlive.com/xsts/authorize", {
+        const res: {Token: string} = await got("https://xsts.auth.xboxlive.com/xsts/authorize", {
             method: "POST",
             body: JSON.stringify(reqBody)
-        });
-        const obj = JSON.parse(res.body);
-        return obj.Token;
+        }).json();
+        return res.Token;
     }
 
-    async step4_login (xstsToken: string, uhs: string): Promise<string> {
+    private async step4_login (xstsToken: string, uhs: string): Promise<string> {
         const reqBody = {
             identityToken: `XBL3.0 x=${uhs};${xstsToken}`
         };
-        const res = await got("https://api.minecraftservices.com/authentication/login_with_xbox", {
+        const res: {access_token: string} = await got("https://api.minecraftservices.com/authentication/login_with_xbox", {
             method: "POST",
             body: JSON.stringify(reqBody)
-        });
-        const obj = JSON.parse(res.body);
-        return obj.access_token;
+        }).json();
+        return res.access_token;
     }
 
-    async step5_check (MCAccessToken: string): Promise<boolean> {
+    private async step5_check (MCAccessToken: string): Promise<boolean> {
         const res = await got("https://api.minecraftservices.com/entitlements/mcstore", {
             headers: {
                 Authorization: `Bearer ${MCAccessToken}`
@@ -100,17 +118,23 @@ export class MicrosoftAccount implements Account {
         return res.statusCode !== undefined && res.statusCode >= 200 && res.statusCode < 300;
     }
 
-    async step6_uuid_name (MCAccessToken: string): Promise<STEP6> {
-        const res = await got("https://api.minecraftservices.com/minecraft/profile", {
+    private async step6_uuid_name (MCAccessToken: string): Promise<STEP6> {
+        return await got("https://api.minecraftservices.com/minecraft/profile", {
             headers: {
                 Authorization: `Bearer ${MCAccessToken}`
             }
-        });
-        return JSON.parse(res.body);
+        }).json();
     }
 
-    async verify (): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async readSaved (data: MicrosoftUserData): Promise<boolean> {
+        this.data = data;
+        try {
+            const at=(await this.step1_refresh());
+            await this.nextSteps(at);
+        }catch{
+            return false;
+        }
+        return true;
     }
 
     getUUID (): string {
@@ -125,8 +149,13 @@ export class MicrosoftAccount implements Account {
         const MSCode = content.get("ms_code");
         if (MSCode === undefined) { throw new Error("No Microsoft OAuth code"); }
 
-        const val = await this.step1(MSCode);
-        const tu = await this.step2_xbl(val.access_token);
+        const val = await this.step1_new(MSCode);
+        await this.nextSteps(val.access_token);
+        this.data.refresh_token = val.refresh_token;
+    }
+
+    private async nextSteps (access_token: string){
+        const tu = await this.step2_xbl(access_token);
         const xsts = await this.step3_xsts(tu.token);
         const MCAccessToken = await this.step4_login(xsts, tu.uhs);
         if (!await this.step5_check(MCAccessToken)) {

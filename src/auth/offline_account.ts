@@ -34,7 +34,7 @@ export class OfflineAccount implements Account {
         this.data.name = content.get("username") ?? "Steve";
     }
 
-    async verify (): Promise<boolean> {
+    async readSaved (): Promise<boolean> {
         return true;
     }
 

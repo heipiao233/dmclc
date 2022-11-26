@@ -1,10 +1,12 @@
 import os from "os";
-import { Installer, ModuleInstaller } from "./install.js";
+import { Installer } from "./install.js";
 import { ModuleType } from "./modules/mc_module.js";
-import { RunMinecraft } from "./run.js";
 import { FabricModule } from "./modules/fabric.js";
 import { QuiltModule } from "./modules/quilt/quilt.js";
 import { ForgeModule } from "./modules/forge/forge.js";
+import { Version } from "./version";
+import fs from "fs";
+import { mkdirsSync } from "fs-extra";
 export class Launcher {
     rootPath: string;
     systemType = os.platform();
@@ -12,11 +14,10 @@ export class Launcher {
     natives: "linux" | "osx" | "windows";
     mirror = "bmclapi2.bangbang93.com";
     installer: Installer = new Installer(this);
-    moduleInstaller: ModuleInstaller = new ModuleInstaller(this);
-    runner: RunMinecraft = new RunMinecraft(this);
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
     usingJava: string;
+    installedVersions: Version[];
     constructor (rootPath: string, name: string, javaExec: string) {
         this.name = name;
         this.rootPath = rootPath;
@@ -37,5 +38,16 @@ export class Launcher {
         this.moduleTypes.set("fabric", new FabricModule(this));
         this.moduleTypes.set("quilt", new QuiltModule(this));
         this.moduleTypes.set("forge", new ForgeModule(this));
+        this.installedVersions = this.getInstalledVersions();
+    }
+    getInstalledVersions(): Version[] {
+        if (!fs.existsSync(`${this.rootPath}/versions`)) {
+            mkdirsSync(`${this.rootPath}/versions`);
+            return [];
+        }
+        const value = fs.readdirSync(`${this.rootPath}/versions`)
+            .filter(value=>fs.existsSync(`${this.rootPath}/versions/${value}/${value}.json`))
+            .map(value=>Version.fromVersionName(this, value));
+        return value;
     }
 }
