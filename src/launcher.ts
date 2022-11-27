@@ -22,7 +22,7 @@ export class Launcher {
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accountTypes: Map<string, (data: never) => Account<any>> = new Map();
+    accountTypes: Map<string, (data: any) => Account<any>> = new Map();
     usingJava: string;
     installedVersions: Map<string, Version>;
     constructor (rootPath: string, name: string, javaExec: string) {
