@@ -9,4 +9,5 @@ export interface Account<T extends UserData> {
   prepareLaunch: () => Promise<void>
   getLaunchJVMArgs: (mc: Version) => Promise<string[]>
   getLaunchGameArgs: () => Promise<Map<string, string>>
+  toString: () => string;
 }

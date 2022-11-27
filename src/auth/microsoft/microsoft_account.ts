@@ -186,6 +186,10 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         map.set("user_properties", "{}");
         return map;
     }
+
+    toString (): string {
+        return `${this.data.name} (Microsoft)`;
+    }
 }
 
 function genQS (obj: {[index: string]: string}): string {

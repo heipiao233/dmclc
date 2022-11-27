@@ -41,6 +41,10 @@ export class OfflineAccount implements Account<UserData> {
     getUUID (): string {
         return this.data.uuid === undefined ? genUUID("OfflinePlayer:".concat(this.data.name!)) : this.data.uuid;
     }
+
+    toString (): string {
+        return `${this.data.name} (Offline)`;
+    }
 }
 
 function genUUID (name: string): string {
