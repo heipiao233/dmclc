@@ -46,7 +46,7 @@ export class Version {
         await this.completeVersionInstall();
         await this.extractNative(this.versionObject, this.name);
         const args = await this.getArguments(this.versionObject, this.name, account);
-        const allArguments = (await account.getLaunchJVMArgs(this)).concat(args);
+        const allArguments = (await account.getLaunchJVMArgs(this)).concat(args).concat(["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"]);
         console.log(allArguments.join(" "));
         return cp.execFile(this.launcher.usingJava, allArguments, {
             cwd: this.extras.enableIndependentGameDir
