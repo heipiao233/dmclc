@@ -124,12 +124,12 @@ export class Version {
         const res: string[] = [];
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
             if (i.downloads === undefined) {
-                res.push(`./libraries/${expandMavenId(i.name)}`);
+                res.push(`${this.extras.enableIndependentGameDir?"../..":"."}/libraries/${expandMavenId(i.name)}`);
             } else if (i.downloads.artifact !== undefined){
-                res.push(`./libraries/${i.downloads.artifact.path}`);
+                res.push(`${this.extras.enableIndependentGameDir?"../..":"."}/libraries/${i.downloads.artifact.path}`);
             }
         });
-        if (!versionObject.mainClass.startsWith("cpw"))res.push(`./versions/${versionName}/${versionName}.jar`);// Forge
+        if (!versionObject.mainClass.startsWith("cpw"))res.push(`${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/${versionName}.jar`);// Forge
         return res;
     }
 
@@ -141,14 +141,14 @@ export class Version {
         } else argVal = arg;
         argVal = argVal.replaceAll("${version_name}", `${this.launcher.name}`)
             .replaceAll("${game_directory}", ".")
-            .replaceAll("${assets_root}", "./assets")
+            .replaceAll("${assets_root}", `${this.extras.enableIndependentGameDir?"../..":"."}/assets`)
             .replaceAll("${assets_index_name}", versionObject.assets)
             .replaceAll("${auth_uuid}", `${account.getUUID()}`)
             .replaceAll("${version_type}", `${this.launcher.name}`)
-            .replaceAll("${natives_directory}", `./versions/${versionName}/natives`)
+            .replaceAll("${natives_directory}", `${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/natives`)
             .replaceAll("${launcher_name}", `${this.launcher.name}`)
             .replaceAll("${launcher_version}", "0.1")
-            .replaceAll("${library_directory}", "./libraries/")
+            .replaceAll("${library_directory}", `${this.extras.enableIndependentGameDir?"../..":"."}/libraries/`)
             .replaceAll("${classpath_separator}", this.launcher.separator)
             .replaceAll("${classpath}", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
         argOverrides.forEach((v, k) => {
