@@ -126,8 +126,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         }).json();
     }
 
-    async readSaved (data: MicrosoftUserData): Promise<boolean> {
-        this.data = data;
+    async check (): Promise<boolean> {
         try {
             const at=(await this.step1_refresh());
             await this.nextSteps(at);

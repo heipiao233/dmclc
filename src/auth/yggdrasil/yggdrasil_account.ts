@@ -58,8 +58,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         });
     }
 
-    async readSaved(data: T): Promise<boolean> {
-        this.data = data;
+    async check(): Promise<boolean> {
         return await new Promise((resolve) => {
             const req = https.request(this.data.apiurl + "/authserver/validate", { method: "POST" }, (res) => {
                 if (res.statusCode === 204) resolve(true);

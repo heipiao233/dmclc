@@ -2,7 +2,7 @@ import { UserData } from "./user_data.js";
 import { Version } from "../version.js";
 export interface Account<T extends UserData> {
   data: T;
-  readSaved: (data: T) => Promise<boolean>
+  check: () => Promise<boolean>
   getUUID: () => string
   getUserExtraContent: () => string[]
   readUserExtraContent: (content: Map<string, string>) => Promise<void>

@@ -7,6 +7,11 @@ import { ForgeModule } from "./modules/forge/forge.js";
 import { Version } from "./version.js";
 import fs from "fs";
 import { mkdirsSync } from "fs-extra";
+import { Account } from "./auth/account.js";
+import { AuthlibInjectorAccount } from "./auth/ali_account.js";
+import { MinecraftUniversalLoginAccount } from "./auth/mul_account.js";
+import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
+import { OfflineAccount } from "./auth/offline_account.js";
 export class Launcher {
     rootPath: string;
     systemType = os.platform();
@@ -16,6 +21,8 @@ export class Launcher {
     installer: Installer = new Installer(this);
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    accountTypes: Map<string, (data: never) => Account<any>> = new Map();
     usingJava: string;
     installedVersions: Map<string, Version>;
     constructor (rootPath: string, name: string, javaExec: string) {
@@ -38,6 +45,10 @@ export class Launcher {
         this.moduleTypes.set("fabric", new FabricModule(this));
         this.moduleTypes.set("quilt", new QuiltModule(this));
         this.moduleTypes.set("forge", new ForgeModule(this));
+        this.accountTypes.set("microsoft", (data)=>new MicrosoftAccount(data));
+        this.accountTypes.set("offline", (data)=>new OfflineAccount(data));
+        this.accountTypes.set("authlib_injector", (data)=>new AuthlibInjectorAccount(data, this.rootPath));
+        this.accountTypes.set("minecraft_universal_login", (data)=>new MinecraftUniversalLoginAccount(data, this.rootPath));
         this.installedVersions = this.getInstalledVersions();
     }
     getInstalledVersions(): Map<string, Version> {
