@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "type": "module",
   "description": "Dolphin Minecraft Launcher Core",
   "devDependencies": {
@@ -45,7 +45,6 @@
     "iconv": "^3.0.1",
     "iconv-lite": "^0.6.3",
     "node-stream-zip": "^1.15.0",
-    "regedit": "^5.1.1",
     "uuid": "^9.0.0",
     "xml2js": "^0.4.23"
   }

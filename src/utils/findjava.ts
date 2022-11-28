@@ -3,7 +3,6 @@
 import * as cp from "child_process";
 import os from "os";
 import fs from "fs";
-import { promisified as regedit } from "regedit";
 
 export async function findAllJava(): Promise<string[][]> {
     switch (os.platform()) {
@@ -43,14 +42,41 @@ async function findForWindows(): Promise<string[][]> {
 }
 
 async function readFromRegister(key: string): Promise<string[][]> {
-    const versions = await regedit.list([key]);
-    const ret: string[][] = [];
-    versions[key].keys.forEach(async val=>{
-        const query = `${key}\\${val}`;
-        const versionInfo = (await regedit.list([query]))[query];
-        ret.push([val, `${versionInfo.values["JavaHome"].value}\\bin\\java.exe`]);
-    });
+    const ret:string[][] = [];
+    const versions = await getRegistrySubDirs(key);
+    for (const version of versions) {
+        if((await getRegistrySubDirs(version)).includes(`${version}\\MSI`)){
+            const exec = `${await getRegistryValue(version, "JavaHome")}\\bin\\java.exe`;
+            const groups = version.split("\\");
+            if(fs.existsSync(exec))ret.push([groups[groups.length-1], exec]);
+        }
+    }
     return ret;
+}
+
+async function getRegistryValue(key: string, name: string): Promise<string> {
+    return new Promise(resolve=>{
+        let out = "";
+        cp.execFile("cmd", ["/c", "reg", "query", key, "/v", name]).stdout?.on("data", chunk=>{
+            out+=chunk;
+        }).on("end", ()=>{
+            const lines = out.split("\n");
+            for (const line of lines) {
+                if(line.includes("REG_SZ")){
+                    resolve(line.substring(line.indexOf("REG_SZ") + "REG_SZ".length).trim());
+                }
+            }
+        });
+    });
+}
+
+async function getRegistrySubDirs(key: string): Promise<string[]> {
+    return new Promise(resolve=>{
+        let out = "";
+        cp.execFile("cmd", ["/c", "reg", "query", key]).stdout?.on("data", chunk=>{
+            out+=chunk;
+        }).on("end", ()=>resolve(out.split("\n").filter(v=>v.startsWith(key))));
+    });
 }
 
 async function findForLinux(): Promise<string[][]> {
