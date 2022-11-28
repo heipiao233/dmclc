@@ -8,8 +8,17 @@ export declare class MinecraftUniversalLoginUserData extends YggdrasilUserData {
 }
 export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUniversalLoginUserData> {
     constructor (data: MinecraftUniversalLoginUserData, root: string) {
-        data.apiurl = "https://auth.mc-user.com:233/" + data.serverID;
         super(data, root);
+    }
+
+    getUserExtraContent(): string[] {
+        return super.getUserExtraContent().concat(["serverID"]);
+    }
+
+    async readUserExtraContent(content: Map<string, string>): Promise<void> {
+        this.data.serverID = content.get("serverID")!;
+        this.data.apiurl = "https://auth.mc-user.com:233/" + this.data.serverID;
+        super.readUserExtraContent(content);
     }
 
     async prepareLaunch (): Promise<void> {

@@ -6,6 +6,16 @@ import { download } from "../utils/downloads.js";
 import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
 import { Version } from "../version.js";
 export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> {
+
+    getUserExtraContent(): string[] {
+        return super.getUserExtraContent().concat(["apiurl"]);
+    }
+
+    async readUserExtraContent(content: Map<string, string>): Promise<void> {
+        this.data.apiurl = content.get("apiurl")!;
+        super.readUserExtraContent(content);
+    }
+
     async prepareLaunch (): Promise<void> {
         const obj = JSON.parse(await get("https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json", ""));
         const sha256 = obj.checksums.sha256;
