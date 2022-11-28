@@ -32,8 +32,10 @@ async function findForWindows(): Promise<string[][]> {
             continue;
         }
         for(const vendor of ["Java", "BellSoft", "AdoptOpenJDK", "Zulu", "Microsoft", "Eclipse Foundation", "Semeru"]) {
-            for (const version of fs.readdirSync(`${pf}\\${vendor}`)) {
-                const exec = `${pf}\\${vendor}\\${version}\\bin\\java.exe`;
+            const pth=`${pf}\\${vendor}`;
+            if(!fs.existsSync(pth))continue;
+            for (const version of fs.readdirSync(pth)) {
+                const exec = `${pth}\\${version}\\bin\\java.exe`;
                 if(fs.existsSync(exec))ret.push([version, exec]);
             }
         }
