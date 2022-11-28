@@ -62,7 +62,7 @@ async function getRegistryValue(key: string, name: string): Promise<string> {
         cp.execFile("cmd", ["/c", "reg", "query", key, "/v", name]).stdout?.on("data", chunk=>{
             out+=chunk;
         }).on("end", ()=>{
-            const lines = out.split("\n");
+            const lines = out.split("\r\n");
             for (const line of lines) {
                 if(line.includes("REG_SZ")){
                     resolve(line.substring(line.indexOf("REG_SZ") + "REG_SZ".length).trim());
@@ -77,7 +77,7 @@ async function getRegistrySubDirs(key: string): Promise<string[]> {
         let out = "";
         cp.execFile("cmd", ["/c", "reg", "query", key]).stdout?.on("data", chunk=>{
             out+=chunk;
-        }).on("end", ()=>resolve(out.split("\n").filter(v=>v.startsWith(key))));
+        }).on("end", ()=>resolve(out.split("\r\n").filter(v=>v.startsWith(key))));
     });
 }
 
