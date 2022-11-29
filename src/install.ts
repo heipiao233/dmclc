@@ -20,14 +20,14 @@ export class Installer {
         const content = await http_request.get(ver.url, this.launcher.mirror);
         await mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, content);
-        const version = Version.fromVersionName(this.launcher, versionName);
-        version.completeVersionInstall();
         const extras: DMCLCExtraVersionInfo = {
             version: ver.id,
             modules: [],
             enableIndependentGameDir: false
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
+        const version = Version.fromVersionName(this.launcher, versionName);
+        version.completeVersionInstall();
         return version;
     }
 }
