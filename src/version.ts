@@ -38,8 +38,36 @@ export class Version {
         this.launcher = launcher;
         this.versionObject = object;
         this.name = object.id;
-        this.versionRoot = `${this.launcher.rootPath}/versions/${this.name}/`;
-        this.extras = JSON.parse(fs.readFileSync(`${this.versionRoot}/dmclc_extras.json`).toString());
+        this.versionRoot = `${this.launcher.rootPath}/versions/${this.name}`;
+        const extraPath = `${this.versionRoot}/dmclc_extras.json`;
+        if(!fs.existsSync(extraPath)){
+            this.extras = this.detectExtras();
+        } else {
+            this.extras = JSON.parse(fs.readFileSync(extraPath).toString());
+        }
+    }
+    detectExtras(): DMCLCExtraVersionInfo {
+        const ret: DMCLCExtraVersionInfo = {
+            version: "Unknown",
+            modules: [],
+            enableIndependentGameDir: false
+        };
+        this.launcher.moduleTypes.forEach((v, k)=>{
+            const version = v.findInVersion(this.versionObject);
+            if(version !== null){
+                ret.modules.push({
+                    name: k,
+                    version: version
+                });
+            }
+        });
+        for (const v of this.versionObject.libraries) {
+            if(v.name.includes(":forge:")||v.name.includes(":liteloader:")){
+                ret.version = v.name.split(":")[2].split("-")[0];
+                break;
+            }
+        }
+        return ret;
     }
     async run(account: Account<never>): Promise<ChildProcess> {
         await account.prepareLaunch();

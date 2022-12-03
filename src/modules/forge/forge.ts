@@ -22,8 +22,21 @@ export class ForgeModule implements ModuleType {
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
+    
+    findInVersion(MCVersion: McInstallation): string | null {
+        let ret = "";
+        MCVersion.libraries.forEach(i=>{
+            if(i.name.includes(":forge:")){
+                ret = i.name.split(":")[2].split("-")[1];
+            }
+        });
+        return ret;
+    }
 
     async getSuitableModuleVersions (MCVersion: Version): Promise<string[]> {
+        if(MCVersion.extras.version === "Unknown") {
+            throw new Error("Minecraft Version Unknown");
+        }
         const res = await got(this.metadata);
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
@@ -31,11 +44,15 @@ export class ForgeModule implements ModuleType {
     }
 
     async install (MCVersion: Version, version: string): Promise<void> {
+        if(MCVersion.extras.version === "Unknown") {
+            throw new Error("Minecraft Version Unknown");
+        }
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
         await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher.mirror);
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata0 = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
+        
         if(Number.parseInt(MCVersion.extras.version.split(".")[1])>12){ // 1.13+
             const metadata1: InstallerProfileNew = metadata0;
             await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
