@@ -18,8 +18,10 @@ export class Installer {
 
     async install(ver: VersionInfo, versionName: string): Promise<Version> {
         const content = await http_request.get(ver.url, this.launcher.mirror);
+        const obj = JSON.parse(content);
+        obj.id = versionName;
         await mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
-        fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, content);
+        fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, JSON.stringify(obj));
         const extras: DMCLCExtraVersionInfo = {
             version: ver.id,
             modules: [],

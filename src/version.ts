@@ -42,6 +42,7 @@ export class Version {
         const extraPath = `${this.versionRoot}/dmclc_extras.json`;
         if(!fs.existsSync(extraPath)){
             this.extras = this.detectExtras();
+            fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
         } else {
             this.extras = JSON.parse(fs.readFileSync(extraPath).toString());
         }
