@@ -10,5 +10,6 @@ export function merge(a: McInstallation, b: McInstallation): McInstallation {
     }
     c.libraries.unshift(...b.libraries);
     c.mainClass = b.mainClass;
+    c.id = b.id;
     return c;
 }
