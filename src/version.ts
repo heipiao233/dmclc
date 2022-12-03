@@ -190,13 +190,13 @@ export class Version {
         const res: string[] = [];
         const args = await account.getLaunchGameArgs();
         if (versionObject.arguments !== undefined) {
-            versionObject.arguments.jvm.map(async i => {
+            versionObject.arguments.jvm?.map(async i => {
                 if (typeof (i) === "string") {
                     res.push(this.parseArgument(i, versionObject, versionName, account, args));
                 }
             });
             res.push(versionObject.mainClass);
-            versionObject.arguments.game.map(async i => {
+            versionObject.arguments.game?.map(async i => {
                 if (typeof (i) === "string") {
                     res.push(this.parseArgument(i, versionObject, versionName, account, args));
                 }

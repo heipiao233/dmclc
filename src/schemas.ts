@@ -82,8 +82,8 @@ export declare class LoggingInfo {
 export declare class McInstallation {
     inheritsFrom?: string;
     arguments?: {
-        game: Array<string | Argument>
-        jvm: Array<string | Argument>
+        game?: Array<string | Argument>
+        jvm?: Array<string | Argument>
     };
 
     assetIndex: AssetIndexInfo;
