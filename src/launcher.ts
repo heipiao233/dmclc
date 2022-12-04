@@ -17,7 +17,7 @@ export class Launcher {
     systemType = os.platform();
     separator: string;
     natives: "linux" | "osx" | "windows";
-    mirror = "bmclapi2.bangbang93.com";
+    mirror: string | undefined;
     installer: Installer = new Installer(this);
     name: string;
     moduleTypes: Map<string, ModuleType> = new Map();
