@@ -102,15 +102,16 @@ export class Version {
         } else {
             assetJson = fs.readFileSync(indexPath).toString();
         }
-        await mkdirs(`${this.launcher.rootPath}/assets/objects`);
+        const assetsObjects = `${this.launcher.rootPath}/assets/objects`;
+        await mkdirs(assetsObjects);
         const assetobj: AssetsIndex = JSON.parse(assetJson);
         for (const assid in assetobj.objects) {
             const assitem: Asset = assetobj.objects[assid];
-            if (!fs.existsSync(`${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
-                !checkFile(`${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
-                await mkdirs(`${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}`);
+            if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
+                !checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
+                await mkdirs(`${assetsObjects}/${assitem.hash.slice(0, 2)}`);
                 console.log(assid);
-                allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${this.launcher.rootPath}/assets/objects/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
+                allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
         await downloadAll(allDownloads, this.launcher.mirror);
@@ -118,10 +119,10 @@ export class Version {
 
     async installLibraries (liblist: Library[]): Promise<void> {
         const allDownloads: Map<string, PathLike> = new Map();
-        liblist.filter((i) => {
+        const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
-        }
-        ).forEach(async (i) => {
+        });
+        for (const i of used) {
             if (i.downloads === undefined) {
                 const filePath = expandMavenId(i.name);
                 await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
@@ -145,7 +146,7 @@ export class Version {
                     }
                 });
             }
-        });
+        }
         await downloadAll(allDownloads, this.launcher.mirror);
     }
 
