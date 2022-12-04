@@ -138,13 +138,13 @@ export class Version {
                 if(i.downloads.classifiers!==undefined) {
                     artifacts.push(i.downloads.classifiers[i.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
-                artifacts.forEach(async artifact=>{
+                for (const artifact of artifacts) {
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
                         await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
                         console.log(i.name);
                         allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                     }
-                });
+                }
             }
         }
         await downloadAll(allDownloads, this.launcher.mirror);
