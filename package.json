@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "description": "Dolphin Minecraft Launcher Core",
   "devDependencies": {
     "@types/follow-redirects": "^1.14.1",

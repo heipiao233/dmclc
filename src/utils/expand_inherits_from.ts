@@ -6,7 +6,7 @@ export function expandInheritsFrom(versionObject: McInstallation, rootPath: stri
     let ret: McInstallation = versionObject;
     if(versionObject.inheritsFrom!==undefined){
         const original = JSON.parse(fs.readFileSync(`${rootPath}/versions/${versionObject.inheritsFrom}/${versionObject.inheritsFrom}.json`).toString());
-        ret = merge(expandInheritsFrom(original, rootPath), versionObject);
+        ret = merge(expandInheritsFrom(original, rootPath), versionObject, true);
     }
     return ret;
 }

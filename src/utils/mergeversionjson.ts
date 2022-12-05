@@ -1,6 +1,6 @@
 import { McInstallation } from "../schemas";
 
-export function merge(a: McInstallation, b: McInstallation): McInstallation {
+export function merge(a: McInstallation, b: McInstallation, mergeID = false): McInstallation {
     const c = a;
     if(c.minecraftArguments!=undefined){
         c.minecraftArguments = b.minecraftArguments;
@@ -10,6 +10,6 @@ export function merge(a: McInstallation, b: McInstallation): McInstallation {
     }
     c.libraries.unshift(...b.libraries);
     c.mainClass = b.mainClass;
-    c.id = b.id;
+    if(mergeID)c.id = b.id;
     return c;
 }
