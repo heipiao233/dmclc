@@ -162,7 +162,7 @@ export declare class MCVersion {
     minecraftArguments?: string;
 }
 /**
- * @internal
+ * @public
  */
 export declare class VersionInfo {
     id: string;
@@ -172,7 +172,7 @@ export declare class VersionInfo {
     releaseTime: string;
 }
 /**
- * @internal
+ * @public
  */
 export declare class VersionInfos {
     latest: {
