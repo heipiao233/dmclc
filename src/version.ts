@@ -3,7 +3,7 @@ import { Account } from "./auth/account.js";
 import cp from "child_process";
 import { expandInheritsFrom } from "./utils/expand_inherits_from.js";
 import { Launcher } from "./launcher.js";
-import { Argument, Asset, AssetIndexInfo, AssetsIndex, checkRules, Library, LibraryArtifact, McInstallation } from "./schemas.js";
+import { Argument, Asset, AssetIndexInfo, AssetsIndex, checkRules, Library, LibraryArtifact, MCVersion } from "./schemas.js";
 import fs, { PathLike } from "fs";
 import { download, downloadAll } from "./utils/downloads.js";
 import * as http_request from "./utils/http_request.js";
@@ -14,27 +14,50 @@ import os from "os";
 import compressing from "compressing";
 import { mkdirs } from "fs-extra";
 
+/**
+ * @internal
+ */
 export declare class DMCLCExtraVersionInfo {
     version: string;
-    modules: ModuleInfo[];
+    loaders: LoaderInfo[];
     enableIndependentGameDir: boolean;
 }
-export declare class ModuleInfo {
+
+/**
+ * @internal
+ */
+export declare class LoaderInfo {
     name: string;
     version: string;
 }
 
+/**
+ * Version.
+ * @public
+ */
 export class Version {
     private launcher: Launcher;
-    private versionObject: McInstallation;
+    private versionObject: MCVersion;
     extras: DMCLCExtraVersionInfo;
     name: string;
     versionRoot: string;
+    /**
+     * Creates a new version from name.
+     * @param launcher - The launcher instance
+     * @param name - The name of this version. The directory name, not always Minecraft version.
+     * @returns The new created version object.
+     */
     static fromVersionName(launcher: Launcher, name: string): Version {
         const version = new Version(launcher, expandInheritsFrom(JSON.parse(fs.readFileSync(`${launcher.rootPath}/versions/${name}/${name}.json`).toString()), launcher.rootPath));
         return version;
     }
-    constructor(launcher: Launcher, object: McInstallation){
+
+    /**
+     * Creates a new version from JSON object.
+     * @param launcher - The launcher instance.
+     * @param object - The Version JSON object.
+     */
+    constructor(launcher: Launcher, object: MCVersion){
         this.launcher = launcher;
         this.versionObject = object;
         this.name = object.id;
@@ -47,16 +70,17 @@ export class Version {
             this.extras = JSON.parse(fs.readFileSync(extraPath).toString());
         }
     }
-    detectExtras(): DMCLCExtraVersionInfo {
+
+    private detectExtras(): DMCLCExtraVersionInfo {
         const ret: DMCLCExtraVersionInfo = {
             version: "Unknown",
-            modules: [],
+            loaders: [],
             enableIndependentGameDir: false
         };
-        this.launcher.moduleTypes.forEach((v, k)=>{
+        this.launcher.loaders.forEach((v, k)=>{
             const version = v.findInVersion(this.versionObject);
             if(version !== null){
-                ret.modules.push({
+                ret.loaders.push({
                     name: k,
                     version: version
                 });
@@ -70,6 +94,12 @@ export class Version {
         }
         return ret;
     }
+
+    /**
+     * Run this version!
+     * @param account - The using account.
+     * @returns The Minecraft process. Both stdout and stderr uses UTF-8.
+     */
     async run(account: Account<never>): Promise<ChildProcess> {
         await account.prepareLaunch();
         await this.completeVersionInstall();
@@ -83,15 +113,19 @@ export class Version {
                 : this.launcher.rootPath.toString()
         });
     }
+
+    /**
+     * Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
+     */
     async completeVersionInstall() {
         if (!fs.existsSync(`${this.versionRoot}/${this.name}.jar`) ||
             !checkFile(`${this.versionRoot}/${this.name}.jar`, this.versionObject.downloads.client.sha1)) {
             await download(this.versionObject.downloads.client.url, `${this.versionRoot}/${this.name}.jar`);
         }
-        await this.installAssets(this.versionObject.assetIndex);
-        await this.installLibraries(this.versionObject.libraries);
+        await this.completeAssets(this.versionObject.assetIndex);
+        await this.completeLibraries(this.versionObject.libraries);
     }
-    private async installAssets (asset: AssetIndexInfo): Promise<void> {
+    private async completeAssets (asset: AssetIndexInfo): Promise<void> {
         const allDownloads: Map<string, PathLike> = new Map();
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
         let assetJson: string;
@@ -117,7 +151,12 @@ export class Version {
         await downloadAll(allDownloads, this.launcher.mirror);
     }
 
-    async installLibraries (liblist: Library[]): Promise<void> {
+    /**
+     * INTERNAL API. MAY BE CHANGE WITHOUT NOTIFY.
+     * Fix wrong and missing libraries. Used by Forge installing.
+     * @param liblist - All the libraries.
+     */
+    async completeLibraries (liblist: Library[]): Promise<void> {
         const allDownloads: Map<string, PathLike> = new Map();
         const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
@@ -150,20 +189,20 @@ export class Version {
         await downloadAll(allDownloads, this.launcher.mirror);
     }
 
-    private getClassPath (versionObject: McInstallation, versionName: string): string[] {
+    private getClassPath (versionObject: MCVersion, versionName: string): string[] {
         const res: string[] = [];
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
             if (i.downloads === undefined) {
-                res.push(`${this.extras.enableIndependentGameDir?"../..":"."}/libraries/${expandMavenId(i.name)}`);
+                res.push(`${this.launcher.rootPath}/libraries/${expandMavenId(i.name)}`);
             } else if (i.downloads.artifact !== undefined){
-                res.push(`${this.extras.enableIndependentGameDir?"../..":"."}/libraries/${i.downloads.artifact.path}`);
+                res.push(`${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`);
             }
         });
-        if (!versionObject.mainClass.startsWith("cpw"))res.push(`${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/${versionName}.jar`);// Forge
+        if (!versionObject.mainClass.startsWith("cpw"))res.push(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);// Forge
         return res;
     }
 
-    private parseArgument (arg: string | Argument, versionObject: McInstallation, versionName: string, account: Account<never>, argOverrides: Map<string, string>): string {
+    private parseArgument (arg: string | Argument, versionObject: MCVersion, versionName: string, account: Account<never>, argOverrides: Map<string, string>): string {
         let argVal: string;
         if (typeof arg === "object") {
             if (arg.value instanceof Array)argVal = arg.value.join(" ");
@@ -171,14 +210,14 @@ export class Version {
         } else argVal = arg;
         argVal = argVal.replaceAll("${version_name}", `${this.launcher.name}`)
             .replaceAll("${game_directory}", ".")
-            .replaceAll("${assets_root}", `${this.extras.enableIndependentGameDir?"../..":"."}/assets`)
+            .replaceAll("${assets_root}", `${this.launcher.rootPath}/assets`)
             .replaceAll("${assets_index_name}", versionObject.assets)
             .replaceAll("${auth_uuid}", `${account.getUUID()}`)
             .replaceAll("${version_type}", `${this.launcher.name}`)
-            .replaceAll("${natives_directory}", `${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/natives`)
+            .replaceAll("${natives_directory}", `${this.launcher.rootPath}/versions/${versionName}/natives`)
             .replaceAll("${launcher_name}", `${this.launcher.name}`)
             .replaceAll("${launcher_version}", "0.1")
-            .replaceAll("${library_directory}", `${this.extras.enableIndependentGameDir?"../..":"."}/libraries/`)
+            .replaceAll("${library_directory}", `${this.launcher.rootPath}/libraries/`)
             .replaceAll("${classpath_separator}", this.launcher.separator)
             .replaceAll("${classpath}", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
         argOverrides.forEach((v, k) => {
@@ -187,7 +226,7 @@ export class Version {
         return argVal;
     }
 
-    private async getArguments (versionObject: McInstallation, versionName: string, account: Account<never>): Promise<string[]> {
+    private async getArguments (versionObject: MCVersion, versionName: string, account: Account<never>): Promise<string[]> {
         const res: string[] = [];
         const args = await account.getLaunchGameArgs();
         if (versionObject.arguments !== undefined) {
@@ -203,7 +242,7 @@ export class Version {
                 }
             });
         } else {
-            res.push(`-Djava.library.path=${this.extras.enableIndependentGameDir?".":`./versions/${versionName}`}/natives`);
+            res.push(`-Djava.library.path=${this.launcher.rootPath}/versions/${versionName}/natives`);
             res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
             res.push(versionObject.mainClass);
             versionObject.minecraftArguments!.split(" ").map(async i => {
@@ -214,7 +253,7 @@ export class Version {
         }
         return res;
     }
-    private async extractNative(version: McInstallation, name: string){
+    private async extractNative(version: MCVersion, name: string){
         Promise.all(version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
             .filter(lib=>lib.downloads?.classifiers!==undefined).map(
                 async lib=>{
@@ -224,23 +263,28 @@ export class Version {
                 }
             ));
     }
-    async getSuitableModuleVersions(name: string): Promise<string[]> {
-        const module_ = this.launcher.moduleTypes.get(name);
-        if (module_ == undefined) {
-            throw new Error(`Module not found: ${module_}`);
-        }
-        return module_.getSuitableModuleVersions(this);
-    }
-    async installModule(name: string, moduleVersion: string): Promise<void> {
 
-        const module_ = this.launcher.moduleTypes.get(name);
-        if (module_ == undefined) {
-            throw new Error(`Module not found: ${module_}`);
+    /**
+     * Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts.
+     * @param name - The name of loader.
+     * @returns The versions of loader.
+     */
+    async getSuitableLoaderVersions(name: string): Promise<string[]> {
+        const loader = this.launcher.loaders.get(name);
+        if (loader == undefined) {
+            throw new Error(`Loader not found: ${loader}`);
         }
-        await module_.install(this, moduleVersion);
-        this.extras.modules.push({
+        return loader.getSuitableLoaderVersions(this);
+    }
+    async installLoader(name: string, loaderVersion: string): Promise<void> {
+        const loader = this.launcher.loaders.get(name);
+        if (loader == undefined) {
+            throw new Error(`Loader not found: ${loader}`);
+        }
+        await loader.install(this, loaderVersion);
+        this.extras.loaders.push({
             name: name,
-            version: moduleVersion
+            version: loaderVersion
         });
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
     }

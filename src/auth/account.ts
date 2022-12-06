@@ -1,13 +1,36 @@
 import { UserData } from "./user_data.js";
 import { Version } from "../version.js";
+/**
+ * An account.
+ * @public
+ */
 export interface Account<T extends UserData> {
   data: T;
-  check: () => Promise<boolean>
-  getUUID: () => string
-  getUserExtraContent: () => string[]
-  readUserExtraContent: (content: Map<string, string>) => Promise<void>
-  prepareLaunch: () => Promise<void>
-  getLaunchJVMArgs: (mc: Version) => Promise<string[]>
-  getLaunchGameArgs: () => Promise<Map<string, string>>
-  toString: () => string;
+  /**
+   * Check if this account can login.
+   */
+  check(): Promise<boolean>
+  /**
+   * Get the UUID of this account.
+   * @returns UUID.
+   */
+  getUUID(): string
+  getUserExtraContent(): string[]
+  readUserExtraContent(content: Map<string, string>): Promise<void>
+  /**
+   * @internal
+   */
+  prepareLaunch(): Promise<void>
+  /**
+   * @internal
+   */
+  getLaunchJVMArgs(mc: Version): Promise<string[]>
+  /**
+   * @internal
+   */
+  getLaunchGameArgs(): Promise<Map<string, string>>
+  /**
+   * @internal
+   */
+  toString(): string;
 }

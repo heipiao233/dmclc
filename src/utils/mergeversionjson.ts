@@ -1,6 +1,6 @@
-import { McInstallation } from "../schemas";
+import { MCVersion } from "../schemas";
 
-export function merge(a: McInstallation, b: McInstallation, mergeID = false): McInstallation {
+export function merge(a: MCVersion, b: MCVersion, mergeID = false): MCVersion {
     const c = a;
     if(c.minecraftArguments!=undefined){
         c.minecraftArguments = b.minecraftArguments;

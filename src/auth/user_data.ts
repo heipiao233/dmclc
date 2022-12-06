@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export abstract class UserData {
     declare name?: string;
     declare uuid?: string;

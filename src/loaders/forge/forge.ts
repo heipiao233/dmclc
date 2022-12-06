@@ -1,4 +1,4 @@
-import { ModuleType } from "../mc_module.js";
+import { Loader } from "../loader.js";
 import { Launcher } from "../../launcher.js";
 import { parseStringPromise } from "xml2js";
 import { got } from "got";
@@ -8,7 +8,7 @@ import fs from "fs";
 import fsextra from "fs-extra";
 import { InstallerProfileNew } from "./install_profile_new.js";
 import compressing from "compressing";
-import { McInstallation } from "../../schemas.js";
+import { MCVersion } from "../../schemas.js";
 import { expandMavenId } from "../../utils/maven.js";
 import { execFileSync } from "child_process";
 import StreamZip from "node-stream-zip";
@@ -16,14 +16,14 @@ import { merge } from "../../utils/mergeversionjson.js";
 import { InstallerProfileOld } from "./install_profile_old.js";
 import { Version } from "../../version.js";
 
-export class ForgeModule implements ModuleType {
+export class ForgeLoader implements Loader {
     private readonly launcher: Launcher;
     private readonly metadata = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
     
-    findInVersion(MCVersion: McInstallation): string | null {
+    findInVersion(MCVersion: MCVersion): string | null {
         let ret = "";
         MCVersion.libraries.forEach(i=>{
             if(i.name.includes(":forge:")){
@@ -33,7 +33,7 @@ export class ForgeModule implements ModuleType {
         return ret;
     }
 
-    async getSuitableModuleVersions (MCVersion: Version): Promise<string[]> {
+    async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
             throw new Error("Minecraft Version Unknown");
         }
@@ -56,11 +56,11 @@ export class ForgeModule implements ModuleType {
         if(Number.parseInt(MCVersion.extras.version.split(".")[1])>12){ // 1.13+
             const metadata1: InstallerProfileNew = metadata0;
             await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
-            await MCVersion.installLibraries(metadata1.libraries);
-            const target: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
-            const source: McInstallation = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
+            await MCVersion.completeLibraries(metadata1.libraries);
+            const target: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
+            const source: MCVersion = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
             const result = merge(target, source);
-            await MCVersion.installLibraries(source.libraries);
+            await MCVersion.completeLibraries(source.libraries);
             
             for (const item of metadata1.processors) {
                 if (item.sides === undefined || item.sides.includes("client")) {
@@ -78,8 +78,8 @@ export class ForgeModule implements ModuleType {
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
         } else { // 1.12-
             const metadata1: InstallerProfileOld = metadata0;
-            const target: McInstallation = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
-            const source: McInstallation = metadata1.versionInfo;
+            const target: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
+            const source: MCVersion = metadata1.versionInfo;
             const result = merge(target, source);
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
         }

@@ -1,10 +1,19 @@
 import os from "os";
-type OSType = "linux"|"windows"|"osx";
+/**
+ * @internal
+ */
+export type OSType = "linux"|"windows"|"osx";
+/**
+ * @internal
+ */
 export declare class OSPlatform {
     name: OSType;
     version: string;
     arch: string;
 }
+/**
+ * @internal
+ */
 export function isCurrent(platform: OSPlatform): boolean {
     if (platform === undefined) return true;
     switch (os.platform()) {
@@ -16,46 +25,82 @@ export function isCurrent(platform: OSPlatform): boolean {
         return platform.name === os.platform();
     }
 }
+/**
+ * @internal
+ */
 export function checkRule(rule: Rule): boolean {
     return rule.action === "allow";
 }
+/**
+ * @internal
+ */
 export function checkRules(rules: Rule[]): boolean {
     return rules.filter(v => isCurrent(v.os)).some(checkRule);
 }
+/**
+ * @internal
+ */
 export declare class Asset {
     hash: string;
     size: number;
 }
+/**
+ * @internal
+ */
 export declare class AssetsIndex {
     objects: { [index: string]: Asset };
 }
+/**
+ * @internal
+ */
 export declare class Rule {
     action: "allow" | "disallow";
     features: { [index: string]: boolean };
     os: OSPlatform;
 }
+/**
+ * @internal
+ */
 export declare class Argument {
     rules: Rule[];
     value: string[] | string;
 }
+/**
+ * @internal
+ */
 export declare class Resource {
     url: string;
     sha1: string;
     size: number;
 }
+/**
+ * @internal
+ */
 export declare class ResourceWithID extends Resource {
     id: string;
 }
+/**
+ * @internal
+ */
 export declare class AssetIndexInfo extends ResourceWithID {
     totalSize: number;
 }
+/**
+ * @internal
+ */
 export declare class LibraryArtifact extends Resource {
     path: string;
 }
+/**
+ * @internal
+ */
 export declare class JavaInfo {
     component: string;
     majorVersion: number;
 }
+/**
+ * @internal
+ */
 export declare class Library {
     downloads?: {
         artifact: LibraryArtifact
@@ -74,12 +119,18 @@ export declare class Library {
         [index in OSType]: string;
     };
 }
+/**
+ * @internal
+ */
 export declare class LoggingInfo {
     argument: string;
     file: ResourceWithID;
     type: string;
 }
-export declare class McInstallation {
+/**
+ * @internal
+ */
+export declare class MCVersion {
     inheritsFrom?: string;
     arguments?: {
         game?: Array<string | Argument>
@@ -110,6 +161,9 @@ export declare class McInstallation {
     type: "snapshot" | "release" | "old_beta" | "old_alpha";
     minecraftArguments?: string;
 }
+/**
+ * @internal
+ */
 export declare class VersionInfo {
     id: string;
     type: string;
@@ -117,6 +171,9 @@ export declare class VersionInfo {
     time: string;
     releaseTime: string;
 }
+/**
+ * @internal
+ */
 export declare class VersionInfos {
     latest: {
         release: string
