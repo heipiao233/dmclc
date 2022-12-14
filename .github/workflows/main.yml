@@ -13,6 +13,7 @@ jobs:
         node-version: '16.15.0'
     - name: npm install, build and test
       run: |
+        ls
         npm install
         npm run build
     - name: documents
