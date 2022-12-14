@@ -21,6 +21,7 @@ jobs:
       run: |
         npx api-extractor run
         npx api-documenter markdown -i ./temp
+      continue-on-error: true
     - name: Generate HTML from Markdown
       uses: ldeluigi/markdown-docs@latest
       with:
