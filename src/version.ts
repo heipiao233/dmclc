@@ -13,6 +13,8 @@ import path from "path";
 import os from "os";
 import compressing from "compressing";
 import { mkdirs } from "fs-extra";
+import { ModJarInfo } from "./mods/mod.js";
+import { ModLoadingIssue } from "./loaders/loader.js";
 
 /**
  * @internal
@@ -289,5 +291,26 @@ export class Version {
             version: loaderVersion
         });
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
+    }
+    async findMods(): Promise<ModJarInfo[]> {
+        const moddir = `${
+            this.extras.enableIndependentGameDir
+                ? this.versionRoot
+                : this.launcher.rootPath.toString()
+        }/mods`;
+        const val: ModJarInfo[] = [];
+        for (const mod of fs.readdirSync(moddir)) {
+            const modJar = `${moddir}/${mod}`;
+            if(fs.statSync(modJar).isFile()&&mod.endsWith(".jar")) {
+                val.push(await ModJarInfo.of(modJar, this.launcher, this.extras.loaders.map(v=>v.name)));
+            }
+        }
+        return val;
+    }
+
+    async checkMods(): Promise<ModLoadingIssue[]> {
+        if(this.extras.loaders.length===0)return [];
+        const loader = this.launcher.loaders.get(this.extras.loaders[0].name)!;
+        return loader.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.extras.version, this.extras.loaders[0].version);
     }
 }

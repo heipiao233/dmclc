@@ -7,7 +7,7 @@ import { checkMatch, FabricLikeLoader, formatDepVersion } from "../fabriclike/fa
 import { FabricModJson } from "../fabric_schemas.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
-export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson | FabricModJson> {
+export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
     hashedMaven = "https://maven.quiltmc.org/repository/release/";
@@ -20,13 +20,13 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         });
         return ret;
     }
-    async findModInfos(path: string): Promise<ModInfo<QuiltModJson>[]> {
+    async findModInfos(path: string): Promise<ModInfo<QuiltModJson | FabricModJson>[]> {
         const zip = new nsz.async({
             file: path
         });
         const entry = await zip.entry("quilt.mod.json");
-        if(entry === undefined)return [];
-        const result: ModInfo<QuiltModJson>[] = [];
+        if(entry === undefined)return super.findModInfos(path);
+        const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfos(path);
         const json: QuiltModJson = JSON.parse(zip.entryData(entry).toString());
         if(json.quilt_loader.jars !== undefined){
             for (const jar of json.quilt_loader.jars) {

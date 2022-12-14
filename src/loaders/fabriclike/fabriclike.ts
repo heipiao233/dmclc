@@ -8,7 +8,10 @@ import { merge } from "../../utils/mergeversionjson.js";
 import { Version } from "../../version.js";
 import { ModInfo } from "../../mods/mod.js";
 import * as semver from "semver";
-export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M> {
+import StreamZip from "node-stream-zip";
+import { FabricModJson } from "../fabric_schemas.js";
+import { tmpdir } from "os";
+export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M | FabricModJson> {
     abstract loaderMaven: string;
     abstract metaURL: string;
     intermediaryMaven = "https://maven.fabricmc.net/";
@@ -18,7 +21,28 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     }
     abstract checkMods(mods: ModInfo<M>[], mc: string, loader: string): ModLoadingIssue[];
     abstract findInVersion(MCVersion: MCVersion): string | null;
-    abstract findModInfos(path: string): Promise<ModInfo<M>[]>;
+    
+    async findModInfos(path: string): Promise<ModInfo<FabricModJson | M>[]> {
+        const zip = new StreamZip.async({
+            file: path
+        });
+        const entry = await zip.entry("quilt.mod.json");
+        if(entry === undefined)return [];
+        const result: ModInfo<FabricModJson | M>[] = [];
+        const json: FabricModJson = JSON.parse((await zip.entryData(entry)).toString());
+        if(json.jars !== undefined){
+            for (const jar of json.jars) {
+                const paths = jar.file.split("/");
+                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
+                await zip.extract(jar.file, filename);
+                result.push(...await this.findModInfos(filename));
+            }
+        }
+        const info = new ModInfo("fabric", json);
+        info.data = json;
+        result.push(info);
+        return result;
+    }
 
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
     async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {

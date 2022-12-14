@@ -2,9 +2,7 @@ import { ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { checkMatch, FabricLikeLoader, formatDepVersion } from "./fabriclike/fabriclike.js";
 import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info.js";
-import StreamZip from "node-stream-zip";
 import { FabricModJson } from "./fabric_schemas.js";
-import { tmpdir } from "os";
 import { ModLoadingIssue } from "./loader.js";
 export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, FabricModJson> {
     metaURL = "https://meta.fabricmc.net/v2";
@@ -17,27 +15,6 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
             }
         });
         return ret;
-    }
-    async findModInfos(path: string): Promise<ModInfo<FabricModJson>[]> {
-        const zip = new StreamZip.async({
-            file: path
-        });
-        const entry = await zip.entry("quilt.mod.json");
-        if(entry === undefined)return [];
-        const result: ModInfo<FabricModJson>[] = [];
-        const json: FabricModJson = JSON.parse((await zip.entryData(entry)).toString());
-        if(json.jars !== undefined){
-            for (const jar of json.jars) {
-                const paths = jar.file.split("/");
-                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
-                await zip.extract(jar.file, filename);
-                result.push(...await this.findModInfos(filename));
-            }
-        }
-        const info = new ModInfo("fabric", json);
-        info.data = json;
-        result.push(info);
-        return result;
     }
     checkMods(mods: ModInfo<FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
