@@ -39,10 +39,11 @@ jobs:
         with:
           repository: 'heipiao233/dmclc.wiki'
           path: 'wiki'
-      - run: cp ./markdown/* ${GITHUB_WORKSPACE}/wiki/ -r
       - run: |
-          echo ${GITHUB_WORKSPACE}
-          cd ${GITHUB_WORKSPACE}/wiki/
+          cp ./markdown/* ./wiki/ -r
+          cd ./wiki/
+          git add .
+          git commit -m "auto document"
           git push
       - name: publish
         run: npm publish
