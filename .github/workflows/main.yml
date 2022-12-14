@@ -50,8 +50,7 @@ jobs:
           git push
         continue-on-error: true
       - name: publish
-        uses: !
-          JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
         continue-on-error: true
