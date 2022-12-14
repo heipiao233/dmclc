@@ -39,9 +39,9 @@ jobs:
         with:
           repository: 'heipiao233/dmclc.wiki'
           path: 'wiki'
-      - run: cp ./markdown/* $GITHUB_WORKSPACE/wiki/ -r
+      - run: cp ./markdown/* ${GITHUB_WORKSPACE}/wiki/ -r
       - run: |
-          cd $GITHUB_WORKSPACE/wiki/
+          cd ${GITHUB_WORKSPACE}/wiki/
           git push
       - name: publish
         run: npm publish
