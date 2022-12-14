@@ -37,7 +37,7 @@ jobs:
       - run: npx api-documenter markdown -i ./temp
       - run: |
           cd $GITHUB_WORKSPACE
-          git clone https://heipiao233:${{GITHUB_TOKEN}}@github.com/heipiao233/dmclc.wiki
+          git clone https://heipiao233:${GITHUB_TOKEN}@github.com/heipiao233/dmclc.wiki
       - run: cp ./markdown/* $GITHUB_WORKSPACE/dmclc.wiki/ -r
       - run: |
           cd $GITHUB_WORKSPACE/dmclc.wiki/
