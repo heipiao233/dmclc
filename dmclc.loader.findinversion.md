@@ -9,7 +9,7 @@ Get the version installed, or null if not installed or can't find.
 <b>Signature:</b>
 
 ```typescript
-findInVersion(MCVersion: MCVersion): string | null;
+findInVersion(MCVersion: MCVersion): string | undefined;
 ```
 
 ## Parameters
@@ -20,5 +20,5 @@ findInVersion(MCVersion: MCVersion): string | null;
 
 <b>Returns:</b>
 
-string \| null
+string \| undefined
 

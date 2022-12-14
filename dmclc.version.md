@@ -36,6 +36,7 @@ export declare class Version
 |  [findMods()](./dmclc.version.findmods.md) |  |  |
 |  [fromVersionName(launcher, name)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
+|  [getVersionFromJar()](./dmclc.version.getversionfromjar.md) |  |  |
 |  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  |  |
 |  [run(account)](./dmclc.version.run.md) |  | Run this version! |
 
