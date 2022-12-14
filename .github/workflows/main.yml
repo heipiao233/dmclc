@@ -42,6 +42,8 @@ jobs:
       - run: |
           cp ./markdown/* ./wiki/ -r
           cd ./wiki/
+          git config user.email "heipiao233@outlook.com"
+          git config user.name "heipiao233 (GitHub Action)"
           git add .
           git commit -m "auto document"
           git push
