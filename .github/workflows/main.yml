@@ -41,6 +41,7 @@ jobs:
           path: 'wiki'
       - run: cp ./markdown/* ${GITHUB_WORKSPACE}/wiki/ -r
       - run: |
+          echo ${GITHUB_WORKSPACE}
           cd ${GITHUB_WORKSPACE}/wiki/
           git push
       - name: publish
