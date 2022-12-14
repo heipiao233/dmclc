@@ -15,7 +15,7 @@ export class ModJarInfo {
     manifests: ModInfo<unknown>[] = [];
     static async of(path: string, launcher: Launcher, loaders: string[]): Promise<ModJarInfo> {
         const obj = new ModJarInfo();
-        for (const name in loaders) {
+        for (const name of loaders) {
             const loader = launcher.loaders.get(name)!;
             obj.manifests.push(...await loader.findModInfos(path));
         }
