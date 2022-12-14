@@ -49,4 +49,6 @@ jobs:
           git commit -m "auto document"
           git push
       - name: publish
-        run: npm publish
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
