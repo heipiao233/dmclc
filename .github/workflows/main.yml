@@ -35,11 +35,12 @@ jobs:
       run: npx api-extractor run
       continue-on-error: true
     - run: npx api-documenter markdown -i ./temp
-    - name: Generate HTML from Markdown
-      uses: ZacJW/markdown-html-action@1.1.1
+    - name: Markdown to PDF and HTML
+      uses: BaileyJM02/markdown-to-pdf@v1
       with:
-        input_files: ./markdown
-        output_files: ./_site
+        input_dir: ./markdown
+        output_dir: ./_site
+        build_html: true
     - name: Upload GitHub Pages artifact
       uses: actions/upload-pages-artifact@v1.0.6
   deploy:
