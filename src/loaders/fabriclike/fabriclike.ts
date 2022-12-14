@@ -20,7 +20,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         this.launcher = launcher;
     }
     abstract checkMods(mods: ModInfo<M>[], mc: string, loader: string): ModLoadingIssue[];
-    abstract findInVersion(MCVersion: MCVersion): string | null;
+    abstract findInVersion(MCVersion: MCVersion): string | undefined;
     
     async findModInfos(path: string): Promise<ModInfo<FabricModJson | M>[]> {
         const zip = new StreamZip.async({

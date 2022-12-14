@@ -35,7 +35,7 @@ export interface Loader<T> {
      * Get the version installed, or null if not installed or can't find.
      * @param MCVersion - Minecraft version manifest.
      */
-    findInVersion(MCVersion: MCVersion): string | null
+    findInVersion(MCVersion: MCVersion): string | undefined
     findModInfos(path: string): Promise<ModInfo<T>[]>
     checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
 }

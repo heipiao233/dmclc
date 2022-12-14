@@ -27,14 +27,12 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         this.launcher = launcher;
     }
     
-    findInVersion(MCVersion: MCVersion): string | null {
-        let ret = "";
-        MCVersion.libraries.forEach(i=>{
+    findInVersion(MCVersion: MCVersion): string | undefined {
+        for (const i of MCVersion.libraries) {
             if(i.name.includes(":forge:")){
-                ret = i.name.split(":")[2].split("-")[1];
+                return i.name.split(":")[2].split("-")[1];
             }
-        });
-        return ret;
+        }
     }
 
     async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {

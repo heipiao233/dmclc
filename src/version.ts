@@ -15,6 +15,7 @@ import compressing from "compressing";
 import { mkdirs } from "fs-extra";
 import { ModJarInfo } from "./mods/mod.js";
 import { ModLoadingIssue } from "./loaders/loader.js";
+import StreamZip from "node-stream-zip";
 
 /**
  * @internal
@@ -86,7 +87,7 @@ export class Version {
         const ret = new DMCLCExtraVersionInfo();
         this.launcher.loaders.forEach((v, k)=>{
             const version = v.findInVersion(this.versionObject);
-            if(version !== null){
+            if(version){
                 ret.loaders.push(new LoaderInfo(k, version));
             }
         });
@@ -96,7 +97,18 @@ export class Version {
                 break;
             }
         }
+        if(ret.version === "Unknown") {
+            this.getVersionFromJar();
+        }
         return ret;
+    }
+    async getVersionFromJar() {
+        const zip = new StreamZip.async({file: `${this.versionRoot}/${this.name}.jar`});
+        const entry = await zip.entry("version.json");
+        if(entry) {
+            const obj = JSON.parse((await zip.entryData(entry)).toString());
+            this.extras.version = obj;
+        }
     }
 
     /**

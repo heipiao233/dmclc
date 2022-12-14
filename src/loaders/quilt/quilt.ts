@@ -11,8 +11,8 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
     hashedMaven = "https://maven.quiltmc.org/repository/release/";
-    findInVersion(MCVersion: MCVersion): string | null {
-        let ret: string | null = null;
+    findInVersion(MCVersion: MCVersion): string | undefined {
+        let ret: string | undefined;
         MCVersion.libraries.forEach(i=>{
             if(i.name.includes(":quilt-loader:")){
                 ret = i.name.split(":")[2];

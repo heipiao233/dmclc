@@ -7,8 +7,8 @@ import { ModLoadingIssue } from "./loader.js";
 export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, FabricModJson> {
     metaURL = "https://meta.fabricmc.net/v2";
     loaderMaven = "https://maven.fabricmc.net/";
-    findInVersion(MCVersion: MCVersion): string | null {
-        let ret: string | null = null;
+    findInVersion(MCVersion: MCVersion): string | undefined {
+        let ret: string | undefined;
         MCVersion.libraries.forEach(i=>{
             if(i.name.includes(":fabric-loader:")){
                 ret = i.name.split(":")[2];
