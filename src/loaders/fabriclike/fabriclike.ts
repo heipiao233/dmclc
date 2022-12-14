@@ -26,7 +26,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const zip = new StreamZip.async({
             file: path
         });
-        const entry = await zip.entry("quilt.mod.json");
+        const entry = await zip.entry("fabric.mod.json");
         if(entry === undefined)return [];
         const result: ModInfo<FabricModJson | M>[] = [];
         const json: FabricModJson = JSON.parse((await zip.entryData(entry)).toString());
