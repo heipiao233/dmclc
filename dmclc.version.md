@@ -30,8 +30,10 @@ export declare class Version
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [checkMods()](./dmclc.version.checkmods.md) |  |  |
 |  [completeLibraries(liblist)](./dmclc.version.completelibraries.md) |  | INTERNAL API. MAY BE CHANGE WITHOUT NOTIFY. Fix wrong and missing libraries. Used by Forge installing. |
 |  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
+|  [findMods()](./dmclc.version.findmods.md) |  |  |
 |  [fromVersionName(launcher, name)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
 |  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  |  |
