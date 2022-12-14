@@ -1,5 +1,5 @@
 on:
-  create
+  [create, workflow_dispatch]
 jobs:
   build:
     name: build
