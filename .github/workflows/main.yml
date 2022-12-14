@@ -1,5 +1,19 @@
 on:
   [create, workflow_dispatch]
+permissions:
+  id-token: write
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  discussions: write
+  issues: write
+  packages: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
 jobs:
   build:
     name: build
