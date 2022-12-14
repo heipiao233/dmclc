@@ -1,7 +1,12 @@
+import { ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
-import { FabricLikeLoader } from "./fabriclike/fabriclike.js";
+import { checkMatch, FabricLikeLoader, formatDepVersion } from "./fabriclike/fabriclike.js";
 import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info.js";
-export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo> {
+import StreamZip from "node-stream-zip";
+import { FabricModJson } from "./fabric_schemas.js";
+import { tmpdir } from "os";
+import { ModLoadingIssue } from "./loader.js";
+export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, FabricModJson> {
     metaURL = "https://meta.fabricmc.net/v2";
     loaderMaven = "https://maven.fabricmc.net/";
     findInVersion(MCVersion: MCVersion): string | null {
@@ -13,4 +18,70 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo> {
         });
         return ret;
     }
+    async findModInfos(path: string): Promise<ModInfo<FabricModJson>[]> {
+        const zip = new StreamZip.async({
+            file: path
+        });
+        const entry = await zip.entry("quilt.mod.json");
+        if(entry === undefined)return [];
+        const result: ModInfo<FabricModJson>[] = [];
+        const json: FabricModJson = JSON.parse((await zip.entryData(entry)).toString());
+        if(json.jars !== undefined){
+            for (const jar of json.jars) {
+                const paths = jar.file.split("/");
+                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
+                await zip.extract(jar.file, filename);
+                result.push(...await this.findModInfos(filename));
+            }
+        }
+        const info = new ModInfo("fabric", json);
+        info.data = json;
+        result.push(info);
+        return result;
+    }
+    checkMods(mods: ModInfo<FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
+        const modIdVersions: Record<string, string> = {
+            minecraft: mc,
+            fabricloader: loader
+        };
+        const issues: ModLoadingIssue[] = [];
+        for (const mod of mods) {
+            if(mod.loader !== "fabric")continue;
+            if(mod.data.id in modIdVersions) {
+                issues.push(new ModLoadingIssue("error", "dmclc.mods.duplicated", [mod.data.id]));
+            } else {
+                modIdVersions[mod.data.id] = mod.data.version;
+            }
+        }
+        for (const mod of mods) {
+            if(mod.loader !== "fabric")break;
+            issues.push(...checkFabricDeps(mod.data, modIdVersions));
+        }
+        return issues;
+    }
 }
+export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string, string>): ModLoadingIssue[] {
+    const issues: ModLoadingIssue[] = [];
+    for (const id in mod.depends) {
+        if(!(id in modIdVersions&&checkMatch(modIdVersions[id], mod.depends[id]))){
+            issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing", [mod.id, id, formatDepVersion(mod.depends[id])]));
+        }
+    }
+    for (const id in mod.recommends) {
+        if(!(id in modIdVersions&&checkMatch(modIdVersions[id], mod.recommends[id]))){
+            issues.push(new ModLoadingIssue("warning", "dmclc.mods.recommends_wrong_missing", [mod.id, id, formatDepVersion(mod.recommends[id])]));
+        }
+    }
+    for (const id in mod.conflicts) {
+        if(id in modIdVersions && checkMatch(modIdVersions[id], mod.conflicts[id])){
+            issues.push(new ModLoadingIssue("warning", "dmclc.mods.conflicts_exists", [mod.id, id, formatDepVersion(mod.conflicts[id])]));
+        }
+    }
+    for (const id in mod.breaks) {
+        if(id in modIdVersions && checkMatch(modIdVersions[id], mod.breaks[id])){
+            issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists", [mod.id, id, formatDepVersion(mod.breaks[id])]));
+        }
+    }
+    return issues;
+}
+

@@ -1,15 +1,15 @@
 import { Library } from "../../schemas.js";
 // Only include fields that we care about.
-export declare class FabricLikeVersionInfo {
+export type FabricLikeVersionInfo = {
     loader: Version;
     intermediary: Version;
     launcherMeta: LauncherMeta;
 }
-export declare class LauncherMeta {
+export type LauncherMeta = {
     libraries: { "client": Library[], "common": Library[] };
     mainClass: { "client": string };
 }
-export declare class Version {
+export type Version = {
     maven: string;
     version: string;
 }

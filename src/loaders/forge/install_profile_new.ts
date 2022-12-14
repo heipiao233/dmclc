@@ -1,6 +1,6 @@
 import { Library } from "../../schemas.js";
 
-export declare class InstallerProfileNew {
+export type InstallerProfileNew = {
     data: {
         [index: string]: { "client": string, "server": string }
     };
@@ -8,7 +8,7 @@ export declare class InstallerProfileNew {
     processors: Processor[];
     libraries: Library[];
 }
-declare class Processor {
+type Processor = {
     sides: ["client" | "server"];
     jar: string;
     classpath: string[];

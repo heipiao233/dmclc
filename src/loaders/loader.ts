@@ -1,12 +1,41 @@
+import { ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { Version } from "../version.js";
+
+export type IssueLevel = "error" | "warning";
+
+export class ModLoadingIssue {
+    level: IssueLevel;
+    message: string;
+    args: string[];
+    constructor(level: IssueLevel, message: string, args: string[]) {
+        this.level = level;
+        this.message = message;
+        this.args = args;
+    }
+}
 
 /**
  * Used to install loaders.
  * @public
  */
-export interface Loader {
-  getSuitableLoaderVersions: (MCVersion: Version) => Promise<string[]>
-  install: (MCVersion: Version, version: string) => Promise<void>
-  findInVersion: (MCVersion: MCVersion) => string | null
+export interface Loader<T> {
+    /**
+     * Get all loader versions that work on the Minecraft version
+     * @param MCVersion - Minecraft version.
+     */
+    getSuitableLoaderVersions(MCVersion: Version): Promise<string[]>
+    /**
+     * Install.
+     * @param MCVersion - Minecraft version.
+     * @param version - Loader version.
+     */
+    install(MCVersion: Version, version: string): Promise<void>
+    /**
+     * Get the version installed, or null if not installed or can't find.
+     * @param MCVersion - Minecraft version manifest.
+     */
+    findInVersion(MCVersion: MCVersion): string | null
+    findModInfos(path: string): Promise<ModInfo<T>[]>
+    checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
 }

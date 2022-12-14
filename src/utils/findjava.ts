@@ -3,8 +3,14 @@
 import * as cp from "child_process";
 import os from "os";
 import fs from "fs";
+import { Pair } from "./pair.js";
 
-export async function findAllJava(): Promise<string[][]> {
+/**
+ * Find all java.
+ * @returns All java versions.
+ * @public
+ */
+export async function findAllJava(): Promise<Pair<string, string>[]> {
     switch (os.platform()) {
     case "win32":
         return await findForWindows();
@@ -17,8 +23,8 @@ export async function findAllJava(): Promise<string[][]> {
     }
 }
 
-async function findForWindows(): Promise<string[][]> {
-    const ret:string[][] = [];
+async function findForWindows(): Promise<Pair<string, string>[]> {
+    const ret: Pair<string, string>[] = [];
     ret.push(...await readFromRegister("HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Runtime Environment"));
     ret.push(...await readFromRegister("HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit"));
     ret.push(...await readFromRegister("HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\JRE"));
@@ -36,21 +42,21 @@ async function findForWindows(): Promise<string[][]> {
             if(!fs.existsSync(pth))continue;
             for (const version of fs.readdirSync(pth)) {
                 const exec = `${pth}\\${version}\\bin\\java.exe`;
-                if(fs.existsSync(exec))ret.push([version, exec]);
+                if(fs.existsSync(exec))ret.push(new Pair(version, exec));
             }
         }
     }
     return ret;
 }
 
-async function readFromRegister(key: string): Promise<string[][]> {
-    const ret:string[][] = [];
+async function readFromRegister(key: string): Promise<Pair<string, string>[]> {
+    const ret: Pair<string, string>[] = [];
     const versions = await getRegistrySubDirs(key);
     for (const version of versions) {
         if((await getRegistrySubDirs(version)).includes(`${version}\\MSI`)){
             const exec = `${await getRegistryValue(version, "JavaHome")}\\bin\\java.exe`;
             const groups = version.split("\\");
-            if(fs.existsSync(exec))ret.push([groups[groups.length-1], exec]);
+            if(fs.existsSync(exec))ret.push(new Pair(groups[groups.length-1], exec));
         }
     }
     return ret;
@@ -81,22 +87,22 @@ async function getRegistrySubDirs(key: string): Promise<string[]> {
     });
 }
 
-async function findForLinux(): Promise<string[][]> {
+async function findForLinux(): Promise<Pair<string, string>[]> {
     const dirs = ["/usr/java", "/usr/lib/jvm", "/usr/lib32/jvm"];
-    const ret: string[][] = [];
+    const ret: Pair<string, string>[] = [];
     for (const i of dirs) {
         for (const j of fs.readdirSync(i)) {
             const exec = `${i}/${j}/bin/java`;
             if(fs.existsSync(exec)){
-                ret.push([exec, await getJavaVersion(exec)]);
+                ret.push(new Pair(await getJavaVersion(exec), exec));
             }
         }
     }
     return ret;
 }
 
-async function findForMac(): Promise<string[][]> {
-    const ret: string[][] = [];
+async function findForMac(): Promise<Pair<string, string>[]> {
+    const ret: Pair<string, string>[] = [];
     // TODO: MAC
     return ret;
 }

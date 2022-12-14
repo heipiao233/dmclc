@@ -1,15 +1,15 @@
 import { Account } from "../account.js";
 import { got } from "got";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
-declare class STEP1 {
+type STEP1 = {
     access_token: string;
     refresh_token: string;
 }
-declare class STEP2 {
+type STEP2 = {
     token: string;
     uhs: string;
 }
-declare class STEP6 {
+type STEP6 = {
     id: string;
     name: string;
 }

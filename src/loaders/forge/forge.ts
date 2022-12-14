@@ -1,4 +1,4 @@
-import { Loader } from "../loader.js";
+import { Loader, ModLoadingIssue } from "../loader.js";
 import { Launcher } from "../../launcher.js";
 import { parseStringPromise } from "xml2js";
 import { got } from "got";
@@ -15,8 +15,12 @@ import StreamZip from "node-stream-zip";
 import { merge } from "../../utils/mergeversionjson.js";
 import { InstallerProfileOld } from "./install_profile_old.js";
 import { Version } from "../../version.js";
+import { ModInfo } from "../../mods/mod.js";
+import toml from "toml";
+import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";
+import { VersionRange, ArtifactVersion } from "maven-artifact-version";
 
-export class ForgeLoader implements Loader {
+export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     private readonly launcher: Launcher;
     private readonly metadata = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
     constructor (launcher: Launcher) {
@@ -93,6 +97,98 @@ export class ForgeLoader implements Loader {
             return metadata.data[a].client;
         }).replaceAll(/\[(.+?)\]/g, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
     }
+    async findModInfos(path: string): Promise<ModInfo<StoreData | ForgeMcmodInfoOne>[]> {
+        const zip = new StreamZip.async({
+            file: path
+        });
+        const ret: ModInfo<StoreData | ForgeMcmodInfoOne>[] = [];
+        const jarJarEntry = await zip.entry("META-INF/jarjar/metadata.json");
+        if(jarJarEntry) {
+            const data: ForgeJarJarJson = JSON.parse((await zip.entryData(jarJarEntry)).toString());
+            for (const jarObj of data.jars) {
+                const jar = jarObj.path;
+                const paths = jar.split("/");
+                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
+                await zip.extract(jar, filename);
+                ret.push(...await this.findModInfos(filename));
+            }
+        }
+        const newEntry = await zip.entry("META-INF/mods.toml");
+        if(newEntry){
+            const data: ForgeModsToml = toml.parse((await zip.entryData(newEntry)).toString());
+            for (const i of data.mods) {
+                if(i.version === "${file.jarVersion}"){
+                    i.version = await getVersion(zip);
+                }
+                ret.push(new ModInfo("forge", {
+                    info: i,
+                    deps: data.dependencies[i.modId]
+                }));
+            }
+        }
+        const oldEntry = await zip.entry("mcmod.info");
+        if(oldEntry) {
+            const data: ForgeMcmodInfo = JSON.parse((await zip.entryData(oldEntry)).toString());
+            for (const i of data) {
+                ret.push(new ModInfo("forge", i));
+            }
+        }
+        return ret;
+    }
+    checkMods(mods: ModInfo<StoreData | ForgeMcmodInfoOne>[], mc: string, loader: string): ModLoadingIssue[] {
+        const ret: ModLoadingIssue[] = [];
+        const modIdVersions: Record<string, string> = {
+            minecraft: mc,
+            forge: loader,
+            Forge: loader
+        };
+        for (const mod of mods) {
+            if("info" in mod.data){
+                modIdVersions[mod.data.info.modId] = mod.data.info.version;
+            } else {
+                modIdVersions[mod.data.modid] = mod.data.version ?? "";
+            }
+        }
+        for (const mod of mods) {
+            if("info" in mod.data){
+                for (const dep of mod.data.deps) {
+                    if(dep.mandatory) {
+                        const range = VersionRange.createFromVersionSpec(dep.versionRange)!;
+                        if(!(dep.modId in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
+                            ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
+                                [mod.data.info.modId, dep.modId, dep.versionRange]));
+                        }
+                    }
+                }
+            } else {
+                ret.push(new ModLoadingIssue("warning", "dmclc.mods.dependency_check_may_not_always_true",
+                    [mod.data.modid]));
+                if(mod.data.useDependencyInformation) {
+                    if(mod.data.requiredMods)
+                        for (const dep of mod.data.requiredMods) {
+                            if(dep.includes("@")) {
+                                const [depid, depver] = dep.split("@");
+                                const range = VersionRange.createFromVersionSpec(depver)!;
+                                if(!(depid in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[depid])))) {
+                                    ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
+                                        [mod.data.modid, depid, depver]));
+                                }
+                            } else {
+                                if(!(dep in modIdVersions)){
+                                    ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
+                                        [mod.data.modid, dep]));
+                                }
+                            }
+                        }
+                }
+                if(!(mod.data.mcversion === mc)) {
+                    ret.push(new ModLoadingIssue("error", "dmclc.mods.minecraft_wrong",
+                        [mod.data.modid, mc, mod.data.mcversion!]));
+                }
+            }
+        }
+        return ret;
+    }
 }
 async function getMainClass (jar: string): Promise<string> {
     /* eslint-disable new-cap */
@@ -100,4 +196,9 @@ async function getMainClass (jar: string): Promise<string> {
         file: jar
     });
     return (await zip.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Main-Class:"))[0].replaceAll("Main-Class:", "").trim();
+}
+
+async function getVersion (jar: StreamZip.StreamZipAsync): Promise<string> {
+    /* eslint-disable new-cap */
+    return (await jar.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Implementation-Version:"))[0].replaceAll("Implementation-Version:", "").trim();
 }

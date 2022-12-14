@@ -30,10 +30,10 @@ export class Launcher {
     /** The name of your launcher. */
     name: string;
     /** All loaders. */
-    loaders: Map<string, Loader> = new Map();
+    loaders: Map<string, Loader<unknown>> = new Map();
     /** All account types. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    accountTypes: Map<string, (data: any) => Account<any>> = new Map();
+    accountTypes: Map<string, (data: Record<string, unknown>) => Account<any>> = new Map();
     /** Using Java executable */
     usingJava: string;
     /** All installed versions. */

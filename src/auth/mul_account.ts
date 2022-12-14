@@ -3,8 +3,8 @@ import fs from "fs";
 import { download } from "../utils/downloads.js";
 import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
 
-export declare class MinecraftUniversalLoginUserData extends YggdrasilUserData {
-    serverID: string;
+export class MinecraftUniversalLoginUserData extends YggdrasilUserData {
+    serverID?: string;
 }
 export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUniversalLoginUserData> {
     constructor (data: MinecraftUniversalLoginUserData, root: string) {

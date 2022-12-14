@@ -17,18 +17,27 @@ import { mkdirs } from "fs-extra";
 /**
  * @internal
  */
-export declare class DMCLCExtraVersionInfo {
+export class DMCLCExtraVersionInfo {
     version: string;
     loaders: LoaderInfo[];
     enableIndependentGameDir: boolean;
+    constructor() {
+        this.version = "Unknown";
+        this.loaders = [];
+        this.enableIndependentGameDir = false;
+    }
 }
 
 /**
  * @internal
  */
-export declare class LoaderInfo {
+export class LoaderInfo {
     name: string;
     version: string;
+    constructor(name: string, version: string){
+        this.name = name;
+        this.version = version;
+    }
 }
 
 /**
@@ -72,18 +81,11 @@ export class Version {
     }
 
     private detectExtras(): DMCLCExtraVersionInfo {
-        const ret: DMCLCExtraVersionInfo = {
-            version: "Unknown",
-            loaders: [],
-            enableIndependentGameDir: false
-        };
+        const ret = new DMCLCExtraVersionInfo();
         this.launcher.loaders.forEach((v, k)=>{
             const version = v.findInVersion(this.versionObject);
             if(version !== null){
-                ret.loaders.push({
-                    name: k,
-                    version: version
-                });
+                ret.loaders.push(new LoaderInfo(k, version));
             }
         });
         for (const v of this.versionObject.libraries) {

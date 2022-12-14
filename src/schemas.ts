@@ -6,7 +6,7 @@ export type OSType = "linux"|"windows"|"osx";
 /**
  * @internal
  */
-export declare class OSPlatform {
+export type OSPlatform = {
     name: OSType;
     version: string;
     arch: string;
@@ -40,20 +40,20 @@ export function checkRules(rules: Rule[]): boolean {
 /**
  * @internal
  */
-export declare class Asset {
+export type Asset = {
     hash: string;
     size: number;
 }
 /**
  * @internal
  */
-export declare class AssetsIndex {
+export type AssetsIndex = {
     objects: { [index: string]: Asset };
 }
 /**
  * @internal
  */
-export declare class Rule {
+export type Rule = {
     action: "allow" | "disallow";
     features: { [index: string]: boolean };
     os: OSPlatform;
@@ -61,14 +61,14 @@ export declare class Rule {
 /**
  * @internal
  */
-export declare class Argument {
+export type Argument = {
     rules: Rule[];
     value: string[] | string;
 }
 /**
  * @internal
  */
-export declare class Resource {
+export type Resource = {
     url: string;
     sha1: string;
     size: number;
@@ -76,32 +76,32 @@ export declare class Resource {
 /**
  * @internal
  */
-export declare class ResourceWithID extends Resource {
+export type ResourceWithID = {
     id: string;
-}
+} & Resource
 /**
  * @internal
  */
-export declare class AssetIndexInfo extends ResourceWithID {
+export type AssetIndexInfo = {
     totalSize: number;
-}
+} & ResourceWithID
 /**
  * @internal
  */
-export declare class LibraryArtifact extends Resource {
+export type LibraryArtifact = {
     path: string;
-}
+} & Resource
 /**
  * @internal
  */
-export declare class JavaInfo {
+export type JavaInfo = {
     component: string;
     majorVersion: number;
 }
 /**
  * @internal
  */
-export declare class Library {
+export type Library = {
     downloads?: {
         artifact: LibraryArtifact
         classifiers: {
@@ -122,7 +122,7 @@ export declare class Library {
 /**
  * @internal
  */
-export declare class LoggingInfo {
+export type LoggingInfo = {
     argument: string;
     file: ResourceWithID;
     type: string;
@@ -130,7 +130,7 @@ export declare class LoggingInfo {
 /**
  * @internal
  */
-export declare class MCVersion {
+export type MCVersion = {
     inheritsFrom?: string;
     arguments?: {
         game?: Array<string | Argument>
@@ -164,7 +164,7 @@ export declare class MCVersion {
 /**
  * @public
  */
-export declare class VersionInfo {
+export type VersionInfo = {
     id: string;
     type: string;
     url: string;
@@ -174,7 +174,7 @@ export declare class VersionInfo {
 /**
  * @public
  */
-export declare class VersionInfos {
+export type VersionInfos = {
     latest: {
         release: string
         snapshot: string

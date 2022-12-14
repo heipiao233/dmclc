@@ -1,5 +1,5 @@
 import { MCVersion } from "../../schemas.js";
 
-export declare class InstallerProfileOld {
+export type InstallerProfileOld = {
     versionInfo: MCVersion;
 }

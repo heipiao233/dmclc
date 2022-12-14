@@ -1,12 +1,14 @@
 import got from "got";
-import { Loader } from "../loader.js";
+import { Loader, ModLoadingIssue } from "../loader.js";
 import { FabricLikeVersionInfo } from "./fabriclike_version_info.js";
 import { Launcher } from "../../launcher.js";
 import { MCVersion } from "../../schemas.js";
 import fs from "fs";
 import { merge } from "../../utils/mergeversionjson.js";
 import { Version } from "../../version.js";
-export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo> implements Loader {
+import { ModInfo } from "../../mods/mod.js";
+import * as semver from "semver";
+export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M> {
     abstract loaderMaven: string;
     abstract metaURL: string;
     intermediaryMaven = "https://maven.fabricmc.net/";
@@ -14,7 +16,9 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo> implemen
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
+    abstract checkMods(mods: ModInfo<M>[], mc: string, loader: string): ModLoadingIssue[];
     abstract findInVersion(MCVersion: MCVersion): string | null;
+    abstract findModInfos(path: string): Promise<ModInfo<M>[]>;
 
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
     async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {
@@ -41,4 +45,19 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo> implemen
         const newVersion: MCVersion = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.name)}/${encodeURIComponent(version)}/profile/json`).json();
         fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(merge(mcVersion, newVersion)));
     }
+}
+
+export function formatDepVersion(dep: string | string[]): string {
+    if(typeof(dep) === "string"){
+        return dep.replaceAll(" ", " and ");
+    } else {
+        return dep.map(formatDepVersion).join("\nor ");
+    }
+}
+
+export function checkMatch(current: string, required: string | string[]): boolean {
+    if(typeof(required) === "string") {
+        return !required.split(" ").map(v=>semver.satisfies(current, v)).includes(false);
+    }
+    return required.map(v=>checkMatch(current, v)).includes(true);
 }

@@ -1,8 +1,8 @@
 /**
  * @internal
  */
-export abstract class UserData {
-    declare name?: string;
-    declare uuid?: string;
-    declare accessToken?: string;
+export class UserData {
+    name?: string;
+    uuid?: string;
+    accessToken?: string;
 }

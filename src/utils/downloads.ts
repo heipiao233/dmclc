@@ -10,8 +10,9 @@ export async function downloadAll(files: Map<string, fs.PathLike>, mirror?: stri
 }
 export async function download(url: string, filename: fs.PathLike, mirror?: string): Promise<void> {
     if(url.length===0)return;
+    let realURL = url;
     if (mirror !== undefined) {
-        url = url.replaceAll("launchermeta.mojang.com", mirror)
+        realURL = url.replaceAll("launchermeta.mojang.com", mirror)
             .replaceAll("launcher.mojang.com", mirror)
             .replaceAll("resources.download.minecraft.net", mirror + "/assets")
             .replaceAll("libraries.minecraft.net", mirror + "/maven")
@@ -22,11 +23,14 @@ export async function download(url: string, filename: fs.PathLike, mirror?: stri
             .replaceAll("piston-meta.mojang.com", mirror)
             .replaceAll("piston-data.mojang.com", mirror);
     }
-    url = url.replaceAll("http://", "https://");
+    realURL = realURL.replaceAll("http://", "https://");
     const file = fs.createWriteStream(filename);
-    const req = https.get(url);
+    const req = https.get(realURL);
     return new Promise(resolve=>{
-        req.on("response", res => {
+        req.on("response", async res => {
+            if(res.statusCode == 404) { // Download original resource.
+                resolve(await download(url, filename));
+            }
             res.pipe(file);
             res.on("close", ()=>{
                 resolve();

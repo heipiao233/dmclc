@@ -26,7 +26,7 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
     }
 
     async getLaunchJVMArgs (mc: Version): Promise<string[]> {
-        const content = await get(this.data.apiurl, "");
+        const content = await get(this.data.apiurl!, "");
         return [`-javaagent:${mc.extras.enableIndependentGameDir?"../..":"."}/authlib-injector-latest.jar=${this.data.apiurl}`, `-Dauthlibinjector.yggdrasil.prefetched=${Buffer.from(content).toString("base64")}`];
     }
     toString (): string {
