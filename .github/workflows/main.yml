@@ -20,13 +20,8 @@ jobs:
     - name: documents
       run: |
         npx api-extractor run
-        npx api-documenter markdown -i ./temp
+        npx api-documenter markdown -i ./temp -o ./_site
       continue-on-error: true
-    - name: Generate HTML from Markdown
-      uses: ldeluigi/markdown-docs@latest
-      with:
-        src: markdown
-        dst: _site
     - name: Upload GitHub Pages artifact
       uses: actions/upload-pages-artifact@v1.0.6
   deploy:
