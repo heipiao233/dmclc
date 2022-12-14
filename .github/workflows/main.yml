@@ -35,12 +35,13 @@ jobs:
         run: npx api-extractor run
         continue-on-error: true
       - run: npx api-documenter markdown -i ./temp
+      - uses: actions/checkout@v3
+        with:
+          repository: 'heipiao233/dmclc.wiki'
+          path: 'wiki'
+      - run: cp ./markdown/* $GITHUB_WORKSPACE/wiki/ -r
       - run: |
-          cd $GITHUB_WORKSPACE
-          git clone https://heipiao233:${GITHUB_TOKEN}@github.com/heipiao233/dmclc.wiki
-      - run: cp ./markdown/* $GITHUB_WORKSPACE/dmclc.wiki/ -r
-      - run: |
-          cd $GITHUB_WORKSPACE/dmclc.wiki/
+          cd $GITHUB_WORKSPACE/wiki/
           git push
       - name: publish
         run: npm publish
