@@ -37,11 +37,12 @@ jobs:
       - run: npx api-documenter markdown -i ./temp
       - uses: actions/checkout@v3
         with:
-          repository: 'heipiao233/dmclc.wiki'
-          path: 'wiki'
+          repository: 'heipiao233/dmclc'
+          path: 'docs'
+          ref: 'docs'
       - run: |
-          cp ./markdown/* ./wiki/ -r
-          cd ./wiki/
+          cp ./markdown/* ./docs/ -r
+          cd ./docs/
           git config --global user.email "heipiao233@outlook.com"
           git config --global user.name "heipiao233"
           git add .
