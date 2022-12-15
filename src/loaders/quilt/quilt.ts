@@ -44,7 +44,9 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
     checkMods(mods: ModInfo<QuiltModJson | FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
             minecraft: normalizeVersion(mc),
-            quilt_loader: loader
+            quilt_loader: loader,
+            fabricloader: "Provided",
+            java: "Provided"
         };
         const issues: ModLoadingIssue[] = [];
         for (const mod of mods) {

@@ -281,6 +281,12 @@ function getCombatVersion(mc: string): string {
 function fixWrongSemVer(v: string): string {
     if(v === "*")return v;
     const [a, b] = v.split("-");
+    if(b === "") {
+        if(a.indexOf(".") === a.lastIndexOf(".")) {
+            return `${a}.0`;
+        }
+        return a;
+    }
     if(a.indexOf(".") === a.lastIndexOf(".")) {
         return `${a}.0-${b}`;
     }

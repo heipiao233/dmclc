@@ -19,7 +19,8 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
     checkMods(mods: ModInfo<FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
             minecraft: normalizeVersion(mc),
-            fabricloader: loader
+            fabricloader: loader,
+            java: "Provided"
         };
         const issues: ModLoadingIssue[] = [];
         for (const mod of mods) {
