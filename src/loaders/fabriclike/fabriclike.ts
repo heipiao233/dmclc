@@ -86,7 +86,7 @@ export function checkMatch(current: string, required: string | string[]): boolea
     if(typeof(required) === "string") {
         return !required.split(" ")
             .map(v=>fixWrongSemVer(v))
-            .map(v=>semver.satisfies(current, v)).includes(false);
+            .map(v=>semver.satisfies(current, v, {includePrerelease: true})).includes(false);
     }
     return required.map(v=>checkMatch(current, v)).includes(true);
 }
