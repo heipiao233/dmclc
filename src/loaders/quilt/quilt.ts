@@ -7,6 +7,7 @@ import { checkMatch, FabricLikeLoader, formatDepVersion } from "../fabriclike/fa
 import { FabricModJson } from "../fabric_schemas.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
+import { normalizeVersion } from "../fabriclike/fabriclike";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
@@ -43,7 +44,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
     }
     checkMods(mods: ModInfo<QuiltModJson | FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
-            minecraft: mc,
+            minecraft: normalizeVersion(mc),
             quilt_loader: loader
         };
         const issues: ModLoadingIssue[] = [];

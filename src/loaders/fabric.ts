@@ -1,6 +1,6 @@
 import { ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
-import { checkMatch, FabricLikeLoader, formatDepVersion } from "./fabriclike/fabriclike.js";
+import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from "./fabriclike/fabriclike.js";
 import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info.js";
 import { FabricModJson } from "./fabric_schemas.js";
 import { ModLoadingIssue } from "./loader.js";
@@ -18,7 +18,7 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
     }
     checkMods(mods: ModInfo<FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
-            minecraft: mc,
+            minecraft: normalizeVersion(mc),
             fabricloader: loader
         };
         const issues: ModLoadingIssue[] = [];
@@ -61,4 +61,3 @@ export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string
     }
     return issues;
 }
-
