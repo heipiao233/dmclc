@@ -24,11 +24,7 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         const issues: ModLoadingIssue[] = [];
         for (const mod of mods) {
             if(mod.loader !== "fabric")continue;
-            if(mod.data.id in modIdVersions) {
-                issues.push(new ModLoadingIssue("error", "dmclc.mods.duplicated", [mod.data.id]));
-            } else {
-                modIdVersions[mod.data.id] = mod.data.version;
-            }
+            modIdVersions[mod.data.id] = mod.data.version;
         }
         for (const mod of mods) {
             if(mod.loader !== "fabric")break;

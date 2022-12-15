@@ -80,8 +80,11 @@ export function formatDepVersion(dep: string | string[]): string {
 }
 
 export function checkMatch(current: string, required: string | string[]): boolean {
+    current = fixWrongSemVer(current);
     if(typeof(required) === "string") {
-        return !required.split(" ").map(v=>semver.satisfies(current, v)).includes(false);
+        return !required.split(" ")
+            .map(v=>fixWrongSemVer(v))
+            .map(v=>semver.satisfies(current, v)).includes(false);
     }
     return required.map(v=>checkMatch(current, v)).includes(true);
 }
@@ -272,5 +275,13 @@ function getCombatVersion(mc: string): string {
     default:
         return "11.45.14-1919810";
     }
+}
+
+function fixWrongSemVer(v: string): string {
+    const [a, b] = v.split("-");
+    if(a.indexOf(".") === a.lastIndexOf(".")) {
+        return `${a}.0-${b}`;
+    }
+    return v;
 }
 
