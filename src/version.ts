@@ -107,7 +107,7 @@ export class Version {
         const entry = await zip.entry("version.json");
         if(entry) {
             const obj = JSON.parse((await zip.entryData(entry)).toString());
-            this.extras.version = obj;
+            this.extras.version = obj.id;
         }
         await zip.close();
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
