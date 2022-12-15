@@ -109,6 +109,8 @@ export class Version {
             const obj = JSON.parse((await zip.entryData(entry)).toString());
             this.extras.version = obj;
         }
+        await zip.close();
+        fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
     }
 
     /**

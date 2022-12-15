@@ -131,6 +131,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 ret.push(new ModInfo("forge", i));
             }
         }
+        await zip.close();
         return ret;
     }
     checkMods(mods: ModInfo<StoreData | ForgeMcmodInfoOne>[], mc: string, loader: string): ModLoadingIssue[] {
@@ -193,7 +194,9 @@ async function getMainClass (jar: string): Promise<string> {
     const zip = new StreamZip.async({
         file: jar
     });
-    return (await zip.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Main-Class:"))[0].replaceAll("Main-Class:", "").trim();
+    const ret = (await zip.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Main-Class:"))[0].replaceAll("Main-Class:", "").trim();
+    await zip.close();
+    return ret;
 }
 
 async function getVersion (jar: StreamZip.StreamZipAsync): Promise<string> {

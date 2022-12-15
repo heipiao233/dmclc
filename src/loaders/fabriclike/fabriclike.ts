@@ -38,6 +38,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
                 result.push(...await this.findModInfos(filename));
             }
         }
+        await zip.close();
         const info = new ModInfo("fabric", json);
         info.data = json;
         result.push(info);
