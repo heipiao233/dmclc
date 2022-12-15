@@ -3,11 +3,10 @@ import { tmpdir } from "os";
 import { ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { checkFabricDeps } from "../fabric.js";
-import { checkMatch, FabricLikeLoader, formatDepVersion } from "../fabriclike/fabriclike.js";
+import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
-import { normalizeVersion } from "../fabriclike/fabriclike";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
