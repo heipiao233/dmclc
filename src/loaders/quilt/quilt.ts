@@ -50,8 +50,18 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         for (const mod of mods) {
             if("quilt_loader" in mod.data){
                 modIdVersions[mod.data.quilt_loader.id] = mod.data.quilt_loader.version;
+                if(mod.data.quilt_loader.provides){
+                    for (const provide of mod.data.quilt_loader.provides) {
+                        modIdVersions[provide.id] = provide.version;
+                    }
+                }
             } else {
                 modIdVersions[mod.data.id] = mod.data.version;
+                if(mod.data.provides){
+                    for (const provide of mod.data.provides) {
+                        modIdVersions[provide] = "Provided";
+                    }
+                }
             }
         }
         for (const mod of mods) {

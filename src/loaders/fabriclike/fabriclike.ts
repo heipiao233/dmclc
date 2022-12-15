@@ -80,6 +80,7 @@ export function formatDepVersion(dep: string | string[]): string {
 }
 
 export function checkMatch(current: string, required: string | string[]): boolean {
+    if(current === "Provided") return true;
     current = fixWrongSemVer(current);
     if(typeof(required) === "string") {
         return !required.split(" ")

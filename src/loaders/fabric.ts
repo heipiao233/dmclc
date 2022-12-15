@@ -25,6 +25,11 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         for (const mod of mods) {
             if(mod.loader !== "fabric")continue;
             modIdVersions[mod.data.id] = mod.data.version;
+            if(mod.data.provides){
+                for (const provide of mod.data.provides) {
+                    modIdVersions[provide] = "Provided";
+                }
+            }
         }
         for (const mod of mods) {
             if(mod.loader !== "fabric")break;

@@ -23,6 +23,7 @@ export type VersionRange = string | string[];
 export type FabricModJson = {
     id: string;
     version: string;
+    provides?: string[]; // Not in official document
     environment?: Env;
     jars?: NestedJarEntry[];
     depends?: Dependencies;
