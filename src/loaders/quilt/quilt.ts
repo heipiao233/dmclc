@@ -133,7 +133,7 @@ function processDeps(deps?: DependencyObject[] | DependencyObject | string): Dep
         }];
     } else {
         if(deps instanceof Array){
-            ret = deps;
+            ret = deps.map(processDeps).flat();
         } else if(deps instanceof Object){
             ret = [deps];
         }
