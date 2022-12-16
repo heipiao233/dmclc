@@ -21,6 +21,7 @@ import assert from "assert";
 import { SemanticVersion } from "./SemanticVersion.js";
 
 export class VersionIntervalImpl extends VersionInterval {
+    static INFINITE: VersionInterval = new VersionIntervalImpl(undefined, false, undefined, false);
     private readonly min?: Version;
     private readonly minInclusive: boolean;
     private readonly max?: Version;

@@ -26,7 +26,6 @@ import { VersionIntervalImpl } from "./VersionIntervalImpl.js";
  * @code (x,x)} with x being a non-{@code null} version and both endpoints being exclusive.
  */
 export abstract class VersionInterval {
-    static INFINITE: VersionInterval = new VersionIntervalImpl(undefined, false, undefined, false);
 
     /**
      * Get whether the interval uses {@link SemanticVersion} compatible bounds.
