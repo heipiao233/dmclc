@@ -1,4 +1,3 @@
-import * as nsz from "node-stream-zip";
 import { tmpdir } from "os";
 import { ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -7,6 +6,7 @@ import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from
 import { FabricModJson } from "../fabric_schemas.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
+import StreamZip from "node-stream-zip";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
@@ -21,7 +21,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         return ret;
     }
     async findModInfos(path: string): Promise<ModInfo<QuiltModJson | FabricModJson>[]> {
-        const zip = new nsz.async({
+        const zip = new StreamZip.async({
             file: path
         });
         const entry = await zip.entry("quilt.mod.json");
