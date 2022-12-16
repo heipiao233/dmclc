@@ -28,7 +28,7 @@ import { Version } from "./Version.js";
  * <li>Arbitrary {@code <build>} contents
  * </ul>
  */
-export class SemanticVersionImpl extends SemanticVersion {
+export class SemanticVersionImpl implements SemanticVersion {
     private static readonly DOT_SEPARATED_ID = /|[-0-9A-Za-z]+(\.[-0-9A-Za-z]+)*/;
     private static readonly UNSIGNED_INTEGER = /0|[1-9][0-9]*/;
     private readonly components: number[] = [];
@@ -81,10 +81,10 @@ export class SemanticVersionImpl extends SemanticVersion {
                         throw new VersionParsingException("Pre-release versions are not allowed to use X-ranges!");
                     }
 
-                    components[i] = SemanticVersionImpl.COMPONENT_WILDCARD;
+                    components[i] = SemanticVersion.COMPONENT_WILDCARD;
                     if (firstWildcardIdx < 0) firstWildcardIdx = i;
                     continue;
-                } else if (i > 0 && components[i - 1] == SemanticVersionImpl.COMPONENT_WILDCARD) {
+                } else if (i > 0 && components[i - 1] == SemanticVersion.COMPONENT_WILDCARD) {
                     throw new VersionParsingException("Interjacent wildcard (1.x.2) are disallowed!");
                 }
             }
@@ -104,7 +104,7 @@ export class SemanticVersionImpl extends SemanticVersion {
             }
         }
 
-        if (storeX && components.length == 1 && components[0] == SemanticVersionImpl.COMPONENT_WILDCARD) {
+        if (storeX && components.length == 1 && components[0] == SemanticVersion.COMPONENT_WILDCARD) {
             throw new VersionParsingException("Versions of form 'x' or 'X' not allowed!");
         }
 
@@ -117,8 +117,7 @@ export class SemanticVersionImpl extends SemanticVersion {
     }
 
     constructor(components: number[], prerelease: string | null, build: string | null) {
-        super();
-        if (components.length == 0 || components[0] == SemanticVersionImpl.COMPONENT_WILDCARD) throw new Error("Invalid components: "+components);
+        if (components.length == 0 || components[0] == SemanticVersion.COMPONENT_WILDCARD) throw new Error("Invalid components: "+components);
 
         this.components = components;
         this.prerelease = prerelease;
@@ -138,7 +137,7 @@ export class SemanticVersionImpl extends SemanticVersion {
                 fnBuilder.push(".");
             }
 
-            if (i == SemanticVersionImpl.COMPONENT_WILDCARD) {
+            if (i == SemanticVersion.COMPONENT_WILDCARD) {
                 fnBuilder.push("x");
             } else {
                 fnBuilder.push(i);
@@ -167,7 +166,7 @@ export class SemanticVersionImpl extends SemanticVersion {
             throw new Error("Tried to access negative version number component!");
         } else if (pos >= this.components.length) {
             // Repeat "x" if x-range, otherwise repeat "0".
-            return this.components[this.components.length - 1] == SemanticVersionImpl.COMPONENT_WILDCARD ? SemanticVersionImpl.COMPONENT_WILDCARD : 0;
+            return this.components[this.components.length - 1] == SemanticVersion.COMPONENT_WILDCARD ? SemanticVersion.COMPONENT_WILDCARD : 0;
         } else {
             return this.components[pos];
         }
@@ -236,7 +235,7 @@ export class SemanticVersionImpl extends SemanticVersion {
             const first = this.getVersionComponent(i);
             const second = o.getVersionComponent(i);
 
-            if (first == SemanticVersionImpl.COMPONENT_WILDCARD || second == SemanticVersionImpl.COMPONENT_WILDCARD) {
+            if (first == SemanticVersion.COMPONENT_WILDCARD || second == SemanticVersion.COMPONENT_WILDCARD) {
                 continue;
             }
 
