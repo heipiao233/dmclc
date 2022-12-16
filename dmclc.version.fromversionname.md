@@ -9,7 +9,7 @@ Creates a new version from name.
 <b>Signature:</b>
 
 ```typescript
-static fromVersionName(launcher: Launcher, name: string): Version;
+static fromVersionName(launcher: Launcher, name: string): MinecraftVersion;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ static fromVersionName(launcher: Launcher, name: string): Version;
 
 <b>Returns:</b>
 
-[Version](./dmclc.version.md)
+[MinecraftVersion](./dmclc.version.md)
 
 The new created version object.
 

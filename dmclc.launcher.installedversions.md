@@ -9,5 +9,5 @@ All installed versions.
 <b>Signature:</b>
 
 ```typescript
-installedVersions: Map<string, Version>;
+installedVersions: Map<string, MinecraftVersion>;
 ```

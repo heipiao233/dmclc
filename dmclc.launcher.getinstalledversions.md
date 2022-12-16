@@ -9,11 +9,11 @@ Gets all installed versions, no cache.
 <b>Signature:</b>
 
 ```typescript
-getInstalledVersions(): Map<string, Version>;
+getInstalledVersions(): Map<string, MinecraftVersion>;
 ```
 <b>Returns:</b>
 
-Map&lt;string, [Version](./dmclc.version.md)<!-- -->&gt;
+Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt;
 
 All installed versions.
 

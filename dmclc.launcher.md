@@ -23,7 +23,7 @@ export declare class Launcher
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
-|  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [Version](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
+|  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
 |  [loaders](./dmclc.launcher.loaders.md) |  | Map&lt;string, [Loader](./dmclc.loader.md)<!-- -->&lt;unknown&gt;&gt; | All loaders. |
 |  [mirror](./dmclc.launcher.mirror.md) |  | string \| undefined | BMCLAPI |

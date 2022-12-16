@@ -9,7 +9,7 @@ Version.
 <b>Signature:</b>
 
 ```typescript
-export declare class Version 
+export declare class MinecraftVersion 
 ```
 
 ## Constructors

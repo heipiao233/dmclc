@@ -9,14 +9,14 @@ Get all loader versions that work on the Minecraft version
 <b>Signature:</b>
 
 ```typescript
-getSuitableLoaderVersions(MCVersion: Version): Promise<string[]>;
+getSuitableLoaderVersions(MCVersion: MinecraftVersion): Promise<string[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  MCVersion | [Version](./dmclc.version.md) | Minecraft version. |
+|  MCVersion | [MinecraftVersion](./dmclc.version.md) | Minecraft version. |
 
 <b>Returns:</b>
 

@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-install(ver: VersionInfo, versionName: string): Promise<Version>;
+install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion>;
 ```
 
 ## Parameters
@@ -15,11 +15,11 @@ install(ver: VersionInfo, versionName: string): Promise<Version>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  ver | [VersionInfo](./dmclc.versioninfo.md) | The version to install. |
-|  versionName | string | The [Version.name](./dmclc.version.name.md) of the new version. |
+|  versionName | string | The  of the new version. |
 
 <b>Returns:</b>
 
-Promise&lt;[Version](./dmclc.version.md)<!-- -->&gt;
+Promise&lt;[MinecraftVersion](./dmclc.version.md)<!-- -->&gt;
 
 The new version.
 

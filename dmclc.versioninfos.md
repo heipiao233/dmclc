@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type VersionInfos = {
+export type VersionInfos = {
     latest: {
         release: string;
         snapshot: string;

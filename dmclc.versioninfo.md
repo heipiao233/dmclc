@@ -8,7 +8,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type VersionInfo = {
+export type VersionInfo = {
     id: string;
     type: string;
     url: string;

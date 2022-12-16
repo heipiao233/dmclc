@@ -9,14 +9,14 @@ Install.
 <b>Signature:</b>
 
 ```typescript
-install(MCVersion: Version, version: string): Promise<void>;
+install(MCVersion: MinecraftVersion, version: string): Promise<void>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  MCVersion | [Version](./dmclc.version.md) | Minecraft version. |
+|  MCVersion | [MinecraftVersion](./dmclc.version.md) | Minecraft version. |
 |  version | string | Loader version. |
 
 <b>Returns:</b>
