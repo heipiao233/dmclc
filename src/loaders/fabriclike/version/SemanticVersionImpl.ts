@@ -154,7 +154,7 @@ export class SemanticVersionImpl implements SemanticVersion {
             fnBuilder.push(this.build);
         }
 
-        this.friendlyName = fnBuilder.toString();
+        this.friendlyName = fnBuilder.join("");
     }
 
     getVersionComponentCount(): number {

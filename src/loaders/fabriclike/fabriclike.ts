@@ -280,6 +280,6 @@ export function formatDepVersion(version: string | string[]): string {
     if(version instanceof Array) {
         return version.map(formatDepVersion).join("\nor\n");
     }
-    const v = VersionParser.parse(version, false);
-    return v.getFriendlyString();
+    const v = VersionPredicateParser.parseOne(version);
+    return v.toString();
 }
