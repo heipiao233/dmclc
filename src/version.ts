@@ -47,7 +47,7 @@ export class LoaderInfo {
  * Version.
  * @public
  */
-export class Version {
+export class MinecraftVersion {
     private launcher: Launcher;
     private versionObject: MCVersion;
     extras: DMCLCExtraVersionInfo;
@@ -59,8 +59,8 @@ export class Version {
      * @param name - The name of this version. The directory name, not always Minecraft version.
      * @returns The new created version object.
      */
-    static fromVersionName(launcher: Launcher, name: string): Version {
-        const version = new Version(launcher, expandInheritsFrom(JSON.parse(fs.readFileSync(`${launcher.rootPath}/versions/${name}/${name}.json`).toString()), launcher.rootPath));
+    static fromVersionName(launcher: Launcher, name: string): MinecraftVersion {
+        const version = new MinecraftVersion(launcher, expandInheritsFrom(JSON.parse(fs.readFileSync(`${launcher.rootPath}/versions/${name}/${name}.json`).toString()), launcher.rootPath));
         return version;
     }
 

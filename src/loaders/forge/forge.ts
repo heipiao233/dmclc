@@ -1,7 +1,7 @@
 import { Loader, ModLoadingIssue } from "../loader.js";
 import { Launcher } from "../../launcher.js";
 import { parseStringPromise } from "xml2js";
-import { got } from "got";
+import got from "got";
 import { download } from "../../utils/downloads.js";
 import { tmpdir } from "os";
 import fs from "fs";
@@ -14,7 +14,7 @@ import { execFileSync } from "child_process";
 import StreamZip from "node-stream-zip";
 import { merge } from "../../utils/mergeversionjson.js";
 import { InstallerProfileOld } from "./install_profile_old.js";
-import { Version } from "../../version.js";
+import { MinecraftVersion } from "../../version.js";
 import { ModInfo } from "../../mods/mod.js";
 import toml from "toml";
 import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";
@@ -35,7 +35,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         }
     }
 
-    async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {
+    async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
             throw new Error("Minecraft Version Unknown");
         }
@@ -45,7 +45,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         return versions.filter((v: string) => v.startsWith(`${MCVersion}-`));
     }
 
-    async install (MCVersion: Version, version: string): Promise<void> {
+    async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
         if(MCVersion.extras.version === "Unknown") {
             throw new Error("Minecraft Version Unknown");
         }
@@ -87,7 +87,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         }
     }
 
-    transformArguments (arg: string, MCVersion: Version, metadata: InstallerProfileNew): string {
+    transformArguments (arg: string, MCVersion: MinecraftVersion, metadata: InstallerProfileNew): string {
         return arg.replaceAll(/\{(.+?)\}/g, (v, a) => {
             if (a === "SIDE") return "client";
             if (a === "MINECRAFT_JAR") return `${MCVersion.versionRoot}/${MCVersion.name}.jar`;

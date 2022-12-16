@@ -1,6 +1,6 @@
 import { ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
-import { Version } from "../version.js";
+import { MinecraftVersion } from "../version.js";
 
 export type IssueLevel = "error" | "warning";
 
@@ -24,13 +24,13 @@ export interface Loader<T> {
      * Get all loader versions that work on the Minecraft version
      * @param MCVersion - Minecraft version.
      */
-    getSuitableLoaderVersions(MCVersion: Version): Promise<string[]>
+    getSuitableLoaderVersions(MCVersion: MinecraftVersion): Promise<string[]>
     /**
      * Install.
      * @param MCVersion - Minecraft version.
      * @param version - Loader version.
      */
-    install(MCVersion: Version, version: string): Promise<void>
+    install(MCVersion: MinecraftVersion, version: string): Promise<void>
     /**
      * Get the version installed, or null if not installed or can't find.
      * @param MCVersion - Minecraft version manifest.

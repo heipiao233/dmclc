@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "3.0.0-alpha.16",
+  "version": "3.1.0-alpha.1",
   "description": "Dolphin Minecraft Launcher Core",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -46,7 +46,6 @@
     "iconv-lite": "^0.6.3",
     "maven-artifact-version": "^0.0.1",
     "node-stream-zip": "^1.15.0",
-    "semver": "^7.3.8",
     "toml": "^3.0.0",
     "uuid": "^9.0.0",
     "xml2js": "^0.4.23"

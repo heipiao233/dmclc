@@ -1,7 +1,7 @@
 import { Account } from "../account.js";
 import { YggdrasilUserData } from "./yggdrasil_data.js";
 import * as https from "https";
-import { Version } from "../../version.js";
+import { MinecraftVersion } from "../../version.js";
 export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements Account<T> {
     data: T;
     protected root: string;
@@ -11,7 +11,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     abstract prepareLaunch(): Promise<void>
-    abstract getLaunchJVMArgs(mc: Version): Promise<string[]>
+    abstract getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>
     async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
         const at = await this.getAccessToken();

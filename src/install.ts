@@ -2,7 +2,7 @@ import fs from "fs";
 import * as http_request from "./utils/http_request.js";
 import { VersionInfo, VersionInfos } from "./schemas.js";
 import { Launcher } from "./launcher.js";
-import { DMCLCExtraVersionInfo, Version } from "./version.js";
+import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version.js";
 import { mkdirs } from "fs-extra";
 /**
  * Install new Minecraft versions.
@@ -31,10 +31,10 @@ export class Installer {
     /**
      * 
      * @param ver - The version to install.
-     * @param versionName - The {@link Version.name} of the new version.
+     * @param versionName - The {@link MinecraftVersion.name} of the new version.
      * @returns The new version.
      */
-    async install(ver: VersionInfo, versionName: string): Promise<Version> {
+    async install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion> {
         const content = await http_request.get(ver.url, this.launcher.mirror);
         const obj = JSON.parse(content);
         obj.id = versionName;
@@ -46,7 +46,7 @@ export class Installer {
             enableIndependentGameDir: false
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
-        const version = Version.fromVersionName(this.launcher, versionName);
+        const version = MinecraftVersion.fromVersionName(this.launcher, versionName);
         version.completeVersionInstall();
         return version;
     }

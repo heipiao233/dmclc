@@ -5,12 +5,15 @@ import { Launcher } from "../../launcher.js";
 import { MCVersion } from "../../schemas.js";
 import fs from "fs";
 import { merge } from "../../utils/mergeversionjson.js";
-import { Version } from "../../version.js";
+import { MinecraftVersion } from "../../version.js";
 import { ModInfo } from "../../mods/mod.js";
-import * as semver from "semver";
 import StreamZip from "node-stream-zip";
 import { FabricModJson } from "../fabric_schemas.js";
 import { tmpdir } from "os";
+import { VersionPredicateParser } from "./version/VersionPredicateParser.js";
+import { SemanticVersionImpl } from "./version/SemanticVersionImpl.js";
+import { VersionPredicate } from "./version/VersionPredicate.js";
+import { VersionParser } from "./version/VersionParser.js";
 export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M | FabricModJson> {
     abstract loaderMaven: string;
     abstract metaURL: string;
@@ -46,7 +49,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     }
 
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
-    async getSuitableLoaderVersions (MCVersion: Version): Promise<string[]> {
+    async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
             throw new Error("Minecraft Version Unknown");
         }
@@ -59,7 +62,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         return result;
     }
 
-    async install (MCVersion: Version, version: string): Promise<void> {
+    async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
         if(MCVersion.extras.version === "Unknown") {
             throw new Error("Minecraft Version Unknown");
         }
@@ -70,25 +73,6 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const newVersion: MCVersion = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}/profile/json`).json();
         fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(merge(mcVersion, newVersion)));
     }
-}
-
-export function formatDepVersion(dep: string | string[]): string {
-    if(typeof(dep) === "string"){
-        return dep.replaceAll(" ", " and ");
-    } else {
-        return dep.map(formatDepVersion).join("\nor ");
-    }
-}
-
-export function checkMatch(current: string, required: string | string[]): boolean {
-    if(current === "Provided") return true;
-    current = fixWrongSemVer(current);
-    if(typeof(required) === "string") {
-        return !required.split(" ")
-            .map(v=>fixWrongSemVer(v))
-            .map(v=>semver.satisfies(current, v, {includePrerelease: true})).includes(false);
-    }
-    return required.map(v=>checkMatch(current, v)).includes(true);
 }
 
 /**
@@ -109,7 +93,7 @@ export function normalizeVersion(mc: string): string {
         return `${release}-rc.${rcBuild}`;
     } else if ((matcher = mc.match(/(.*)-pre\d+/))) {
         const release = matcher[1];
-        const legacy = semver.gte("1.16", release);
+        const legacy = VersionPredicateParser.parseOne("<=1.16").test(SemanticVersionImpl.of(release, false));
         if(legacy) {
             return `${release}-rc.${matcher[2]}`;
         } else return `${release}-beta.${matcher[2]}`;
@@ -279,18 +263,23 @@ function getCombatVersion(mc: string): string {
     }
 }
 
-function fixWrongSemVer(v: string): string {
-    if(v === "*")return v;
-    const [a, b] = v.split("-");
-    if(b === "") {
-        if(a.indexOf(".") === a.lastIndexOf(".")) {
-            return `${a}.0`;
-        }
-        return a;
+export function checkMatch(current: string, required: string | string[]): boolean {
+    let p: Set<VersionPredicate>;
+    const currentV = VersionParser.parse(current, false);
+    if(required instanceof Array) {
+        p = VersionPredicateParser.parse(required);
+    } else p = new Set([VersionPredicateParser.parseOne(required)]);
+    let res = true;
+    for (const i of p) {
+        res &&= i.test(currentV);
     }
-    if(a.indexOf(".") === a.lastIndexOf(".")) {
-        return `${a}.0-${b}`;
-    }
-    return v;
+    return res;
 }
 
+export function formatDepVersion(version: string | string[]): string {
+    if(version instanceof Array) {
+        return version.map(formatDepVersion).join("\nor\n");
+    }
+    const v = VersionParser.parse(version, false);
+    return v.getFriendlyString();
+}

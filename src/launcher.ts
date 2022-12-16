@@ -4,7 +4,7 @@ import { Loader } from "./loaders/loader.js";
 import { FabricLoader } from "./loaders/fabric.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
 import { ForgeLoader } from "./loaders/forge/forge.js";
-import { Version } from "./version.js";
+import { MinecraftVersion } from "./version.js";
 import fs from "fs";
 import { mkdirsSync } from "fs-extra";
 import { Account } from "./auth/account.js";
@@ -37,7 +37,7 @@ export class Launcher {
     /** Using Java executable */
     usingJava: string;
     /** All installed versions. */
-    installedVersions: Map<string, Version>;
+    installedVersions: Map<string, MinecraftVersion>;
     /**
      * Create a new Launcher object.
      * @param rootPath - {@link Launcher.rootPath}
@@ -75,15 +75,15 @@ export class Launcher {
      * Gets all installed versions, no cache.
      * @returns All installed versions.
      */
-    getInstalledVersions(): Map<string, Version> {
-        const value = new Map<string, Version>();
+    getInstalledVersions(): Map<string, MinecraftVersion> {
+        const value = new Map<string, MinecraftVersion>();
         if (!fs.existsSync(`${this.rootPath}/versions`)) {
             mkdirsSync(`${this.rootPath}/versions`);
             return new Map();
         }
         fs.readdirSync(`${this.rootPath}/versions`)
             .filter(value=>fs.existsSync(`${this.rootPath}/versions/${value}/${value}.json`))
-            .forEach(name=>value.set(name, Version.fromVersionName(this, name)));
+            .forEach(name=>value.set(name, MinecraftVersion.fromVersionName(this, name)));
         return value;
     }
 }

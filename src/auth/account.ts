@@ -1,5 +1,5 @@
 import { UserData } from "./user_data.js";
-import { Version } from "../version.js";
+import { MinecraftVersion } from "../version.js";
 /**
  * An account.
  * @public
@@ -24,7 +24,7 @@ export interface Account<T extends UserData> {
   /**
    * @internal
    */
-  getLaunchJVMArgs(mc: Version): Promise<string[]>
+  getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>
   /**
    * @internal
    */

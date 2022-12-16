@@ -4,7 +4,7 @@ import fs from "fs";
 import { checkFile } from "../utils/check_file.js";
 import { download } from "../utils/downloads.js";
 import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
-import { Version } from "../version.js";
+import { MinecraftVersion } from "../version.js";
 export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> {
 
     getUserExtraContent(): string[] {
@@ -25,7 +25,7 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
         }
     }
 
-    async getLaunchJVMArgs (mc: Version): Promise<string[]> {
+    async getLaunchJVMArgs (mc: MinecraftVersion): Promise<string[]> {
         const content = await get(this.data.apiurl!, "");
         return [`-javaagent:${mc.extras.enableIndependentGameDir?"../..":"."}/authlib-injector-latest.jar=${this.data.apiurl}`, `-Dauthlibinjector.yggdrasil.prefetched=${Buffer.from(content).toString("base64")}`];
     }
