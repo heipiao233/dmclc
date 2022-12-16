@@ -63,7 +63,7 @@ export class SemanticVersionImpl implements SemanticVersion {
             throw new VersionParsingException("Missing version component!");
         }
 
-        const componentStrings = version.split("\\.");
+        const componentStrings = version.split(".");
 
         if (componentStrings.length < 1) {
             throw new VersionParsingException("Did not provide version numbers!");
