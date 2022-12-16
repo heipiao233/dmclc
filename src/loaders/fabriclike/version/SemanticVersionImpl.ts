@@ -28,7 +28,7 @@ import { Version } from "./Version.js";
  * <li>Arbitrary {@code <build>} contents
  * </ul>
  */
-export class SemanticVersionImpl implements SemanticVersion {
+export class SemanticVersionImpl extends SemanticVersion {
     private static readonly DOT_SEPARATED_ID = /|[-0-9A-Za-z]+(\.[-0-9A-Za-z]+)*/;
     private static readonly UNSIGNED_INTEGER = /0|[1-9][0-9]*/;
     private readonly components: number[] = [];
@@ -117,6 +117,7 @@ export class SemanticVersionImpl implements SemanticVersion {
     }
 
     constructor(components: number[], prerelease: string | null, build: string | null) {
+        super();
         if (components.length == 0 || components[0] == SemanticVersion.COMPONENT_WILDCARD) throw new Error("Invalid components: "+components);
 
         this.components = components;
