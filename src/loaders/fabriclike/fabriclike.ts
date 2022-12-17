@@ -264,6 +264,7 @@ function getCombatVersion(mc: string): string {
 }
 
 export function checkMatch(current: string, required: string | string[]): boolean {
+    if(current === "Provided") return true;
     let p: Set<VersionPredicate>;
     const currentV = VersionParser.parse(current, false);
     if(required instanceof Array) {

@@ -247,8 +247,8 @@ export class SemanticVersionImpl extends SemanticVersion {
         const prereleaseA = this.getPrereleaseKey();
         const prereleaseB = o.getPrereleaseKey();
 
-        if (prereleaseA || prereleaseB) {
-            if (prereleaseA && prereleaseB) {
+        if (prereleaseA !== null || prereleaseB !== null) {
+            if (prereleaseA !== null && prereleaseB !== null) {
                 const prereleaseATokenizer = prereleaseA.split(".");
                 const prereleaseBTokenizer = prereleaseB.split(".");
                 // while (prereleaseATokenizer.hasMoreElements()) {

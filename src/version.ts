@@ -53,6 +53,7 @@ export class MinecraftVersion {
     extras: DMCLCExtraVersionInfo;
     name: string;
     versionRoot: string;
+    versionJarPath: string;
     /**
      * Creates a new version from name.
      * @param launcher - The launcher instance
@@ -74,10 +75,11 @@ export class MinecraftVersion {
         this.versionObject = object;
         this.name = object.id;
         this.versionRoot = `${this.launcher.rootPath}/versions/${this.name}`;
+        this.versionJarPath = `${this.versionRoot}/${this.name}.jar`;
         const extraPath = `${this.versionRoot}/dmclc_extras.json`;
         if(!fs.existsSync(extraPath)){
             this.extras = this.detectExtras();
-            fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
+            this.saveExtras();
         } else {
             this.extras = JSON.parse(fs.readFileSync(extraPath).toString());
         }
@@ -103,14 +105,14 @@ export class MinecraftVersion {
         return ret;
     }
     async getVersionFromJar() {
-        const zip = new StreamZip.async({file: `${this.versionRoot}/${this.name}.jar`});
+        const zip = new StreamZip.async({file: this.versionJarPath});
         const entry = await zip.entry("version.json");
         if(entry) {
             const obj = JSON.parse((await zip.entryData(entry)).toString());
             this.extras.version = obj.id;
         }
         await zip.close();
-        fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
+        this.saveExtras();
     }
 
     /**
@@ -136,9 +138,9 @@ export class MinecraftVersion {
      * Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
      */
     async completeVersionInstall() {
-        if (!fs.existsSync(`${this.versionRoot}/${this.name}.jar`) ||
-            !checkFile(`${this.versionRoot}/${this.name}.jar`, this.versionObject.downloads.client.sha1)) {
-            await download(this.versionObject.downloads.client.url, `${this.versionRoot}/${this.name}.jar`);
+        if (!fs.existsSync(this.versionJarPath) ||
+            !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
+            await download(this.versionObject.downloads.client.url, this.versionJarPath);
         }
         await this.completeAssets(this.versionObject.assetIndex);
         await this.completeLibraries(this.versionObject.libraries);
@@ -304,8 +306,13 @@ export class MinecraftVersion {
             name: name,
             version: loaderVersion
         });
+        this.saveExtras();
+    }
+
+    saveExtras() {
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
     }
+
     async findMods(): Promise<ModJarInfo[]> {
         const moddir = `${
             this.extras.enableIndependentGameDir
@@ -322,6 +329,10 @@ export class MinecraftVersion {
         return val;
     }
 
+    /**
+     * Check mod dependencies. You should warn your users that the result is not always correct.
+     * @returns All mod loading issues.
+     */
     async checkMods(): Promise<ModLoadingIssue[]> {
         if(this.extras.loaders.length===0)return [];
         const loader = this.launcher.loaders.get(this.extras.loaders[0].name)!;
