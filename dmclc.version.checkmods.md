@@ -4,6 +4,8 @@
 
 ## Version.checkMods() method
 
+Check mod dependencies. You should warn your users that the result is not always correct.
+
 <b>Signature:</b>
 
 ```typescript
@@ -12,4 +14,6 @@ checkMods(): Promise<ModLoadingIssue[]>;
 <b>Returns:</b>
 
 Promise&lt;ModLoadingIssue\[\]&gt;
+
+All mod loading issues.
 

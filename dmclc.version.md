@@ -24,13 +24,14 @@ export declare class MinecraftVersion
 |  --- | --- | --- | --- |
 |  [extras](./dmclc.version.extras.md) |  | DMCLCExtraVersionInfo |  |
 |  [name](./dmclc.version.name.md) |  | string |  |
+|  [versionJarPath](./dmclc.version.versionjarpath.md) |  | string |  |
 |  [versionRoot](./dmclc.version.versionroot.md) |  | string |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [checkMods()](./dmclc.version.checkmods.md) |  |  |
+|  [checkMods()](./dmclc.version.checkmods.md) |  | Check mod dependencies. You should warn your users that the result is not always correct. |
 |  [completeLibraries(liblist)](./dmclc.version.completelibraries.md) |  | INTERNAL API. MAY BE CHANGE WITHOUT NOTIFY. Fix wrong and missing libraries. Used by Forge installing. |
 |  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
 |  [findMods()](./dmclc.version.findmods.md) |  |  |
@@ -39,4 +40,5 @@ export declare class MinecraftVersion
 |  [getVersionFromJar()](./dmclc.version.getversionfromjar.md) |  |  |
 |  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  |  |
 |  [run(account)](./dmclc.version.run.md) |  | Run this version! |
+|  [saveExtras()](./dmclc.version.saveextras.md) |  |  |
 
