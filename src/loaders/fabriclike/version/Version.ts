@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-import { VersionParser } from "./VersionParser.js";
-
 /**
  * Represents a version of a mod.
  *
@@ -27,17 +25,6 @@ export abstract class Version {
      * Returns the user-friendly representation of this version.
      */
     abstract getFriendlyString(): string;
-
-    /**
-     * Parses a version from a string notation.
-     *
-     * @param string the string notation of the version
-     * @return the parsed version
-     * @throws VersionParsingException if a problem arises during version parsing
-     */
-    static parse(string: string): Version {
-        return VersionParser.parse(string, false);
-    }
 
     abstract compareTo(version: Version): number;
 

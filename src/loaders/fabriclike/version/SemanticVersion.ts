@@ -16,7 +16,6 @@
  */
 
 import { Version } from "./Version.js";
-import { VersionParser } from "./VersionParser.js";
 
 /**
  * Represents a <a href="https://semver.org/">Sematic Version</a>.
@@ -83,15 +82,4 @@ export abstract class SemanticVersion extends Version {
 	 * @return whether this version has a wildcard notation
 	 */
     abstract hasWildcard(): boolean | undefined;
-
-    /**
-	 * Parses a semantic version from a string notation.
-	 *
-	 * @param s the string notation of the version
-	 * @return the parsed version
-	 * @throws VersionParsingException if a problem arises during version parsing
-	 */
-    static parse(s: string): SemanticVersion {
-        return VersionParser.parseSemantic(s);
-    }
 }
