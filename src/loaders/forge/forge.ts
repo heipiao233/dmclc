@@ -165,9 +165,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                             }
                         }
                     }
-            } else {
-                ret.push(new ModLoadingIssue("warning", "dmclc.mods.dependency_check_may_not_always_true",
-                    [mod.data.modid]));
+            } else if(parseInt(mc.split(".")[1])<=12) {
                 if(mod.data.useDependencyInformation) {
                     if(mod.data.requiredMods)
                         for (const dep of mod.data.requiredMods) {
