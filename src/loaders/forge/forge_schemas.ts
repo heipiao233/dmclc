@@ -20,7 +20,7 @@ export type ForgeModsToml = {
     license: string;
     issueTrackerURL: string;
     mods: ForgeNewMod[];
-    dependencies: Record<string, Dependency[]>
+    dependencies?: Record<string, Dependency[]>;
 }
 export type ForgeMcmodInfoOne = {
     modid: string;
@@ -39,7 +39,7 @@ export type ForgeMcmodInfoOne = {
 export type ForgeMcmodInfo = ForgeMcmodInfoOne[];
 export type StoreData = {
     info: ForgeNewMod;
-    deps: Dependency[];
+    deps?: Dependency[];
 };
 export type ForgeJarJarJson = {
     jars: {

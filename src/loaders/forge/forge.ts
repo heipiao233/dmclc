@@ -118,10 +118,15 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 if(i.version === "${file.jarVersion}"){
                     i.version = await getVersion(zip);
                 }
-                ret.push(new ModInfo("forge", {
-                    info: i,
-                    deps: data.dependencies[i.modId]
-                }));
+                if(data.dependencies)
+                    ret.push(new ModInfo("forge", {
+                        info: i,
+                        deps: data.dependencies[i.modId]
+                    }));
+                else
+                    ret.push(new ModInfo("forge", {
+                        info: i
+                    }));
             }
         }
         const oldEntry = await zip.entry("mcmod.info");
@@ -150,15 +155,16 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         }
         for (const mod of mods) {
             if("info" in mod.data){
-                for (const dep of mod.data.deps) {
-                    if(dep.mandatory) {
-                        const range = VersionRange.createFromVersionSpec(dep.versionRange)!;
-                        if(!(dep.modId in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
-                            ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
-                                [mod.data.info.modId, dep.modId, dep.versionRange]));
+                if(mod.data.deps)
+                    for (const dep of mod.data.deps) {
+                        if(dep.mandatory) {
+                            const range = VersionRange.createFromVersionSpec(dep.versionRange)!;
+                            if(!(dep.modId in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
+                                ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
+                                    [mod.data.info.modId, dep.modId, dep.versionRange]));
+                            }
                         }
                     }
-                }
             } else {
                 ret.push(new ModLoadingIssue("warning", "dmclc.mods.dependency_check_may_not_always_true",
                     [mod.data.modid]));
