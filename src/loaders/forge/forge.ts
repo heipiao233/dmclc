@@ -205,5 +205,5 @@ async function getMainClass (jar: string): Promise<string> {
 
 async function getVersion (jar: StreamZip.StreamZipAsync): Promise<string> {
     /* eslint-disable new-cap */
-    return (await jar.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Implementation-Version:"))[0].replaceAll("Implementation-Version:", "").trim();
+    return (await jar.entryData("META-INF/MANIFEST.MF")).toString().split("\n").filter(i => i.startsWith("Implementation-Version:"))[0]?.replaceAll("Implementation-Version:", "").trim();
 }
