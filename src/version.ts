@@ -145,9 +145,9 @@ export class MinecraftVersion {
             !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
             promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath));
         }
-        promises.push(new TaskNode(this.completeAssets(this.versionObject.assetIndex)));
+        promises.push(TaskNode.of(this.completeAssets(this.versionObject.assetIndex)));
         promises.push(this.completeLibraries(this.versionObject.libraries));
-        return new TaskNode(promises);
+        return TaskNode.of(promises);
     }
     private async completeAssets (asset: AssetIndexInfo): Promise<Promise<void>[]> {
         const allDownloads: Map<string, PathLike> = new Map();
@@ -211,7 +211,7 @@ export class MinecraftVersion {
                 }
             }
         }
-        return new TaskNode(downloadAll(allDownloads, this.launcher.mirror));
+        return TaskNode.of(downloadAll(allDownloads, this.launcher.mirror));
     }
 
     private getClassPath (versionObject: MCVersion, versionName: string): string[] {

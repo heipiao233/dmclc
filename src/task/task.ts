@@ -2,30 +2,34 @@ export class TaskNode extends Promise<void> {
     addProgress?: () => void;
     done = -1;
     all = 0;
-    constructor(childs_: Promise<Promise<void>[]> | Promise<void>[]) {
-        super(async (resolve, reject) => {
+    static of(childs_: Promise<Promise<void>[]> | Promise<void>[]): TaskNode {
+        const obj = new this(async (resolve, reject) => {
             const childs = await childs_;
             if(!(childs instanceof Array))return;
-            if (this.addProgress)
-                this.addProgress();
-            this.done++;
-            this.all = childs.length;
+            if (obj.addProgress)
+                obj.addProgress();
+            obj.done++;
+            obj.all = childs.length;
             for (const child of childs) {
                 if(child instanceof TaskNode) {
-                    this.all--;
-                    this.all += child.all;
-                    child.onAddProgress(this.addProgress);
+                    obj.all--;
+                    obj.all += child.all;
+                    child.onAddProgress(obj.addProgress);
                 } else {
                     child.then(() => {
-                        if (this.addProgress)
-                            this.addProgress();
-                        this.done++;
-                        if(this.done === this.all)resolve();
+                        if (obj.addProgress)
+                            obj.addProgress();
+                        obj.done++;
+                        if(obj.done === obj.all)resolve();
                     });
                     child.catch(reject);
                 }
             }
         });
+        return obj;
+    }
+    private constructor(executor: (resolve: (value: void | PromiseLike<void>) => void, reject: (reason?: unknown) => void) => void) {
+        super(executor);
     }
     onAddProgress(addProgress?: () => void) {
         this.addProgress = addProgress;
