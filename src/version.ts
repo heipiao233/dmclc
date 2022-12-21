@@ -12,10 +12,12 @@ import { expandMavenId } from "./utils/maven.js";
 import path from "path";
 import os from "os";
 import compressing from "compressing";
-import { mkdirs } from "fs-extra";
+import { mkdirs, mkdirsSync } from "fs-extra";
 import { ModJarInfo } from "./mods/mod.js";
 import { ModLoadingIssue } from "./loaders/loader.js";
 import StreamZip from "node-stream-zip";
+import { readFile, writeFile } from "fs/promises";
+import { TaskNode } from "./task/task.js";
 
 /**
  * @internal
@@ -137,46 +139,49 @@ export class MinecraftVersion {
     /**
      * Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
      */
-    async completeVersionInstall() {
+    completeVersionInstall(): TaskNode {
+        const promises = [];
         if (!fs.existsSync(this.versionJarPath) ||
             !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
-            await download(this.versionObject.downloads.client.url, this.versionJarPath);
+            promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath));
         }
-        await this.completeAssets(this.versionObject.assetIndex);
-        await this.completeLibraries(this.versionObject.libraries);
+        promises.push(new TaskNode(this.completeAssets(this.versionObject.assetIndex)));
+        promises.push(this.completeLibraries(this.versionObject.libraries));
+        return new TaskNode(promises);
     }
-    private async completeAssets (asset: AssetIndexInfo): Promise<void> {
+    private async completeAssets (asset: AssetIndexInfo): Promise<Promise<void>[]> {
         const allDownloads: Map<string, PathLike> = new Map();
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
-        let assetJson: string;
+        let assetJson;
         if (!fs.existsSync(indexPath)) {
             assetJson = await http_request.get(asset.url, this.launcher.mirror);
-            await mkdirs(`${this.launcher.rootPath}/assets/indexes`);
-            fs.writeFileSync(indexPath, assetJson);
+            mkdirs(`${this.launcher.rootPath}/assets/indexes`);
+            writeFile(indexPath, assetJson);
         } else {
-            assetJson = fs.readFileSync(indexPath).toString();
+            assetJson = (await readFile(indexPath)).toString();
         }
         const assetsObjects = `${this.launcher.rootPath}/assets/objects`;
-        await mkdirs(assetsObjects);
+        mkdirs(assetsObjects);
         const assetobj: AssetsIndex = JSON.parse(assetJson);
         for (const assid in assetobj.objects) {
             const assitem: Asset = assetobj.objects[assid];
             if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
                 !checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
-                await mkdirs(`${assetsObjects}/${assitem.hash.slice(0, 2)}`);
+                mkdirs(`${assetsObjects}/${assitem.hash.slice(0, 2)}`);
                 console.log(assid);
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
-        await downloadAll(allDownloads, this.launcher.mirror);
+        return downloadAll(allDownloads, this.launcher.mirror);
     }
 
     /**
      * INTERNAL API. MAY BE CHANGE WITHOUT NOTIFY.
      * Fix wrong and missing libraries. Used by Forge installing.
      * @param liblist - All the libraries.
+     * @internal
      */
-    async completeLibraries (liblist: Library[]): Promise<void> {
+    completeLibraries (liblist: Library[]): TaskNode {
         const allDownloads: Map<string, PathLike> = new Map();
         const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
@@ -184,7 +189,7 @@ export class MinecraftVersion {
         for (const i of used) {
             if (i.downloads === undefined) {
                 const filePath = expandMavenId(i.name);
-                await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
+                mkdirsSync(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
                 let url: string;
                 if(i.url===undefined)url = "https://libraries.minecraft.net/";
                 else url = i.url;
@@ -199,14 +204,14 @@ export class MinecraftVersion {
                 }
                 for (const artifact of artifacts) {
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
-                        await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
+                        mkdirsSync(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
                         console.log(i.name);
                         allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                     }
                 }
             }
         }
-        await downloadAll(allDownloads, this.launcher.mirror);
+        return new TaskNode(downloadAll(allDownloads, this.launcher.mirror));
     }
 
     private getClassPath (versionObject: MCVersion, versionName: string): string[] {

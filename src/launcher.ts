@@ -12,6 +12,7 @@ import { AuthlibInjectorAccount } from "./auth/ali_account.js";
 import { MinecraftUniversalLoginAccount } from "./auth/mul_account.js";
 import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
 import { OfflineAccount } from "./auth/offline_account.js";
+import { TaskNode } from "./task/task.js";
 /**
  * The core of DMCLC.
  * @public
@@ -38,6 +39,7 @@ export class Launcher {
     usingJava: string;
     /** All installed versions. */
     installedVersions: Map<string, MinecraftVersion>;
+    private tasks: TaskNode[] = [];
     /**
      * Create a new Launcher object.
      * @param rootPath - {@link Launcher.rootPath}
@@ -46,7 +48,7 @@ export class Launcher {
      */
     constructor (rootPath: string, name: string, javaExec: string) {
         this.name = name;
-        this.rootPath = rootPath;
+        this.rootPath = fs.realpathSync(rootPath);
         this.usingJava = javaExec;
         if (this.systemType === "win32") {
             this.separator = ";";
@@ -85,5 +87,11 @@ export class Launcher {
             .filter(value=>fs.existsSync(`${this.rootPath}/versions/${value}/${value}.json`))
             .forEach(name=>value.set(name, MinecraftVersion.fromVersionName(this, name)));
         return value;
+    }
+    addTaskNode(task: TaskNode) {
+        const i = this.tasks.push(task);
+        task.then(()=>{
+            this.tasks.splice(i, 1);
+        });
     }
 }
