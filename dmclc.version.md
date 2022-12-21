@@ -32,7 +32,6 @@ export declare class MinecraftVersion
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [checkMods()](./dmclc.version.checkmods.md) |  | Check mod dependencies. You should warn your users that the result is not always correct. |
-|  [completeLibraries(liblist)](./dmclc.version.completelibraries.md) |  | INTERNAL API. MAY BE CHANGE WITHOUT NOTIFY. Fix wrong and missing libraries. Used by Forge installing. |
 |  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
 |  [findMods()](./dmclc.version.findmods.md) |  |  |
 |  [fromVersionName(launcher, name)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |

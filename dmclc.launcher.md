@@ -38,5 +38,6 @@ export declare class Launcher
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [addTaskNode(task)](./dmclc.launcher.addtasknode.md) |  |  |
 |  [getInstalledVersions()](./dmclc.launcher.getinstalledversions.md) |  | Gets all installed versions, no cache. |
 
