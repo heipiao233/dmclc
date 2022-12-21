@@ -5,7 +5,7 @@ export class TaskNode extends Promise<void> {
     static of(childs_: Promise<Promise<void>[]> | Promise<void>[]): TaskNode {
         const obj = new this(async (resolve, reject) => {
             const childs = await childs_;
-            if(!(childs instanceof Array))return;
+            if(childs.length === 0)resolve();
             if (obj.addProgress)
                 obj.addProgress();
             obj.done++;
@@ -15,6 +15,7 @@ export class TaskNode extends Promise<void> {
                     obj.all--;
                     obj.all += child.all;
                     child.onAddProgress(obj.addProgress);
+                    if(obj.done === obj.all)resolve();
                 } else {
                     child.then(() => {
                         if (obj.addProgress)
