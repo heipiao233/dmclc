@@ -4,9 +4,10 @@ export class TaskNode extends Promise<void> {
     all = 0;
     constructor(childs_: Promise<Promise<void>[]> | Promise<void>[]) {
         super(async (resolve, reject) => {
+            const childs = await childs_;
+            if(!(childs instanceof Array))return;
             if (this.addProgress)
                 this.addProgress();
-            const childs = await childs_;
             this.done++;
             this.all = childs.length;
             for (const child of childs) {
