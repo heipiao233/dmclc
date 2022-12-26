@@ -9,9 +9,9 @@ Complete this version installation. Fix wrong libraries, asset files and version
 <b>Signature:</b>
 
 ```typescript
-completeVersionInstall(): TaskNode;
+completeVersionInstall(): Promise<void[]>;
 ```
 <b>Returns:</b>
 
-TaskNode
+Promise&lt;void\[\]&gt;
 
