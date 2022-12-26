@@ -1,5 +1,5 @@
 import fs from "fs";
-import * as fr from "follow-redirects";
+import fr from "follow-redirects";
 const https = fr.https;
 export function downloadAll(files: Map<string, fs.PathLike>, mirror?: string): Promise<void>[] {
     const promises: Array<Promise<void>> = new Array<Promise<void>>();
