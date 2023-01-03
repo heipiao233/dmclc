@@ -1,4 +1,4 @@
-import { Env } from "../mods/mod.js";
+export type Env = "*" | "client" | "server";
 
 export type NestedJarEntry = {
     file: string;

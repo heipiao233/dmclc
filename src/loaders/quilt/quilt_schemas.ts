@@ -32,7 +32,7 @@ export type QuiltModJson = {
             description?: string;
             contributors?: Record<string, string>;
             contact?: Record<string, string>;
-            license?: string | string | {
+            license?: string | string[] | {
                 name: string;
                 id: string;
                 url: string;

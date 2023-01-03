@@ -1,5 +1,5 @@
-import { Account } from "../account.js";
 import { got } from "got";
+import { Account } from "../account.js";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
 type STEP1 = {
     access_token: string;
@@ -25,27 +25,26 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: genQS({
+            form: {
                 client_id: "00000000402b5328",
                 code: code,
                 grant_type: "authorization_code",
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
                 scope: "service::user.auth.xboxlive.com::MBI_SSL"
-            })
+            }
         }).json();
     }
 
     private async step1_refresh(): Promise<string> {
-        const res: {access_token: string} = await (got("https://login.live.com/oauth20_token.srf", {
-            method: "POST",
+        const res: {access_token: string} = await (got.post("https://login.live.com/oauth20_token.srf", {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: genQS({
+            form: {
                 client_id: "00000000402b5328",
                 grant_type: "refresh_token",
                 refresh_token: this.data.refresh_token!
-            })
+            }
         }).json());
         return res.access_token;
     }
@@ -128,12 +127,16 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
 
     async check (): Promise<boolean> {
         try {
-            const at=(await this.step1_refresh());
-            await this.nextSteps(at);
+            await this.refresh();
         }catch{
             return false;
         }
         return true;
+    }
+    
+    private async refresh() {
+        const at=(await this.step1_refresh());
+        await this.nextSteps(at);
     }
 
     getUUID (): string {
@@ -177,6 +180,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
 
     async getLaunchGameArgs (): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
+        await this.refresh();
         const at = this.data.accessToken!;
         map.set("auth_access_token", at);
         map.set("auth_session", at);
@@ -189,18 +193,4 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     toString (): string {
         return `${this.data.name} (Microsoft)`;
     }
-}
-
-function genQS (obj: {[index: string]: string}): string {
-    let ret = "";
-    for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            const value = obj[key];
-            const encodedValue = encodeURIComponent(value);
-            const encodedKey = encodeURIComponent(key);
-            ret = ret.concat(`${encodedKey}=${encodedValue}&`);
-        }
-    }
-    ret = ret.substring(0, ret.length - 1);
-    return ret;
 }

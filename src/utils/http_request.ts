@@ -1,7 +1,7 @@
 import got from "got";
 
 export async function get (url: string, mirror: string | undefined): Promise<string> {
-    if(mirror !== undefined){
+    if(mirror !== undefined) {
         url = url.replaceAll("launchermeta.mojang.com", mirror)
             .replaceAll("launcher.mojang.com", mirror)
             .replaceAll("resources.download.minecraft.net", mirror)

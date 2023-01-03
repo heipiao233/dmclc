@@ -1,13 +1,13 @@
 // https://github.com/huanghongxun/HMCL/blob/73b938cfd9d408df4e9a91987fea190cc9b42706/HMCLCore/src/main/java/org/jackhuang/hmcl/util/platform/JavaVersion.java#L300
 
 import * as cp from "child_process";
-import os from "os";
 import fs from "fs";
+import os from "os";
 import { Pair } from "./pair.js";
 
 /**
  * Find all java.
- * @returns All java versions.
+ * @returns All java versions. An array of Pairs, Pair.a is java version, b is java executable.
  * @public
  */
 export async function findAllJava(): Promise<Pair<string, string>[]> {

@@ -1,12 +1,12 @@
+import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
-import { ModInfo } from "../../mods/mod.js";
+import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { checkFabricDeps } from "../fabric.js";
 import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
-import StreamZip from "node-stream-zip";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
@@ -122,6 +122,27 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
             }
         }
         return issues;
+    }
+
+    
+    getModInfo(modJson: QuiltModJson): ModDisplayInfo {
+        const meta = modJson.quilt_loader.metadata;
+        const res: ModDisplayInfo = {
+            id: modJson.quilt_loader.id,
+            version: modJson.quilt_loader.version
+        };
+        if(meta) {
+            if(meta.description) res.description = meta.description;
+            if(meta.name) res.name = meta.name;
+            if(meta.license instanceof Array) {
+                res.license = meta.license.join(", ");
+            } else if(!(meta.license instanceof Object)) {
+                res.license = meta.license ?? "ARR";
+            } else {
+                res.license = meta.license.name;
+            }
+        }
+        return res;
     }
 }
 

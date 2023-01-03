@@ -1,24 +1,24 @@
-import { Loader, ModLoadingIssue } from "../loader.js";
-import { Launcher } from "../../launcher.js";
-import { parseStringPromise } from "xml2js";
-import got from "got";
-import { download } from "../../utils/downloads.js";
-import { tmpdir } from "os";
+import { execFileSync } from "child_process";
+import compressing from "compressing";
 import fs from "fs";
 import fsextra from "fs-extra";
-import { InstallerProfileNew } from "./install_profile_new.js";
-import compressing from "compressing";
-import { MCVersion } from "../../schemas.js";
-import { expandMavenId } from "../../utils/maven.js";
-import { execFileSync } from "child_process";
+import got from "got";
+import { ArtifactVersion, VersionRange } from "maven-artifact-version";
 import StreamZip from "node-stream-zip";
-import { merge } from "../../utils/mergeversionjson.js";
-import { InstallerProfileOld } from "./install_profile_old.js";
-import { MinecraftVersion } from "../../version.js";
-import { ModInfo } from "../../mods/mod.js";
+import { tmpdir } from "os";
 import toml from "toml";
+import { parseStringPromise } from "xml2js";
+import { Launcher } from "../../launcher.js";
+import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
+import { MCVersion } from "../../schemas.js";
+import { download } from "../../utils/downloads.js";
+import { expandMavenId } from "../../utils/maven.js";
+import { merge } from "../../utils/mergeversionjson.js";
+import { MinecraftVersion } from "../../version.js";
+import { Loader, ModLoadingIssue } from "../loader.js";
 import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";
-import { VersionRange, ArtifactVersion } from "maven-artifact-version";
+import { InstallerProfileNew } from "./install_profile_new.js";
+import { InstallerProfileOld } from "./install_profile_old.js";
 
 export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     private readonly launcher: Launcher;
@@ -121,11 +121,13 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 if(data.dependencies)
                     ret.push(new ModInfo("forge", {
                         info: i,
-                        deps: data.dependencies[i.modId]
+                        deps: data.dependencies[i.modId],
+                        jar: data
                     }));
                 else
                     ret.push(new ModInfo("forge", {
-                        info: i
+                        info: i,
+                        jar: data
                     }));
             }
         }
@@ -191,6 +193,24 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             }
         }
         return ret;
+    }
+
+    getModInfo(mod: StoreData | ForgeMcmodInfoOne): ModDisplayInfo {
+        if("info" in mod) {
+            return {
+                id: mod.info.modId,
+                version: mod.info.version,
+                name: mod.info.displayName,
+                description: mod.info.description,
+                license: mod.jar.license,
+            };
+        }
+        return {
+            id: mod.modid,
+            version: mod.version ?? "",
+            name: mod.name,
+            description: mod.description
+        };
     }
 }
 async function getMainClass (jar: string): Promise<string> {

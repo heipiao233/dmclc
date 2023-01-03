@@ -1,4 +1,4 @@
-import { ModInfo } from "../mods/mod.js";
+import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { MinecraftVersion } from "../version.js";
 
@@ -38,4 +38,5 @@ export interface Loader<T> {
     findInVersion(MCVersion: MCVersion): string | undefined
     findModInfos(path: string): Promise<ModInfo<T>[]>
     checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
+    getModInfo(mod: T): ModDisplayInfo;
 }

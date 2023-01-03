@@ -1,10 +1,11 @@
-import { get } from "../utils/http_request.js";
-import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
 import fs from "fs";
+import got from "got";
 import { checkFile } from "../utils/check_file.js";
 import { download } from "../utils/downloads.js";
-import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
+import { get } from "../utils/http_request.js";
 import { MinecraftVersion } from "../version.js";
+import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
+import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
 export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> {
 
     getUserExtraContent(): string[] {
@@ -12,8 +13,8 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {
-        this.data.apiurl = content.get("apiurl")!;
-        super.readUserExtraContent(content);
+        this.data.apiurl = await getRealApiUrl(content.get("apiurl")!);
+        await super.readUserExtraContent(content);
     }
 
     async prepareLaunch (): Promise<void> {
@@ -26,10 +27,15 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
     }
 
     async getLaunchJVMArgs (mc: MinecraftVersion): Promise<string[]> {
-        const content = await get(this.data.apiurl!, "");
+        const content = (await got(this.data.apiurl!)).body;
         return [`-javaagent:${mc.extras.enableIndependentGameDir?"../..":"."}/authlib-injector-latest.jar=${this.data.apiurl}`, `-Dauthlibinjector.yggdrasil.prefetched=${Buffer.from(content).toString("base64")}`];
     }
     toString (): string {
-        return `${this.data.name} (Authlib Injector)`;
+        return `${this.data.name} (${this.data.serverName})`;
     }
+}
+async function getRealApiUrl(input: string): Promise<string> {
+    const api = (await got.get(input)).headers["X-Authlib-Injector-API-Location"];
+    if(api instanceof Array || api === undefined) return input;
+    return new URL(api, input).toString();
 }

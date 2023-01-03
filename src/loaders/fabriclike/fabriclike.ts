@@ -1,19 +1,19 @@
-import got from "got";
-import { Loader, ModLoadingIssue } from "../loader.js";
-import { FabricLikeVersionInfo } from "./fabriclike_version_info.js";
-import { Launcher } from "../../launcher.js";
-import { MCVersion } from "../../schemas.js";
 import fs from "fs";
+import got from "got";
+import StreamZip from "node-stream-zip";
+import { tmpdir } from "os";
+import { Launcher } from "../../launcher.js";
+import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
+import { MCVersion } from "../../schemas.js";
 import { merge } from "../../utils/mergeversionjson.js";
 import { MinecraftVersion } from "../../version.js";
-import { ModInfo } from "../../mods/mod.js";
-import StreamZip from "node-stream-zip";
 import { FabricModJson } from "../fabric_schemas.js";
-import { tmpdir } from "os";
-import { VersionPredicateParser } from "./version/VersionPredicateParser.js";
+import { Loader, ModLoadingIssue } from "../loader.js";
+import { FabricLikeVersionInfo } from "./fabriclike_version_info.js";
 import { SemanticVersionImpl } from "./version/SemanticVersionImpl.js";
-import { VersionPredicate } from "./version/VersionPredicate.js";
 import { VersionParser } from "./version/VersionParser.js";
+import { VersionPredicate } from "./version/VersionPredicate.js";
+import { VersionPredicateParser } from "./version/VersionPredicateParser.js";
 export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M | FabricModJson> {
     abstract loaderMaven: string;
     abstract metaURL: string;
@@ -24,6 +24,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     }
     abstract checkMods(mods: ModInfo<M>[], mc: string, loader: string): ModLoadingIssue[];
     abstract findInVersion(MCVersion: MCVersion): string | undefined;
+    abstract getModInfo(mod: M | FabricModJson): ModDisplayInfo;
     
     async findModInfos(path: string): Promise<ModInfo<FabricModJson | M>[]> {
         const zip = new StreamZip.async({

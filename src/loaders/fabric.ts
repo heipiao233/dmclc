@@ -1,4 +1,4 @@
-import { ModInfo } from "../mods/mod.js";
+import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from "./fabriclike/fabriclike.js";
 import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info.js";
@@ -37,6 +37,21 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
             issues.push(...checkFabricDeps(mod.data, modIdVersions));
         }
         return issues;
+    }
+
+    getModInfo(mod: FabricModJson): ModDisplayInfo {
+        const res: ModDisplayInfo = {
+            id: mod.id,
+            version: mod.version
+        };
+        if(mod.description) res.description = mod.description;
+        if(mod.name) res.name = mod.name;
+        if(mod.license instanceof Array) {
+            res.license = mod.license.join(", ");
+        } else {
+            res.license = mod.license ?? "ARR";
+        }
+        return res;
     }
 }
 export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string, string>): ModLoadingIssue[] {

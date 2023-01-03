@@ -1,7 +1,12 @@
+import got from "got";
+import { MinecraftVersion } from "../../version.js";
 import { Account } from "../account.js";
 import { YggdrasilUserData } from "./yggdrasil_data.js";
-import * as https from "https";
-import { MinecraftVersion } from "../../version.js";
+
+type ATCT = {
+    accessToken: string,
+    clientToken: string
+};
 export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements Account<T> {
     data: T;
     protected root: string;
@@ -29,48 +34,62 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {
         const profileId: number = Number.parseInt(content.get("profileId")!);
-        return await new Promise((resolve) => {
-            const req = https.request(this.data.apiurl + "/authserver/authenticate", { method: "POST" }, (res) => {
-                const jsondata: string[] = [];
-                res.on("data", (chunk) => jsondata.push(chunk));
-                res.on("end", () => {
-                    const jsonvalue = jsondata.join("");
-                    console.log(jsonvalue);
-                    const v = JSON.parse(jsonvalue);
-                    this.data.accessToken = v.accessToken;
-                    this.data.clientToken = v.clientToken;
-                    this.data.uuid = v.availableProfiles[profileId].id;
-                    this.data.name = v.availableProfiles[profileId].name;
-                    resolve();
-                });
-            });
-            req.setHeader("Content-Type", "application/json");
-            req.write(`{
-                "username":"${content.get("username")}",
-                "password":"${content.get("password")}",
-                "requestUser":true,
-                "agent":{
-                    "name":"Minecraft",
-                    "version":1
+        const res: ATCT & {
+            availableProfiles: {
+                id: string,
+                name: string
+            }[]
+        } = await got.post(this.data.apiurl + "/authserver/authenticate", {
+            json: {
+                username: content.get("username"),
+                password: content.get("password"),
+                requestUser: true,
+                agent: {
+                    name: "Minecraft",
+                    version: 1
                 }
-            }`);
-            req.end();
-        });
+            }
+        }).json();
+        this.data.accessToken = res.accessToken;
+        this.data.clientToken = res.clientToken;
+        this.data.uuid = res.availableProfiles[profileId].id;
+        this.data.name = res.availableProfiles[profileId].name;
+        const meta: {
+            meta: {
+                serverName: string
+            }
+        } = await got(this.data.apiurl!).json();
+        this.data.serverName = meta.meta.serverName;
     }
 
     async check(): Promise<boolean> {
-        return await new Promise((resolve) => {
-            const req = https.request(this.data.apiurl + "/authserver/validate", { method: "POST" }, (res) => {
-                if (res.statusCode === 204) resolve(true);
-                resolve(false);
-            });
-            req.setHeader("Content-Type", "application/json");
-            req.write(`{
-                "accessToken":"${this.data.accessToken}",
-                "clientToken":"${this.data.clientToken}"
-            }`);
-            req.end();
+        const req = await got.post(this.data.apiurl + "/authserver/validate", {
+            json: {
+                accessToken: this.data.accessToken,
+                clientToken: this.data.clientToken
+            }
         });
+        if(req.statusCode === 204) {
+            return true;
+        }
+        return await this.refresh();
+    }
+
+    private async refresh(): Promise<boolean> {
+        const req = await got.post<ATCT>(this.data.apiurl + "/authserver/refresh", {
+            json: {
+                accessToken: this.data.accessToken,
+                clientToken: this.data.clientToken
+            },
+            responseType: "json"
+        });
+        if(req.statusCode < 200 || req.statusCode >= 300) {
+            return false;
+        }
+        const res: ATCT = req.body;
+        this.data.accessToken = res.accessToken;
+        this.data.clientToken = res.clientToken;
+        return true;
     }
 
     getUUID(): string {

@@ -39,6 +39,7 @@ export type ForgeMcmodInfoOne = {
 export type ForgeMcmodInfo = ForgeMcmodInfoOne[];
 export type StoreData = {
     info: ForgeNewMod;
+    jar: ForgeModsToml;
     deps?: Dependency[];
 };
 export type ForgeJarJarJson = {
