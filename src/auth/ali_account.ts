@@ -35,7 +35,7 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
     }
 }
 async function getRealApiUrl(input: string): Promise<string> {
-    const api = (await got.get(input)).headers["X-Authlib-Injector-API-Location"];
+    const api = (await got.get(input)).headers["x-authlib-injector-api-location"];
     if(api instanceof Array || api === undefined) return input;
     return new URL(api, input).toString();
 }

@@ -20,8 +20,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     private async step1_new(code: string): Promise<STEP1> {
-        return await got("https://login.live.com/oauth20_token.srf", {
-            method: "POST",
+        return (await got.post<STEP1>("https://login.live.com/oauth20_token.srf", {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -31,19 +30,19 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
                 grant_type: "authorization_code",
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
                 scope: "service::user.auth.xboxlive.com::MBI_SSL"
-            }
-        }).json();
+            },
+            responseType: "json"
+        })).body;
     }
 
     private async step1_refresh(): Promise<string> {
-        const res: {access_token: string} = await (got.post("https://login.live.com/oauth20_token.srf", {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+        const res: { access_token: string } = await (got.post("https://login.live.com/oauth20_token.srf", {
             form: {
                 client_id: "00000000402b5328",
                 grant_type: "refresh_token",
-                refresh_token: this.data.refresh_token!
+                refresh_token: this.data.refresh_token!,
+                redirect_uri: "https://login.live.com/oauth20_desktop.srf",
+                scope: "service::user.auth.xboxlive.com::MBI_SSL"
             }
         }).json());
         return res.access_token;

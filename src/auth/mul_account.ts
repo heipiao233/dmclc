@@ -32,6 +32,6 @@ export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUn
         return [`-javaagent:./nide8auth.jar=${this.data.serverID}`, "-Dnide8auth.client=true"];
     }
     toString (): string {
-        return `${this.data.name} - ${this.data.serverID} (${this.data.serverName})`;
+        return `${this.data.name} (${this.data.serverName})`;
     }
 }
