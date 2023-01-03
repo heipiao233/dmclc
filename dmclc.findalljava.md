@@ -15,5 +15,5 @@ export declare function findAllJava(): Promise<Pair<string, string>[]>;
 
 Promise&lt;[Pair](./dmclc.pair.md)<!-- -->&lt;string, string&gt;\[\]&gt;
 
-All java versions.
+All java versions. An array of Pairs, Pair.a is java version, b is java executable.
 

@@ -19,6 +19,7 @@ export interface Loader<T>
 |  [checkMods(mods, mc, loader)](./dmclc.loader.checkmods.md) |  |
 |  [findInVersion(MCVersion)](./dmclc.loader.findinversion.md) | Get the version installed, or null if not installed or can't find. |
 |  [findModInfos(path)](./dmclc.loader.findmodinfos.md) |  |
+|  [getModInfo(mod)](./dmclc.loader.getmodinfo.md) |  |
 |  [getSuitableLoaderVersions(MCVersion)](./dmclc.loader.getsuitableloaderversions.md) | Get all loader versions that work on the Minecraft version |
 |  [install(MCVersion, version)](./dmclc.loader.install.md) | Install. |
 
