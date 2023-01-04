@@ -8,6 +8,7 @@ import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
 import toml from "toml";
 import { parseStringPromise } from "xml2js";
+import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -37,7 +38,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
 
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new Error("Minecraft Version Unknown");
+            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
         const res = await got(this.metadata);
         const obj = await parseStringPromise(res.body);
@@ -47,7 +48,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
 
     async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new Error("Minecraft Version Unknown");
+            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
         await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher.mirror);
@@ -162,8 +163,12 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                         if(dep.mandatory) {
                             const range = VersionRange.createFromVersionSpec(dep.versionRange)!;
                             if(!(dep.modId in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
-                                ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
-                                    [mod.data.info.modId, dep.modId, dep.versionRange]));
+                                ret.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
+                                    {
+                                        source: mod.data.info.modId,
+                                        target: dep.modId,
+                                        targetVersion: dep.versionRange
+                                    }));
                             }
                         }
                     }
@@ -175,20 +180,32 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                                 const [depid, depver] = dep.split("@");
                                 const range = VersionRange.createFromVersionSpec(depver)!;
                                 if(!(depid in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[depid])))) {
-                                    ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
-                                        [mod.data.modid, depid, depver]));
+                                    ret.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
+                                        {
+                                            source: mod.data.modid,
+                                            target: depid,
+                                            targetVersion: depver
+                                        }));
                                 }
                             } else {
                                 if(!(dep in modIdVersions)){
-                                    ret.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
-                                        [mod.data.modid, dep]));
+                                    ret.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
+                                        {
+                                            source: mod.data.modid,
+                                            target: dep,
+                                            targetVersion: this.launcher.i18n("any")
+                                        }));
                                 }
                             }
                         }
                 }
-                if(!(mod.data.mcversion === mc)) {
-                    ret.push(new ModLoadingIssue("error", "dmclc.mods.minecraft_wrong",
-                        [mod.data.modid, mc, mod.data.mcversion!]));
+                if(mod.data.mcversion && !(mod.data.mcversion === mc)) {
+                    ret.push(new ModLoadingIssue("error", "dependencies.minecraft_wrong",
+                        {
+                            source: mod.data.modid,
+                            current: mc,
+                            need: mod.data.mcversion
+                        }));
                 }
             }
         }

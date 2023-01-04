@@ -5,7 +5,6 @@ export { Launcher } from "./launcher.js";
 export { Loader } from "./loaders/loader.js";
 export * from "./schemas.js";
 export * from "./utils/findjava.js";
-export * as i18n from "./utils/I18n.js";
 export { Pair } from "./utils/pair.js";
 export { DMCLCExtraVersionInfo, LoaderInfo, MinecraftVersion as Version } from "./version.js";
 

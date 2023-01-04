@@ -1,3 +1,4 @@
+import { TFunction } from "i18next";
 import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { MinecraftVersion } from "../version.js";
@@ -5,13 +6,11 @@ import { MinecraftVersion } from "../version.js";
 export type IssueLevel = "error" | "warning";
 
 export class ModLoadingIssue {
-    level: IssueLevel;
-    message: string;
-    args: string[];
-    constructor(level: IssueLevel, message: string, args: string[]) {
-        this.level = level;
-        this.message = message;
-        this.args = args;
+    constructor(public level: IssueLevel, public message: string, public args: Record<string, string>) {
+    }
+
+    toLocalizedString(i18n: TFunction): string {
+        return i18n("dependencies." + this.level) + ": " + i18n(this.message, this.args);
     }
 }
 
@@ -36,7 +35,22 @@ export interface Loader<T> {
      * @param MCVersion - Minecraft version manifest.
      */
     findInVersion(MCVersion: MCVersion): string | undefined
+    /**
+     * Get all mod informations.
+     * @param path Mod jar.
+     * @returns An array of ModInfo<T>.
+     */
     findModInfos(path: string): Promise<ModInfo<T>[]>
+    /**
+     * Check installed mods.
+     * @param mods All the installed mods.
+     * @param mc Minecraft version.
+     * @param loader Loader version.
+     */
     checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
+    /**
+     * Get mod display info for end user.
+     * @param mod Mod info.
+     */
     getModInfo(mod: T): ModDisplayInfo;
 }

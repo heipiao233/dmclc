@@ -1,4 +1,5 @@
 import got from "got";
+import { Launcher } from "../../launcher.js";
 import { MinecraftVersion } from "../../version.js";
 import { Account } from "../account.js";
 import { YggdrasilUserData } from "./yggdrasil_data.js";
@@ -8,11 +9,9 @@ type ATCT = {
     clientToken: string
 };
 export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements Account<T> {
-    data: T;
     protected root: string;
-    constructor(data: T, root: string) {
-        this.data = data;
-        this.root = root;
+    constructor(public data: T, protected launcher: Launcher) {
+        this.root = launcher.rootPath;
     }
 
     abstract prepareLaunch(): Promise<void>
@@ -28,8 +27,12 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         return map;
     }
 
-    getUserExtraContent(): string[] {
-        return ["username", "password", "profileId"];
+    getUserExtraContent(): Record<string, string> {
+        return {
+            username: this.launcher.i18n("accounts.yggdrasil.username"),
+            password: this.launcher.i18n("accounts.yggdrasil.password"),
+            profileId: this.launcher.i18n("accounts.yggdrasil.profileId")
+        };
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {

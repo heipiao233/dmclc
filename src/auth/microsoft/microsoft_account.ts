@@ -1,7 +1,6 @@
 import { got } from "got";
-import open from "open";
 import { FormattedError } from "../../errors/FormattedError.js";
-import { translate } from "../../utils/I18n.js";
+import { Launcher } from "../../launcher.js";
 import { Account } from "../account.js";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
 type STEP1 = {
@@ -17,9 +16,7 @@ type STEP6 = {
     name: string;
 }
 export class MicrosoftAccount implements Account<MicrosoftUserData> {
-    data: MicrosoftUserData;
-    constructor (data: MicrosoftUserData) {
-        this.data = data;
+    constructor (public data: MicrosoftUserData, private launcher: Launcher) {
     }
 
     private async step1_new(code: string): Promise<STEP1> {
@@ -83,7 +80,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         );
     }
 
-    private async step3_xsts (xblToken: string): Promise<string> {
+    private async step3_xsts(xblToken: string): Promise<string> {
         const reqBody = {
             Properties: {
                 SandboxId: "RETAIL",
@@ -99,7 +96,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         return res.Token;
     }
 
-    private async step4_login (xstsToken: string, uhs: string): Promise<string> {
+    private async step4_login(xstsToken: string, uhs: string): Promise<string> {
         const reqBody = {
             identityToken: `XBL3.0 x=${uhs};${xstsToken}`
         };
@@ -110,7 +107,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         return res.access_token;
     }
 
-    private async step5_check (MCAccessToken: string): Promise<boolean> {
+    private async step5_check(MCAccessToken: string): Promise<boolean> {
         const res = await got("https://api.minecraftservices.com/entitlements/mcstore", {
             headers: {
                 Authorization: `Bearer ${MCAccessToken}`
@@ -119,7 +116,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         return res.statusCode !== undefined && res.statusCode >= 200 && res.statusCode < 300;
     }
 
-    private async step6_uuid_name (MCAccessToken: string): Promise<STEP6> {
+    private async step6_uuid_name(MCAccessToken: string): Promise<STEP6> {
         return await got("https://api.minecraftservices.com/minecraft/profile", {
             headers: {
                 Authorization: `Bearer ${MCAccessToken}`
@@ -127,7 +124,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         }).json();
     }
 
-    async check (): Promise<boolean> {
+    async check(): Promise<boolean> {
         try {
             await this.refresh();
         }catch{
@@ -141,35 +138,29 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         await this.nextSteps(at);
     }
 
-    getUUID (): string {
+    getUUID(): string {
         return this.data.uuid!;
     }
 
-    getUserExtraContent (): string[] {
-        open(
-            "https://login.live.com/oauth20_authorize.srf" +
-            "?client_id=00000000402b5328" +
-            "&response_type=code" +
-            "&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL" +
-            "&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf"
-        );
-        return ["ms_url"];
+    getUserExtraContent(): Record<string, string> {
+        return {
+            "ms_url": "ms_url"
+        };
     }
 
     async readUserExtraContent (content: Map<string, string>): Promise<void> {
         const MSCode = new URL(content.get("ms_url")!).searchParams.get("code")!;
-
         const val = await this.step1_new(MSCode);
         await this.nextSteps(val.access_token);
         this.data.refresh_token = val.refresh_token;
     }
 
-    private async nextSteps (access_token: string){
+    private async nextSteps(access_token: string){
         const tu = await this.step2_xbl(access_token);
         const xsts = await this.step3_xsts(tu.token);
         const MCAccessToken = await this.step4_login(xsts, tu.uhs);
         if (!await this.step5_check(MCAccessToken)) {
-            throw new FormattedError(await translate("accounts.microsoft.no_minecraft_in_account"));
+            throw new FormattedError(this.launcher.i18n("accounts.microsoft.no_minecraft_in_account"));
         }
         const un = await this.step6_uuid_name(MCAccessToken);
         console.log(un);
@@ -179,10 +170,10 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     async prepareLaunch (): Promise<void> {
-        // We don't need to do anything when use this method.
+        // We don't need to do anything using this method.
     }
 
-    async getLaunchJVMArgs (): Promise<string[]> {
+    async getLaunchJVMArgs(): Promise<string[]> {
         return [];
     }
 
@@ -199,6 +190,6 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     toString (): string {
-        return `${this.data.name} (${translate("accounts.microsoft")})`;
+        return `${this.data.name} (${this.launcher.i18n("accounts.microsoft")})`;
     }
 }

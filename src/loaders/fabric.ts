@@ -58,22 +58,38 @@ export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string
     const issues: ModLoadingIssue[] = [];
     for (const id in mod.depends) {
         if(!(id in modIdVersions&&checkMatch(modIdVersions[id], mod.depends[id]))){
-            issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing", [mod.id, id, formatDepVersion(mod.depends[id])]));
+            issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing", {
+                source: mod.id,
+                target: id,
+                targetVersion: formatDepVersion(mod.depends[id])
+            }));
         }
     }
     for (const id in mod.recommends) {
         if(!(id in modIdVersions&&checkMatch(modIdVersions[id], mod.recommends[id]))){
-            issues.push(new ModLoadingIssue("warning", "dmclc.mods.recommends_wrong_missing", [mod.id, id, formatDepVersion(mod.recommends[id])]));
+            issues.push(new ModLoadingIssue("warning", "dependencies.recommends_wrong_missing", {
+                source: mod.id,
+                target: id,
+                targetVersion: formatDepVersion(mod.recommends[id])
+            }));
         }
     }
     for (const id in mod.conflicts) {
         if(id in modIdVersions && checkMatch(modIdVersions[id], mod.conflicts[id])){
-            issues.push(new ModLoadingIssue("warning", "dmclc.mods.conflicts_exists", [mod.id, id, formatDepVersion(mod.conflicts[id])]));
+            issues.push(new ModLoadingIssue("warning", "dependencies.conflicts_exists", {
+                source: mod.id,
+                target: id,
+                targetVersion: formatDepVersion(mod.conflicts[id])
+            }));
         }
     }
     for (const id in mod.breaks) {
         if(id in modIdVersions && checkMatch(modIdVersions[id], mod.breaks[id])){
-            issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists", [mod.id, id, formatDepVersion(mod.breaks[id])]));
+            issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists", {
+                source: mod.id,
+                target: id,
+                targetVersion: formatDepVersion(mod.breaks[id])
+            }));
         }
     }
     return issues;

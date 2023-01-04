@@ -79,17 +79,37 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                     }
                     if(unlesses.length !== 0){
                         if(!(dep.id in modIdVersions) || !checkMatch(modIdVersions[dep.id], dep.versions ?? "*")){
-                            if(dep.reason)issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing_reason_unless",
-                                [data.id, dep.id, formatDepVersion(dep.versions ?? "*"), dep.reason, formatUnless(unlesses)]));
-                            else issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing_unless",
-                                [data.id, dep.id, formatDepVersion(dep.versions ?? "*"), formatUnless(unlesses)]));
+                            if(dep.reason)issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing_reason_unless",
+                                {
+                                    source: data.id,
+                                    target: dep.id,
+                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
+                                    reason: dep.reason,
+                                    unless: formatUnless(unlesses)
+                                }));
+                            else issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing_unless",
+                                {
+                                    source: data.id,
+                                    target: dep.id,
+                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
+                                    unless: formatUnless(unlesses)
+                                }));
                         }
                     } else {
                         if(!(dep.id in modIdVersions) || !checkMatch(modIdVersions[dep.id], dep.versions ?? "*")){
-                            if(dep.reason)issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing_reason",
-                                [data.id, dep.id, formatDepVersion(dep.versions ?? "*"), dep.reason]));
-                            else issues.push(new ModLoadingIssue("error", "dmclc.mods.dependency_wrong_missing",
-                                [data.id, dep.id, formatDepVersion(dep.versions ?? "*")]));
+                            if(dep.reason)issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing_reason",
+                                {
+                                    source: data.id,
+                                    target: dep.id,
+                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
+                                    reason: dep.reason
+                                }));
+                            else issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
+                                {
+                                    source: data.id,
+                                    target: dep.id,
+                                    targetVersion: formatDepVersion(dep.versions ?? "*")
+                                }));
                         }
                     }
                 }
@@ -103,17 +123,37 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                     }
                     if(unlesses.length !== 0) {
                         if(brk.id in modIdVersions && checkMatch(modIdVersions[brk.id], brk.versions ?? "*")){
-                            if(brk.reason)issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists_reason_unless",
-                                [data.id, brk.id, formatDepVersion(brk.versions ?? "*"), brk.reason, formatUnless(unlesses)]));
-                            else issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists_unless",
-                                [data.id, brk.id, formatDepVersion(brk.versions ?? "*"), formatUnless(unlesses)]));
+                            if(brk.reason)issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists_reason_unless",
+                                {
+                                    source: data.id,
+                                    target: brk.id,
+                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
+                                    reason: brk.reason,
+                                    unless: formatUnless(unlesses)
+                                }));
+                            else issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists_unless",
+                                {
+                                    source: data.id,
+                                    target: brk.id,
+                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
+                                    unless: formatUnless(unlesses)
+                                }));
                         }
                     } else {
                         if(brk.id in modIdVersions && checkMatch(modIdVersions[brk.id], brk.versions ?? "*")){
-                            if(brk.reason)issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists_reason",
-                                [data.id, brk.id, formatDepVersion(brk.versions ?? "*"), brk.reason]));
-                            else issues.push(new ModLoadingIssue("error", "dmclc.mods.breaks_exists",
-                                [data.id, brk.id, formatDepVersion(brk.versions ?? "*")]));
+                            if(brk.reason)issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists_reason",
+                                {
+                                    source: data.id,
+                                    target: brk.id,
+                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
+                                    reason: brk.reason
+                                }));
+                            else issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists",
+                                {
+                                    source: data.id,
+                                    target: brk.id,
+                                    targetVersion: formatDepVersion(brk.versions ?? "*")
+                                }));
                         }
                     }
                 }

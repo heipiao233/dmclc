@@ -1,8 +1,9 @@
 import fs from "fs";
 import { mkdirs } from "fs-extra";
+import got from "got";
 import { Launcher } from "./launcher.js";
-import { VersionInfo, VersionInfos } from "./schemas.js";
-import * as http_request from "./utils/http_request.js";
+import { MCVersion, VersionInfo, VersionInfos } from "./schemas.js";
+import { transformURL } from "./utils/TransformURL.js";
 import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version.js";
 /**
  * Install new Minecraft versions.
@@ -24,7 +25,7 @@ export class Installer {
      */
     async getVersionList(): Promise<VersionInfos> {
         // url:https://launchermeta.mojang.com/mc/game/version_manifest.json
-        const versions: VersionInfos = JSON.parse(await http_request.get("https://launchermeta.mojang.com/mc/game/version_manifest.json", this.launcher.mirror));
+        const versions: VersionInfos = await got(transformURL("https://launchermeta.mojang.com/mc/game/version_manifest.json", this.launcher.mirror)).json();
         return versions;
     }
 
@@ -35,8 +36,7 @@ export class Installer {
      * @returns The new version.
      */
     async install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion> {
-        const content = await http_request.get(ver.url, this.launcher.mirror);
-        const obj = JSON.parse(content);
+        const obj = await got(transformURL(ver.url, this.launcher.mirror)).json<MCVersion>();
         obj.id = versionName;
         await mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, JSON.stringify(obj));

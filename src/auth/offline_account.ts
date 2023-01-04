@@ -1,11 +1,10 @@
 import { createHash } from "crypto";
 import * as uuid from "uuid";
+import { Launcher } from "../launcher.js";
 import { Account } from "./account.js";
 import { UserData } from "./user_data.js";
 export class OfflineAccount implements Account<UserData> {
-    data: UserData;
-    constructor (data: UserData) {
-        this.data = data;
+    constructor (public data: UserData, private launcher: Launcher) {
     }
 
     async getLaunchGameArgs (): Promise<Map<string, string>> {
@@ -26,8 +25,10 @@ export class OfflineAccount implements Account<UserData> {
         return [];
     }
 
-    getUserExtraContent (): string[] {
-        return ["username"];
+    getUserExtraContent(): Record<string, string> {
+        return {
+            username: this.launcher.i18n("accounts.offline.username")
+        };
     }
 
     async readUserExtraContent (content: Map<string, string>): Promise<void> {
@@ -43,7 +44,7 @@ export class OfflineAccount implements Account<UserData> {
     }
 
     toString (): string {
-        return `${this.data.name} (Offline)`;
+        return `${this.data.name} (${this.launcher.i18n("accounts.offline")})`;
     }
 }
 

@@ -1,5 +1,61 @@
 {
     "dmclc": "\"Dolphin\" Minecraft Launcher (Core)",
-    "accounts.microsoft": "Microsoft Account",
-    "accounts.microsoft.no_minecraft_in_account": "This account doesn't have Minecraft."
+
+    "accounts": {
+        "microsoft": {
+            "name": "Microsoft Account",
+            "no_minecraft_in_account": "This account doesn't have Minecraft."
+        },
+        "yggdrasil": {
+            "username": "E-Mail",
+            "password": "Password",
+            "profileID": "Profile ID"
+        },
+        "minecraft_universal_login": {
+            "name": "Minecraft Universal Login Account",
+            "serverID": "Server ID"
+        },
+        "authlib_injector": {
+            "name": "Authlib Injector",
+            "apiurl": "Authentication Server URL"
+        },
+        "offline": {
+            "name": "Offline Account",
+            "username": "Username"
+        }
+    },
+
+    "mod": {
+        "id": "Mod ID",
+        "version": "Version",
+        "name": "Name",
+        "description": "Description",
+        "license": "License"
+    },
+
+    "version": {
+        "loader_not_found": "Loader not found: "
+    },
+
+    "loaders": {
+        "minecraft_version_unknown": "Minecraft version unknown."
+    },
+
+    "any": "any",
+
+    "dependencies": {
+        "dependency_wrong_missing": "{{source}} mod needs {{target}} mod version {{targetVersion}}, but not installed.",
+        "dependency_wrong_missing_reason_unless": "Because of {{reason}}, unless install: {{unless}}, {{source}} mod needs {{target}} mod version {{targetVersion}}, but not installed.",
+        "dependency_wrong_missing_unless": "Unless install: {{unless}}, {{source}} mod needs {{target}} mod version {{targetVersion}}, but not installed.",
+        "dependency_wrong_missing_reason": "Because of {{reason}}, {{source}} mod needs {{target}} mod version {{targetVersion}}, but not installed.",
+        "recommends_wrong_missing": "{{source}} mod recommends using {{target}} mod version {{targetVersion}}, but not installed.",
+        "conflicts_exists": "{{source}} mod conflicts with {{target}} mod version {{targetVersion}}.",
+        "breaks_exists": "{{source}} mod breaks {{target}} mod version {{targetVersion}}.",
+        "breaks_exists_reason_unless": "Unless install: {{unless}}, because of {{reason}}, {{source}} mod breaks {{target}} mod version {{targetVersion}}.",
+        "breaks_exists_unless": "Unless install: {{unless}}, {{source}} mod breaks {{target}} mod version {{targetVersion}}.",
+        "breaks_exists_reason": "Because of {{reason}}, {{source}} mod breaks {{target}} mod version {{targetVersion}}.",
+        "minecraft_wrong": "{{source}} mod needs Minecraft version {{need}}, but currently installed {{current}}.",
+        "error": "Error",
+        "warning": "Warning"
+    }
 }

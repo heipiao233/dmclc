@@ -15,8 +15,10 @@ type AuthlibInjectorArtifact = {
 
 export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> {
 
-    getUserExtraContent(): string[] {
-        return super.getUserExtraContent().concat(["apiurl"]);
+    getUserExtraContent(): Record<string, string> {
+        return Object.assign({
+            apiurl: this.launcher.i18n("accounts.authlib_injector.apiurl")
+        }, super.getUserExtraContent());
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {

@@ -3,10 +3,12 @@ import compressing from "compressing";
 import fs, { PathLike } from "fs";
 import { mkdirs } from "fs-extra";
 import { readFile, writeFile } from "fs/promises";
+import got from "got";
 import StreamZip from "node-stream-zip";
 import os from "os";
 import path from "path";
 import { Account } from "./auth/account.js";
+import { FormattedError } from "./errors/FormattedError.js";
 import { Launcher } from "./launcher.js";
 import { ModLoadingIssue } from "./loaders/loader.js";
 import { ModJarInfo } from "./mods/mod.js";
@@ -14,8 +16,8 @@ import { Argument, Asset, AssetIndexInfo, AssetsIndex, checkRules, Library, Libr
 import { checkFile } from "./utils/check_file.js";
 import { download, downloadAll } from "./utils/downloads.js";
 import { expandInheritsFrom } from "./utils/expand_inherits_from.js";
-import * as http_request from "./utils/http_request.js";
 import { expandMavenId } from "./utils/maven.js";
+import { transformURL } from "./utils/TransformURL.js";
 
 /**
  * @internal
@@ -152,7 +154,7 @@ export class MinecraftVersion {
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
         let assetJson;
         if (!fs.existsSync(indexPath)) {
-            assetJson = await http_request.get(asset.url, this.launcher.mirror);
+            assetJson = (await got(transformURL(asset.url, this.launcher.mirror))).body;
             mkdirs(`${this.launcher.rootPath}/assets/indexes`);
             writeFile(indexPath, assetJson);
         } else {
@@ -295,14 +297,14 @@ export class MinecraftVersion {
     async getSuitableLoaderVersions(name: string): Promise<string[]> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
-            throw new Error(`Loader not found: ${loader}`);
+            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}: ${loader}`);
         }
         return loader.getSuitableLoaderVersions(this);
     }
     async installLoader(name: string, loaderVersion: string): Promise<void> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
-            throw new Error(`Loader not found: ${loader}`);
+            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}${loader}`);
         }
         await loader.install(this, loaderVersion);
         this.extras.loaders.push({

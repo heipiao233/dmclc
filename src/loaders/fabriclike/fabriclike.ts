@@ -2,6 +2,7 @@ import fs from "fs";
 import got from "got";
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
+import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -52,7 +53,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new Error("Minecraft Version Unknown");
+            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
         const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}`)).body);
         const result: string[] = [];
@@ -65,7 +66,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
 
     async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new Error("Minecraft Version Unknown");
+            throw new Error("loaders.minecraft_version_unknown");
         }
         const versionInfo: T = this.cachedLoaderVersions.get(`${MCVersion}-${version}`) ??
             await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}`).json();

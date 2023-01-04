@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Launcher } from "../launcher.js";
 import { download } from "../utils/downloads.js";
 import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
 import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
@@ -7,12 +8,14 @@ export class MinecraftUniversalLoginUserData extends YggdrasilUserData {
     serverID?: string;
 }
 export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUniversalLoginUserData> {
-    constructor (data: MinecraftUniversalLoginUserData, root: string) {
-        super(data, root);
+    constructor (data: MinecraftUniversalLoginUserData, launcher: Launcher) {
+        super(data, launcher);
     }
 
-    getUserExtraContent(): string[] {
-        return super.getUserExtraContent().concat(["serverID"]);
+    getUserExtraContent(): Record<string, string> {
+        return Object.assign({
+            serverID: this.launcher.i18n("accounts.minecraft_universal_login.serverID")
+        }, super.getUserExtraContent());
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {
