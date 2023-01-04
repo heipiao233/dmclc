@@ -9,5 +9,5 @@ The path to the ".minecraft" directory.
 <b>Signature:</b>
 
 ```typescript
-rootPath: string;
+set rootPath(path: string);
 ```

@@ -16,10 +16,10 @@ export interface Loader<T>
 
 |  Method | Description |
 |  --- | --- |
-|  [checkMods(mods, mc, loader)](./dmclc.loader.checkmods.md) |  |
+|  [checkMods(mods, mc, loader)](./dmclc.loader.checkmods.md) | Check installed mods. |
 |  [findInVersion(MCVersion)](./dmclc.loader.findinversion.md) | Get the version installed, or null if not installed or can't find. |
-|  [findModInfos(path)](./dmclc.loader.findmodinfos.md) |  |
-|  [getModInfo(mod)](./dmclc.loader.getmodinfo.md) |  |
+|  [findModInfos(path)](./dmclc.loader.findmodinfos.md) | Get all mod informations. |
+|  [getModInfo(mod)](./dmclc.loader.getmodinfo.md) | Get mod display info for end user. |
 |  [getSuitableLoaderVersions(MCVersion)](./dmclc.loader.getsuitableloaderversions.md) | Get all loader versions that work on the Minecraft version |
 |  [install(MCVersion, version)](./dmclc.loader.install.md) | Install. |
 

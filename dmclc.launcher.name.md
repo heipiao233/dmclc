@@ -4,8 +4,6 @@
 
 ## Launcher.name property
 
-The name of your launcher.
-
 <b>Signature:</b>
 
 ```typescript

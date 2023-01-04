@@ -4,12 +4,14 @@
 
 ## Account.getUserExtraContent() method
 
+Specially, if there is ms\_url in keys, please use a webview.
+
 <b>Signature:</b>
 
 ```typescript
-getUserExtraContent(): string[];
+getUserExtraContent(): Record<string, string>;
 ```
 <b>Returns:</b>
 
-string\[\]
+Record&lt;string, string&gt;
 

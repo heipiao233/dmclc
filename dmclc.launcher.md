@@ -23,11 +23,12 @@ export declare class Launcher
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
+|  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
 |  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
 |  [loaders](./dmclc.launcher.loaders.md) |  | Map&lt;string, [Loader](./dmclc.loader.md)<!-- -->&lt;unknown&gt;&gt; | All loaders. |
 |  [mirror](./dmclc.launcher.mirror.md) |  | string \| undefined | BMCLAPI |
-|  [name](./dmclc.launcher.name.md) |  | string | The name of your launcher. |
+|  [name](./dmclc.launcher.name.md) |  | string |  |
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |
 |  [separator](./dmclc.launcher.separator.md) |  | string | : or ; |
@@ -38,5 +39,6 @@ export declare class Launcher
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getInstalledVersions()](./dmclc.launcher.getinstalledversions.md) |  | Gets all installed versions, no cache. |
+|  [init(lang)](./dmclc.launcher.init.md) |  |  |
+|  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
 

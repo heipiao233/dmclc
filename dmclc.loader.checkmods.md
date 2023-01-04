@@ -4,6 +4,8 @@
 
 ## Loader.checkMods() method
 
+Check installed mods.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,9 @@ checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mods | ModInfo&lt;T&gt;\[\] |  |
-|  mc | string |  |
-|  loader | string |  |
+|  mods | ModInfo&lt;T&gt;\[\] | All the installed mods. |
+|  mc | string | Minecraft version. |
+|  loader | string | Loader version. |
 
 <b>Returns:</b>
 

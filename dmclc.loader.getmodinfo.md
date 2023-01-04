@@ -4,6 +4,8 @@
 
 ## Loader.getModInfo() method
 
+Get mod display info for end user.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,7 +16,7 @@ getModInfo(mod: T): ModDisplayInfo;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mod | T |  |
+|  mod | T | Mod info. |
 
 <b>Returns:</b>
 

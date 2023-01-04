@@ -4,7 +4,7 @@
 
 ## Account.getUUID() method
 
-Get the UUID of this account.
+Get UUID of this account.
 
 <b>Signature:</b>
 

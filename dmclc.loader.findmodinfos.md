@@ -4,6 +4,8 @@
 
 ## Loader.findModInfos() method
 
+Get all mod informations.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ findModInfos(path: string): Promise<ModInfo<T>[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  path | string |  |
+|  path | string | Mod jar. |
 
 <b>Returns:</b>
 
 Promise&lt;ModInfo&lt;T&gt;\[\]&gt;
+
+An array of ModInfo<T>.
 

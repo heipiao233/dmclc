@@ -4,7 +4,7 @@
 
 ## Account.check() method
 
-Check if this account can login.
+Check if this account can use without input any other information again, and refresh access token.
 
 <b>Signature:</b>
 
