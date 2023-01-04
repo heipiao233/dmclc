@@ -1,9 +1,11 @@
-export { Installer } from "./install.js";
-export { Launcher } from "./launcher.js";
-export { MinecraftVersion as Version, DMCLCExtraVersionInfo, LoaderInfo } from "./version.js";
 export { Account } from "./auth/account.js";
 export { UserData } from "./auth/user_data.js";
+export { Installer } from "./install.js";
+export { Launcher } from "./launcher.js";
 export { Loader } from "./loaders/loader.js";
-export { Pair } from "./utils/pair.js";
-export * from "./utils/findjava.js";
 export * from "./schemas.js";
+export * from "./utils/findjava.js";
+export * as i18n from "./utils/I18n.js";
+export { Pair } from "./utils/pair.js";
+export { DMCLCExtraVersionInfo, LoaderInfo, MinecraftVersion as Version } from "./version.js";
+

@@ -1,4 +1,7 @@
 import { got } from "got";
+import open from "open";
+import { FormattedError } from "../../errors/FormattedError.js";
+import { translate } from "../../utils/I18n.js";
 import { Account } from "../account.js";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
 type STEP1 = {
@@ -143,12 +146,18 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     getUserExtraContent (): string[] {
-        return ["ms_code"];
+        open(
+            "https://login.live.com/oauth20_authorize.srf" +
+            "?client_id=00000000402b5328" +
+            "&response_type=code" +
+            "&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL" +
+            "&redirect_uri=https%3A%2F%2Flogin.live.com%2Foauth20_desktop.srf"
+        );
+        return ["ms_url"];
     }
 
     async readUserExtraContent (content: Map<string, string>): Promise<void> {
-        const MSCode = content.get("ms_code");
-        if (MSCode === undefined) { throw new Error("No Microsoft OAuth code"); }
+        const MSCode = new URL(content.get("ms_url")!).searchParams.get("code")!;
 
         const val = await this.step1_new(MSCode);
         await this.nextSteps(val.access_token);
@@ -160,7 +169,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         const xsts = await this.step3_xsts(tu.token);
         const MCAccessToken = await this.step4_login(xsts, tu.uhs);
         if (!await this.step5_check(MCAccessToken)) {
-            throw new Error("Account doesn't have Minecraft.");
+            throw new FormattedError(await translate("accounts.microsoft.no_minecraft_in_account"));
         }
         const un = await this.step6_uuid_name(MCAccessToken);
         console.log(un);
@@ -190,6 +199,6 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     toString (): string {
-        return `${this.data.name} (Microsoft)`;
+        return `${this.data.name} (${translate("accounts.microsoft")})`;
     }
 }

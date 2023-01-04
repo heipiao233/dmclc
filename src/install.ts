@@ -1,9 +1,9 @@
 import fs from "fs";
-import * as http_request from "./utils/http_request.js";
-import { VersionInfo, VersionInfos } from "./schemas.js";
-import { Launcher } from "./launcher.js";
-import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version.js";
 import { mkdirs } from "fs-extra";
+import { Launcher } from "./launcher.js";
+import { VersionInfo, VersionInfos } from "./schemas.js";
+import * as http_request from "./utils/http_request.js";
+import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version.js";
 /**
  * Install new Minecraft versions.
  * @public

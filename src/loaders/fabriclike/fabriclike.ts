@@ -5,7 +5,7 @@ import { tmpdir } from "os";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
-import { merge } from "../../utils/mergeversionjson.js";
+import { merge } from "../../utils/MergeVersionJSON.js";
 import { MinecraftVersion } from "../../version.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { Loader, ModLoadingIssue } from "../loader.js";

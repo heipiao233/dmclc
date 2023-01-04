@@ -2,10 +2,17 @@ import fs from "fs";
 import got from "got";
 import { checkFile } from "../utils/check_file.js";
 import { download } from "../utils/downloads.js";
-import { get } from "../utils/http_request.js";
 import { MinecraftVersion } from "../version.js";
 import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
 import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
+
+type AuthlibInjectorArtifact = {
+    download_url: string;
+    checksums: {
+        sha256: string;
+    }
+}
+
 export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> {
 
     getUserExtraContent(): string[] {
@@ -18,7 +25,7 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
     }
 
     async prepareLaunch (): Promise<void> {
-        const obj = JSON.parse(await get("https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json", ""));
+        const obj = await got("https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json").json<AuthlibInjectorArtifact>();
         const sha256 = obj.checksums.sha256;
         const path = `${this.root.toString()}/authlib-injector-latest.jar`;
         if (!fs.existsSync(path) || !checkFile(path, sha256, "sha256")) {

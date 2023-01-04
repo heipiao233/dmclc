@@ -13,7 +13,7 @@ import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { download } from "../../utils/downloads.js";
 import { expandMavenId } from "../../utils/maven.js";
-import { merge } from "../../utils/mergeversionjson.js";
+import { merge } from "../../utils/MergeVersionJSON.js";
 import { MinecraftVersion } from "../../version.js";
 import { Loader, ModLoadingIssue } from "../loader.js";
 import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";

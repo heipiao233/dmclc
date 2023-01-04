@@ -1,6 +1,6 @@
-import { MCVersion } from "../schemas.js";
-import { merge } from "./mergeversionjson.js";
 import fs from "fs";
+import { MCVersion } from "../schemas.js";
+import { merge } from "./MergeVersionJSON.js";
 
 export function expandInheritsFrom(versionObject: MCVersion, rootPath: string): MCVersion {
     let ret: MCVersion = versionObject;
