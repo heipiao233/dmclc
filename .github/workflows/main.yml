@@ -28,6 +28,7 @@ jobs:
         run: |
           npm install
           npm run build
+          cp ./locales/ lib/locales -r
       - name: documents
         run: npx api-extractor run
         continue-on-error: true

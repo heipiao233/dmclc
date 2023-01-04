@@ -1,4 +1,4 @@
-import { MCVersion } from "../schemas";
+import { MCVersion } from "../schemas.js";
 
 export function merge(a: MCVersion, b: MCVersion, mergeID = false): MCVersion {
     const c = a;
