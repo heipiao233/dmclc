@@ -47,7 +47,7 @@ export class Installer {
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
         const version = MinecraftVersion.fromVersionName(this.launcher, versionName);
-        version.completeVersionInstall();
+        await version.completeVersionInstall();
         return version;
     }
 }
