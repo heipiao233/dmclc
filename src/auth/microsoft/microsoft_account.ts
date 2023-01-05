@@ -20,23 +20,19 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     private async step1_new(code: string): Promise<STEP1> {
-        return (await got.post<STEP1>("https://login.live.com/oauth20_token.srf", {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+        return await got.post("https://login.live.com/oauth20_token.srf", {
             form: {
                 client_id: "00000000402b5328",
-                code: code,
                 grant_type: "authorization_code",
+                code: code,
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
                 scope: "service::user.auth.xboxlive.com::MBI_SSL"
-            },
-            responseType: "json"
-        })).body;
+            }
+        }).json();
     }
 
     private async step1_refresh(): Promise<string> {
-        const res: { access_token: string } = await (got.post("https://login.live.com/oauth20_token.srf", {
+        const res: { access_token: string } = await got.post("https://login.live.com/oauth20_token.srf", {
             form: {
                 client_id: "00000000402b5328",
                 grant_type: "refresh_token",
@@ -44,7 +40,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
                 redirect_uri: "https://login.live.com/oauth20_desktop.srf",
                 scope: "service::user.auth.xboxlive.com::MBI_SSL"
             }
-        }).json());
+        }).json();
         return res.access_token;
     }
 
@@ -108,12 +104,16 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     private async step5_check(MCAccessToken: string): Promise<boolean> {
-        const res = await got("https://api.minecraftservices.com/entitlements/mcstore", {
-            headers: {
-                Authorization: `Bearer ${MCAccessToken}`
-            }
-        });
-        return res.statusCode !== undefined && res.statusCode >= 200 && res.statusCode < 300;
+        try {
+            await got("https://api.minecraftservices.com/entitlements/mcstore", {
+                headers: {
+                    Authorization: `Bearer ${MCAccessToken}`
+                }
+            });
+            return true;
+        } catch {
+            return false;
+        }
     }
 
     private async step6_uuid_name(MCAccessToken: string): Promise<STEP6> {
