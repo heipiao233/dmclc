@@ -44,7 +44,7 @@ export class OfflineAccount implements Account<UserData> {
     }
 
     toString (): string {
-        return `${this.data.name} (${this.launcher.i18n("accounts.offline")})`;
+        return `${this.data.name} (${this.launcher.i18n("accounts.offline.name")})`;
     }
 }
 

@@ -190,6 +190,6 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     toString (): string {
-        return `${this.data.name} (${this.launcher.i18n("accounts.microsoft")})`;
+        return `${this.data.name} (${this.launcher.i18n("accounts.microsoft.name")})`;
     }
 }
