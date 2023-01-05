@@ -39,6 +39,7 @@ export class Launcher {
     /** All installed versions. */
     installedVersions: Map<string, MinecraftVersion> = new Map();
     i18n: i18next.TFunction = i18next.t;
+    private realRootPath = "";
     /**
      * Create a new Launcher object.
      * @param rootPath - {@link Launcher.rootPath}
@@ -96,7 +97,11 @@ export class Launcher {
      * The path to the ".minecraft" directory.
      */
     public set rootPath(path: string) {
-        this.rootPath = fs.realpathSync(path);
+        this.realRootPath = fs.realpathSync(path);
         this.refreshInstalledVersion();
+    }
+
+    public get rootPath(): string {
+        return this.realRootPath;
     }
 }
