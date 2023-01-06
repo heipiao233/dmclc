@@ -79,7 +79,7 @@ export class Launcher {
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
-                loadPath: path.join("./locales/{{lng}}.json", process.cwd())
+                loadPath: path.join(process.cwd(), "./locales/{{lng}}.json")
             }
         });
     }
