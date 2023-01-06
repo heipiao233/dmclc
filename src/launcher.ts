@@ -1,9 +1,10 @@
+import compressing from "compressing";
 import fs from "fs";
 import { mkdirsSync } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
 import os from "os";
-import { fileURLToPath } from "url";
+import path from "path";
 import { Account } from "./auth/account.js";
 import { AuthlibInjectorAccount } from "./auth/ali_account.js";
 import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
@@ -15,6 +16,7 @@ import { FabricLoader } from "./loaders/fabric.js";
 import { ForgeLoader } from "./loaders/forge/forge.js";
 import { Loader } from "./loaders/loader.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
+import { download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
 /**
  * The core of DMCLC.
@@ -72,10 +74,12 @@ export class Launcher {
     }
 
     async init(lang = "en_us") {
+        await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz");
+        await compressing.tgz.uncompress("./locales.tar.gz", ".");
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
-                loadPath: fileURLToPath(new URL("./locales/{{lng}}.json", import.meta.url))
+                loadPath: path.join("./locales/{{lng}}.json", process.cwd())
             }
         });
     }

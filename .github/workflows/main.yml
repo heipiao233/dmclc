@@ -28,7 +28,6 @@ jobs:
         run: |
           npm install
           npm run build
-          cp ./locales/ lib/locales -r
       - name: documents
         run: npx api-extractor run
         continue-on-error: true
@@ -40,11 +39,13 @@ jobs:
           ref: 'docs'
       - run: |
           cp ./markdown/* ./docs/ -r
+          tar cvzf locales.tar.gz locales
+          cp ./locales.tar.gz ./docs/
           cd ./docs/
-          git config --global user.email "heipiao233@outlook.com"
-          git config --global user.name "heipiao233"
+          git config --global user.email "bot_setup_by_heipiao233@example.com"
+          git config --global user.name "bot"
           git add .
-          git commit -m "auto document"
+          git commit -m "auto document and locale"
           git push
         continue-on-error: true
       - name: publish
