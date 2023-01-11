@@ -1,9 +1,9 @@
-import copy from "copy-paste";
 import { got } from "got";
 import open from "open";
 import { setTimeout as sleep } from "timers/promises";
 import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
+import copy from "../../utils/copy.js";
 import { Account } from "../account.js";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
 const client_id = "71dd081b-dc92-4d36-81ac-3a2bde5527ba";
@@ -41,7 +41,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
                 scope
             }
         }).json();
-        copy.copy(device_response.user_code);
+        copy(device_response.user_code);
         open(device_response.verification_uri);
         let interval = device_response.interval;
         const startTime = Date.now();
