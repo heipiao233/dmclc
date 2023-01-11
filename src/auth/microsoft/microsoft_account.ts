@@ -93,7 +93,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             Properties: {
                 AuthMethod: "RPS",
                 SiteName: "user.auth.xboxlive.com",
-                RpsTicket: accessToken
+                RpsTicket: "d=" + accessToken
             },
             RelyingParty: "http://auth.xboxlive.com",
             TokenType: "JWT"
@@ -107,10 +107,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             }
         } = await got("https://user.auth.xboxlive.com/user/authenticate", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(reqBody)
+            json: reqBody
         }).json();
         return (
             {
