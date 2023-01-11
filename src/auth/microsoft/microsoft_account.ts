@@ -1,8 +1,24 @@
+import copy from "copy-paste";
 import { got } from "got";
+import open from "open";
+import { setTimeout as sleep } from "timers/promises";
 import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { Account } from "../account.js";
 import { MicrosoftUserData } from "./microsoft_user_data.js";
+const client_id = "71dd081b-dc92-4d36-81ac-3a2bde5527ba";
+const scope = "XboxLive.signin offline_access";
+type STEP1_1 = {
+    device_code: string,
+    user_code: string,
+    verification_uri: string;
+    interval: number;
+    expires_in: number;
+}
+
+type STEP1_2 = STEP1 | {
+    error: "authorization_pending" | "authorization_declined" | "expired_token" | "slow_down";
+};
 type STEP1 = {
     access_token: string;
     refresh_token: string;
@@ -16,29 +32,57 @@ type STEP6 = {
     name: string;
 }
 export class MicrosoftAccount implements Account<MicrosoftUserData> {
-    constructor (public data: MicrosoftUserData, private launcher: Launcher) {
-    }
+    constructor (public data: MicrosoftUserData, private launcher: Launcher) {}
 
-    private async step1_new(code: string): Promise<STEP1> {
-        return await got.post("https://login.live.com/oauth20_token.srf", {
+    private async step1_new(): Promise<STEP1> {
+        const device_response: STEP1_1 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode", {
             form: {
-                client_id: "00000000402b5328",
-                grant_type: "authorization_code",
-                code: code,
-                redirect_uri: "https://login.live.com/oauth20_desktop.srf",
-                scope: "service::user.auth.xboxlive.com::MBI_SSL"
+                client_id,
+                scope
             }
         }).json();
+        copy.copy(device_response.user_code);
+        open(device_response.verification_uri);
+        let interval = device_response.interval;
+        const startTime = Date.now();
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            await sleep(Math.max(interval, 1) * 1000);
+            const estimatedTime = Date.now() - startTime;
+            if (estimatedTime >= device_response.expires_in) {
+                throw new FormattedError(this.launcher.i18n("accounts.microsoft.timeout"));
+            }
+            const tokenResponse: STEP1_2 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", {
+                form: {
+                    grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+                    code: device_response.device_code,
+                    client_id
+                },
+                throwHttpErrors: false,
+                retry: {
+                    limit: 5
+                }
+            }).json();
+            if ("error" in tokenResponse) {
+                switch (tokenResponse.error) {
+                case "expired_token": 
+                    throw new FormattedError(this.launcher.i18n("accounts.microsoft.timeout"));
+                case "authorization_declined":
+                    throw new FormattedError(this.launcher.i18n("accounts.microsoft.canceled"));
+                case "slow_down":
+                    interval += 5;
+                    break;
+                }
+            } else return tokenResponse;
+        }
     }
 
     private async step1_refresh(): Promise<string> {
-        const res: { access_token: string } = await got.post("https://login.live.com/oauth20_token.srf", {
+        const res: { access_token: string } = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", {
             form: {
-                client_id: "00000000402b5328",
+                client_id,
                 grant_type: "refresh_token",
-                refresh_token: this.data.refresh_token!,
-                redirect_uri: "https://login.live.com/oauth20_desktop.srf",
-                scope: "service::user.auth.xboxlive.com::MBI_SSL"
+                refresh_token: this.data.refresh_token!
             }
         }).json();
         return res.access_token;
@@ -104,16 +148,12 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     private async step5_check(MCAccessToken: string): Promise<boolean> {
-        try {
-            await got("https://api.minecraftservices.com/entitlements/mcstore", {
-                headers: {
-                    Authorization: `Bearer ${MCAccessToken}`
-                }
-            });
-            return true;
-        } catch {
-            return false;
-        }
+        const obj: { items: unknown[] } = (await got("https://api.minecraftservices.com/entitlements/mcstore", {
+            headers: {
+                Authorization: `Bearer ${MCAccessToken}`
+            }
+        }).json());
+        return obj.items.length !== 0;
     }
 
     private async step6_uuid_name(MCAccessToken: string): Promise<STEP6> {
@@ -125,17 +165,14 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     async check(): Promise<boolean> {
-        try {
-            await this.refresh();
-        }catch{
-            return false;
-        }
-        return true;
+        return await this.refresh();
     }
     
-    private async refresh() {
+    private async refresh(): Promise<boolean> {
         const at=(await this.step1_refresh());
+        if (!at) return false;
         await this.nextSteps(at);
+        return true;
     }
 
     getUUID(): string {
@@ -143,19 +180,16 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     getUserExtraContent(): Record<string, string> {
-        return {
-            "ms_url": "ms_url"
-        };
+        return {};
     }
 
-    async readUserExtraContent (content: Map<string, string>): Promise<void> {
-        const MSCode = new URL(content.get("ms_url")!).searchParams.get("code")!;
-        const val = await this.step1_new(MSCode);
+    async readUserExtraContent(): Promise<void> {
+        const val = await this.step1_new();
         await this.nextSteps(val.access_token);
         this.data.refresh_token = val.refresh_token;
     }
 
-    private async nextSteps(access_token: string){
+    private async nextSteps(access_token: string) {
         const tu = await this.step2_xbl(access_token);
         const xsts = await this.step3_xsts(tu.token);
         const MCAccessToken = await this.step4_login(xsts, tu.uhs);

@@ -4,7 +4,10 @@
     "accounts": {
         "microsoft": {
             "name": "微软账号",
-            "no_minecraft_in_account": "该账户尚未购买 Minecraft。"
+            "message": "正版。按确认后，请在弹出的浏览器窗口操作，要输入的代码在剪贴板。",
+            "no_minecraft_in_account": "该账户尚未购买 Minecraft。",
+            "timeout": "登录超时！",
+            "canceled": "登录取消！"
         },
         "yggdrasil": {
             "username": "邮箱",
@@ -13,14 +16,17 @@
         },
         "minecraft_universal_login": {
             "name": "Minecraft 统一通行证",
+            "message": "部分服务器要求使用，帮助服主验证玩家身份。",
             "serverID": "服务器 ID"
         },
         "authlib_injector": {
             "name": "外置登录",
+            "message": "部分服务器要求使用，帮助服主验证玩家身份，亦可为盗版设置皮肤、好友联机。",
             "apiurl": "认证服务器 URL"
         },
         "offline": {
             "name": "离线登录",
+            "message": "盗版玩家的选择。不能设皮肤。",
             "username": "用户名"
         }
     },

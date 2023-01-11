@@ -10,17 +10,15 @@ export interface Account<T extends UserData> {
    * Check if this account can use without input any other information again, and refresh access token.
    */
   check(): Promise<boolean>
+
   /**
    * Get UUID of this account.
    * @returns UUID.
    */
   getUUID(): string
-  /**
-   * Specially, if there is ms_url in keys, please use a webview.
-   */
   getUserExtraContent(): Record<string, string>
+
   /**
-   * 
    * @param content A map, keys must contain all keys of return values from {@link getUserExtraContent}, values are from user input.
    */
   readUserExtraContent(content: Map<string, string>): Promise<void>

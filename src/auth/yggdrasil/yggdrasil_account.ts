@@ -66,36 +66,32 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     async check(): Promise<boolean> {
-        try {
-            await got.post(this.data.apiurl + "/authserver/validate", {
-                json: {
-                    accessToken: this.data.accessToken,
-                    clientToken: this.data.clientToken
-                }
-            });
-            return true;
-        } catch {
-            return await this.refresh();
-        }
+        const resp = await got.post(this.data.apiurl + "/authserver/validate", {
+            json: {
+                accessToken: this.data.accessToken,
+                clientToken: this.data.clientToken
+            },
+            throwHttpErrors: false
+        });
+        if (resp.statusCode === 204) return true;
+        return await this.refresh();
     }
 
     private async refresh(): Promise<boolean> {
-        try{
-            const req = await got.post<ATCT>(this.data.apiurl + "/authserver/refresh", {
-                json: {
-                    accessToken: this.data.accessToken,
-                    clientToken: this.data.clientToken
-                },
-                responseType: "json",
-                followRedirect: false
-            });
-            const res: ATCT = req.body;
-            this.data.accessToken = res.accessToken;
-            this.data.clientToken = res.clientToken;
-            return true;
-        } catch(e) {
-            return false;
-        }
+        const req = await got.post<ATCT>(this.data.apiurl + "/authserver/refresh", {
+            json: {
+                accessToken: this.data.accessToken,
+                clientToken: this.data.clientToken
+            },
+            responseType: "json",
+            followRedirect: false,
+            throwHttpErrors: false
+        });
+        if(req.statusCode >= 300 || req.statusCode < 200) return false;
+        const res: ATCT = req.body;
+        this.data.accessToken = res.accessToken;
+        this.data.clientToken = res.clientToken;
+        return true;
     }
 
     getUUID(): string {
