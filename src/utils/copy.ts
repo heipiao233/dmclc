@@ -4,7 +4,7 @@ import os from "os";
 export default function copy(str: string) {
     switch (os.platform()) {
     case "win32":
-        execSync(`echo "${str}" | clip`);
+        execSync(`echo ${str} | clip`);
         break;
 
     case "darwin":

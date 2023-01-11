@@ -44,11 +44,11 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         copy(device_response.user_code);
         open(device_response.verification_uri);
         let interval = device_response.interval;
-        const startTime = Date.now();
+        const startTime = Date.now() / 1000;
         // eslint-disable-next-line no-constant-condition
         while (true) {
             await sleep(Math.max(interval, 1) * 1000);
-            const estimatedTime = Date.now() - startTime;
+            const estimatedTime = Date.now() / 1000 - startTime;
             if (estimatedTime >= device_response.expires_in) {
                 throw new FormattedError(this.launcher.i18n("accounts.microsoft.timeout"));
             }
