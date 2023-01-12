@@ -28,6 +28,6 @@ export declare class Installer
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [getVersionList()](./dmclc.installer.getversionlist.md) |  | Get all the versions from the network. |
+|  [getVersionList()](./dmclc.installer.getversionlist.md) |  | Get all the versions from Mojang. |
 |  [install(ver, versionName)](./dmclc.installer.install.md) |  |  |
 

@@ -4,7 +4,7 @@
 
 ## Installer.getVersionList() method
 
-Get all the versions from the network.
+Get all the versions from Mojang.
 
 <b>Signature:</b>
 
