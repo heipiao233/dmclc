@@ -128,7 +128,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         };
         const res: {Token: string} = await got("https://xsts.auth.xboxlive.com/xsts/authorize", {
             method: "POST",
-            body: JSON.stringify(reqBody)
+            json: reqBody
         }).json();
         return res.Token;
     }
@@ -139,7 +139,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
         };
         const res: {access_token: string} = await got("https://api.minecraftservices.com/authentication/login_with_xbox", {
             method: "POST",
-            body: JSON.stringify(reqBody)
+            json: reqBody
         }).json();
         return res.access_token;
     }
@@ -194,7 +194,6 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             throw new FormattedError(this.launcher.i18n("accounts.microsoft.no_minecraft_in_account"));
         }
         const un = await this.step6_uuid_name(MCAccessToken);
-        console.log(un);
         this.data.accessToken = MCAccessToken;
         this.data.name = un.name;
         this.data.uuid = un.id;

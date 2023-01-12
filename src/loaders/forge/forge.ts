@@ -74,8 +74,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                         }).join(this.launcher.separator)};${jar}`,
                         await getMainClass(jar),
                         ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata1))];
-                    console.log(args);
-                    console.log(execFileSync(this.launcher.usingJava, args).toString());
+                    execFileSync(this.launcher.usingJava, args);
                 }
             }
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));

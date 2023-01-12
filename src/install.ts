@@ -20,11 +20,10 @@ export class Installer {
     }
 
     /**
-     * Get all the versions from the network.
+     * Get all the versions from Mojang.
      * @returns All the versions.
      */
     async getVersionList(): Promise<VersionInfos> {
-        // url:https://launchermeta.mojang.com/mc/game/version_manifest.json
         const versions: VersionInfos = await got(transformURL("https://launchermeta.mojang.com/mc/game/version_manifest.json", this.launcher.mirror)).json();
         return versions;
     }

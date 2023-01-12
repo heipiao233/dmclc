@@ -128,7 +128,6 @@ export class MinecraftVersion {
         await this.extractNative(this.versionObject, this.name);
         const args = await this.getArguments(this.versionObject, this.name, account);
         const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
-        console.log(allArguments.join(" "));
         return cp.execFile(this.launcher.usingJava, allArguments, {
             cwd: this.extras.enableIndependentGameDir
                 ? this.versionRoot
@@ -168,7 +167,6 @@ export class MinecraftVersion {
             if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
                 !checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
                 mkdirs(`${assetsObjects}/${assitem.hash.slice(0, 2)}`);
-                console.log(assid);
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
@@ -205,7 +203,6 @@ export class MinecraftVersion {
                 for (const artifact of artifacts) {
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
                         await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
-                        console.log(i.name);
                         allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                     }
                 }
