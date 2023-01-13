@@ -145,12 +145,17 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     private async step5_check(MCAccessToken: string): Promise<boolean> {
-        const obj: { items: unknown[] } = (await got("https://api.minecraftservices.com/entitlements/mcstore", {
+        const obj: { items: { name: string }[] } = (await got("https://api.minecraftservices.com/entitlements/mcstore", {
             headers: {
                 Authorization: `Bearer ${MCAccessToken}`
             }
         }).json());
-        return obj.items.length !== 0;
+        for (const i of obj.items) {
+            if (i.name === "game_minecraft") {
+                return true;
+            }
+        }
+        return false;
     }
 
     private async step6_uuid_name(MCAccessToken: string): Promise<STEP6> {
