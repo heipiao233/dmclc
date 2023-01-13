@@ -23,3 +23,7 @@ install(MCVersion: MinecraftVersion, version: string): Promise<void>;
 
 Promise&lt;void&gt;
 
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
+

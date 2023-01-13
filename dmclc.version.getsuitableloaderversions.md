@@ -24,3 +24,7 @@ Promise&lt;string\[\]&gt;
 
 The versions of loader.
 
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
+

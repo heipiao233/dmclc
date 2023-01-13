@@ -20,3 +20,7 @@ constructor(rootPath: string, name: string, javaExec: string);
 |  name | string | [Launcher.name](./dmclc.launcher.name.md) |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
 
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
+

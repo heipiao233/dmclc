@@ -25,6 +25,7 @@ export declare class MinecraftVersion
 |  [extras](./dmclc.version.extras.md) |  | DMCLCExtraVersionInfo |  |
 |  [name](./dmclc.version.name.md) |  | string |  |
 |  [versionJarPath](./dmclc.version.versionjarpath.md) |  | string |  |
+|  [versionObject](./dmclc.version.versionobject.md) |  | MCVersion |  |
 |  [versionRoot](./dmclc.version.versionroot.md) |  | string |  |
 
 ## Methods
@@ -37,7 +38,7 @@ export declare class MinecraftVersion
 |  [fromVersionName(launcher, name)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
 |  [getVersionFromJar()](./dmclc.version.getversionfromjar.md) |  |  |
-|  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  |  |
+|  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  | Install a mod loader. |
 |  [run(account)](./dmclc.version.run.md) |  | Run this version! |
 |  [saveExtras()](./dmclc.version.saveextras.md) |  |  |
 

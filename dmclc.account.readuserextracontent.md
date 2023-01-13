@@ -20,3 +20,7 @@ readUserExtraContent(content: Map<string, string>): Promise<void>;
 
 Promise&lt;void&gt;
 
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
+

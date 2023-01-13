@@ -22,3 +22,7 @@ getSuitableLoaderVersions(MCVersion: MinecraftVersion): Promise<string[]>;
 
 Promise&lt;string\[\]&gt;
 
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
+

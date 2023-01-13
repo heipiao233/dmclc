@@ -4,6 +4,8 @@
 
 ## Version.installLoader() method
 
+Install a mod loader.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,10 +16,14 @@ installLoader(name: string, loaderVersion: string): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  name | string |  |
-|  loaderVersion | string |  |
+|  name | string | Loader name. |
+|  loaderVersion | string | Loader version. |
 
 <b>Returns:</b>
 
 Promise&lt;void&gt;
+
+## Exceptions
+
+{<!-- -->FormattedError<!-- -->}
 
