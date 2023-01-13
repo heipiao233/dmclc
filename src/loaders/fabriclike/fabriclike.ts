@@ -51,6 +51,12 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     }
 
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
+    /**
+     * 
+     * @throws {FormattedError}
+     * @param MCVersion Minecraft version.
+     * @returns Loader versions.
+     */
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
             throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
@@ -66,14 +72,15 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
 
     async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new Error("loaders.minecraft_version_unknown");
+            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
         const versionInfo: T = this.cachedLoaderVersions.get(`${MCVersion}-${version}`) ??
             await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}`).json();
         const mcVersion: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
         if (mcVersion.mainClass === versionInfo.launcherMeta.mainClass.client) return;
         const newVersion: MCVersion = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}/profile/json`).json();
-        fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(merge(mcVersion, newVersion)));
+        MCVersion.versionObject = merge(mcVersion, newVersion);
+        fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(MCVersion.versionObject));
     }
 }
 

@@ -54,18 +54,18 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher.mirror);
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
-        const metadata0 = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
+        const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
         
-        if(Number.parseInt(MCVersion.extras.version.split(".")[1])>12){ // 1.13+
-            const metadata1: InstallerProfileNew = metadata0;
+        if("processors" in metadata){ // 1.13+
             await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
-            await MCVersion.completeLibraries(metadata1.libraries);
-            const target: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
+            await MCVersion.completeLibraries(metadata.libraries);
+            const target: MCVersion = MCVersion.versionObject;
             const source: MCVersion = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
             const result = merge(target, source);
+            MCVersion.versionObject = result;
             await MCVersion.completeLibraries(source.libraries);
             
-            for (const item of metadata1.processors) {
+            for (const item of metadata.processors) {
                 if (item.sides === undefined || item.sides.includes("client")) {
                     const jar = `${this.launcher.rootPath}/libraries/${expandMavenId(item.jar)}`;
                     const args = ["-cp",
@@ -73,16 +73,17 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                             return `${this.launcher.rootPath}/libraries/${expandMavenId(i)}`;
                         }).join(this.launcher.separator)};${jar}`,
                         await getMainClass(jar),
-                        ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata1))];
+                        ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata))];
                     execFileSync(this.launcher.usingJava, args);
                 }
             }
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
         } else { // 1.12-
-            const metadata1: InstallerProfileOld = metadata0;
-            const target: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
+            const metadata1: InstallerProfileOld = metadata;
+            const target: MCVersion = MCVersion.versionObject;
             const source: MCVersion = metadata1.versionInfo;
             const result = merge(target, source);
+            MCVersion.versionObject = result;
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
         }
     }

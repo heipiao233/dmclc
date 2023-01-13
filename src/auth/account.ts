@@ -19,6 +19,7 @@ export interface Account<T extends UserData> {
   getUserExtraContent(): Record<string, string>
 
   /**
+   * @throws {FormattedError}
    * @param content A map, keys must contain all keys of return values from {@link getUserExtraContent}, values are from user input.
    */
   readUserExtraContent(content: Map<string, string>): Promise<void>

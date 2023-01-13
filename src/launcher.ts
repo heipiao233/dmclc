@@ -44,6 +44,7 @@ export class Launcher {
     private realRootPath = "";
     /**
      * Create a new Launcher object.
+     * @throws {FormattedError}
      * @param rootPath - {@link Launcher.rootPath}
      * @param name - {@link Launcher.name}
      * @param javaExec - {@link Launcher.usingJava}

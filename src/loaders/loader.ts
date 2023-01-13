@@ -21,11 +21,13 @@ export class ModLoadingIssue {
 export interface Loader<T> {
     /**
      * Get all loader versions that work on the Minecraft version
+     * @throws {FormattedError}
      * @param MCVersion - Minecraft version.
      */
     getSuitableLoaderVersions(MCVersion: MinecraftVersion): Promise<string[]>
     /**
      * Install.
+     * @throws {FormattedError}
      * @param MCVersion - Minecraft version.
      * @param version - Loader version.
      */

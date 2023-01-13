@@ -50,8 +50,7 @@ export class LoaderInfo {
  * @public
  */
 export class MinecraftVersion {
-    private launcher: Launcher;
-    private versionObject: MCVersion;
+    versionObject: MCVersion;
     extras: DMCLCExtraVersionInfo;
     name: string;
     versionRoot: string;
@@ -72,8 +71,7 @@ export class MinecraftVersion {
      * @param launcher - The launcher instance.
      * @param object - The Version JSON object.
      */
-    constructor(launcher: Launcher, object: MCVersion){
-        this.launcher = launcher;
+    constructor(private launcher: Launcher, object: MCVersion){
         this.versionObject = object;
         this.name = object.id;
         this.versionRoot = `${this.launcher.rootPath}/versions/${this.name}`;
@@ -288,6 +286,7 @@ export class MinecraftVersion {
 
     /**
      * Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts.
+     * @throws {FormattedError}
      * @param name - The name of loader.
      * @returns The versions of loader.
      */
@@ -298,6 +297,12 @@ export class MinecraftVersion {
         }
         return loader.getSuitableLoaderVersions(this);
     }
+    /**
+     * Install a mod loader.
+     * @throws {FormattedError}
+     * @param name Loader name.
+     * @param loaderVersion Loader version.
+     */
     async installLoader(name: string, loaderVersion: string): Promise<void> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
