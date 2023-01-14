@@ -12,7 +12,8 @@
         "yggdrasil": {
             "username": "E-Mail",
             "password": "Password",
-            "profileID": "Profile ID"
+            "profileID": "Profile ID",
+            "wrong_email_or_password": "Wrong E-Mail or password."
         },
         "minecraft_universal_login": {
             "name": "Minecraft Universal Login Account",

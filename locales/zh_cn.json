@@ -12,7 +12,8 @@
         "yggdrasil": {
             "username": "邮箱",
             "password": "密码",
-            "profileID": "角色 ID"
+            "profileID": "角色 ID",
+            "wrong_email_or_password": "错误的邮箱或密码。"
         },
         "minecraft_universal_login": {
             "name": "Minecraft 统一通行证",

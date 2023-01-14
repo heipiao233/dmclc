@@ -16,6 +16,9 @@ export interface Account<T extends UserData> {
    * @returns UUID.
    */
   getUUID(): string
+  /**
+   * If a key is `password`, please mask!
+   */
   getUserExtraContent(): Record<string, string>
 
   /**

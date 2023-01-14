@@ -1,4 +1,5 @@
-import got from "got";
+import got, { Response } from "got";
+import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { MinecraftVersion } from "../../version.js";
 import { Account } from "../account.js";
@@ -31,18 +32,18 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         return {
             username: this.launcher.i18n("accounts.yggdrasil.username"),
             password: this.launcher.i18n("accounts.yggdrasil.password"),
-            profileId: this.launcher.i18n("accounts.yggdrasil.profileId")
+            profileID: this.launcher.i18n("accounts.yggdrasil.profileID")
         };
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {
-        const profileId: number = Number.parseInt(content.get("profileId")!);
-        const res: ATCT & {
+        const profileID: number = Number.parseInt(content.get("profileID")!);
+        const res: Response<ATCT & {
             availableProfiles: {
                 id: string,
                 name: string
             }[]
-        } = await got.post(this.data.apiurl + "/authserver/authenticate", {
+        }> = await got.post(this.data.apiurl + "/authserver/authenticate", {
             json: {
                 username: content.get("username"),
                 password: content.get("password"),
@@ -51,12 +52,17 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
                     name: "Minecraft",
                     version: 1
                 }
-            }
+            },
+            throwHttpErrors: false,
         }).json();
-        this.data.accessToken = res.accessToken;
-        this.data.clientToken = res.clientToken;
-        this.data.uuid = res.availableProfiles[profileId].id;
-        this.data.name = res.availableProfiles[profileId].name;
+        if (res.statusCode === 403) {
+            throw new FormattedError(this.launcher.i18n("accounts.yggdrasil.wrong_email_or_password"));
+        }
+        const obj = res.body;
+        this.data.accessToken = obj.accessToken;
+        this.data.clientToken = obj.clientToken;
+        this.data.uuid = obj.availableProfiles[profileID].id;
+        this.data.name = obj.availableProfiles[profileID].name;
         const meta: {
             meta: {
                 serverName: string
