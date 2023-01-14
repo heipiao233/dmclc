@@ -4,6 +4,8 @@
 
 ## Account.getUserExtraContent() method
 
+If a key is `password`<!-- -->, please mask!
+
 <b>Signature:</b>
 
 ```typescript
