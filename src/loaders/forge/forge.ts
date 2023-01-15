@@ -51,7 +51,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
-        await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher.mirror);
+        await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher);
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());

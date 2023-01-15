@@ -140,7 +140,7 @@ export class MinecraftVersion {
         const promises = [];
         if (!fs.existsSync(this.versionJarPath) ||
             !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
-            promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath));
+            promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath, this.launcher));
         }
         promises.push(...(await this.completeAssets(this.versionObject.assetIndex)));
         promises.push(...(await this.completeLibraries(this.versionObject.libraries)));
@@ -168,7 +168,7 @@ export class MinecraftVersion {
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
-        return downloadAll(allDownloads, this.launcher.mirror);
+        return downloadAll(allDownloads, this.launcher);
     }
 
     /**
@@ -206,7 +206,7 @@ export class MinecraftVersion {
                 }
             }
         }
-        return downloadAll(allDownloads, this.launcher.mirror);
+        return downloadAll(allDownloads, this.launcher);
     }
 
     private getClassPath (versionObject: MCVersion, versionName: string): string[] {

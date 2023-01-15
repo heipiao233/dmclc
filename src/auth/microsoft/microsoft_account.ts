@@ -41,6 +41,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
                 scope
             }
         }).json();
+        if (this.launcher.copy) this.launcher.copy(device_response.user_code);
         copy(device_response.user_code);
         open(device_response.verification_uri);
         let interval = device_response.interval;

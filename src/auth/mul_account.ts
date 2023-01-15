@@ -27,7 +27,7 @@ export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUn
     async prepareLaunch (): Promise<void> {
         const path = `${this.root}/nide8auth.jar`;
         if (!fs.existsSync(path)) {
-            await download("https://login.mc-user.com:233/index/jar", path);
+            await download("https://login.mc-user.com:233/index/jar", path, this.launcher);
         }
     }
 

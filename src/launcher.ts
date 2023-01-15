@@ -53,7 +53,9 @@ export class Launcher {
      * @param name - {@link Launcher.name}
      * @param javaExec - {@link Launcher.usingJava}
      */
-    constructor (rootPath: string, public name: string, javaExec: string) {
+    constructor (rootPath: string, public name: string, javaExec: string,
+        public downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
+        public copy?: (arg: string) => void) {
         this.rootPath = fs.realpathSync(rootPath);
         this.usingJava = javaExec;
         if (this.systemType === "win32") {
@@ -84,10 +86,10 @@ export class Launcher {
     async init(lang = "en_us") {
         // HMCL, pioneer of cross-architecture launcher.
         if(this.specialArch) {
-            await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json");
+            await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
             this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
         }
-        await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz");
+        await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);
         await compressing.tgz.uncompress("./locales.tar.gz", ".");
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
