@@ -54,7 +54,8 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
                 }
             },
             throwHttpErrors: false,
-        }).json();
+            responseType: "json"
+        });
         if (res.statusCode === 403) {
             throw new FormattedError(this.launcher.i18n("accounts.yggdrasil.wrong_email_or_password"));
         }
