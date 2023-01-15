@@ -9,7 +9,7 @@ Create a new Launcher object.
 <b>Signature:</b>
 
 ```typescript
-constructor(rootPath: string, name: string, javaExec: string);
+constructor(rootPath: string, name: string, javaExec: string, downloader?: ((url: string, filename: fs.PathLike, oldURL: string) => Promise<void>) | undefined, copy?: ((arg: string) => void) | undefined);
 ```
 
 ## Parameters
@@ -19,6 +19,8 @@ constructor(rootPath: string, name: string, javaExec: string);
 |  rootPath | string | [Launcher.rootPath](./dmclc.launcher.rootpath.md) |
 |  name | string | [Launcher.name](./dmclc.launcher.name.md) |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
+|  downloader | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
+|  copy | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
 
 ## Exceptions
 

@@ -16,13 +16,15 @@ export declare class Launcher
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(rootPath, name, javaExec)](./dmclc.launcher._constructor_.md) |  | Create a new Launcher object. |
+|  [(constructor)(rootPath, name, javaExec, downloader, copy)](./dmclc.launcher._constructor_.md) |  | Create a new Launcher object. |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
+|  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
+|  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
 |  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
 |  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
