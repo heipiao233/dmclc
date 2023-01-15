@@ -32,6 +32,8 @@ export declare class Launcher
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string |  |
 |  [separator](./dmclc.launcher.separator.md) |  | string | : or ; |
+|  [specialArch?](./dmclc.launcher.specialarch.md) |  | string | <i>(Optional)</i> |
+|  [specialNatives?](./dmclc.launcher.specialnatives.md) |  | Record&lt;string, Library&gt; | <i>(Optional)</i> |
 |  [systemType](./dmclc.launcher.systemtype.md) |  | NodeJS.Platform |  |
 |  [usingJava](./dmclc.launcher.usingjava.md) |  | string | Using Java executable |
 
