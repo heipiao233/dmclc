@@ -13,9 +13,11 @@ import { OfflineAccount } from "./auth/offline_account.js";
 import { FormattedError } from "./errors/FormattedError.js";
 import { Installer } from "./install.js";
 import { FabricLoader } from "./loaders/fabric.js";
+import { VersionParser } from "./loaders/fabriclike/version/VersionParser.js";
 import { ForgeLoader } from "./loaders/forge/forge.js";
 import { Loader } from "./loaders/loader.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
+import { Library } from "./schemas.js";
 import { download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
 /**
@@ -41,6 +43,8 @@ export class Launcher {
     /** All installed versions. */
     installedVersions: Map<string, MinecraftVersion> = new Map();
     i18n: i18next.TFunction = i18next.t;
+    specialArch?: string;
+    specialNatives?: Record<string, Library>;
     private realRootPath = "";
     /**
      * Create a new Launcher object.
@@ -59,6 +63,9 @@ export class Launcher {
             this.separator = ":";
             if (this.systemType === "linux") {
                 this.natives = "linux";
+                if(process.arch !== "x64" && process.arch !== "ia32") {
+                    this.specialArch = process.arch;
+                }
             } else if(this.systemType === "darwin") {
                 this.natives = "osx";
             }else{
@@ -75,6 +82,11 @@ export class Launcher {
     }
 
     async init(lang = "en_us") {
+        // HMCL, pioneer of cross-architecture launcher.
+        if(this.specialArch) {
+            await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json");
+            this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
+        }
         await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz");
         await compressing.tgz.uncompress("./locales.tar.gz", ".");
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
@@ -108,5 +120,33 @@ export class Launcher {
 
     public get rootPath(): string {
         return this.realRootPath;
+    }
+    
+    private getArchString(): string {
+        let arch;
+        switch (os.arch()) {
+        case "arm":
+            arch = "arm32";
+            break;
+                
+        case "arm64" || "aarch64":
+            arch = "arm64";
+            break;
+
+        case "mips64el":
+            arch = "mips64el";
+            break;
+
+        case "loongarch64":
+            if (VersionParser.parse(os.release(), false).compareTo(VersionParser.parse("5.19", false)) <= 0) {
+                arch = "loongarch64_ow";
+            } else arch = "loongarch64";
+            break;
+
+        default:
+            arch = os.arch();
+            break;
+        }
+        return `${this.natives}-${arch}`;
     }
 }

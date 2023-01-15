@@ -195,7 +195,7 @@ export class MinecraftVersion {
                 if (i.downloads.artifact!==undefined) {
                     artifacts.push(i.downloads.artifact);
                 }
-                if(i.downloads.classifiers!==undefined) {
+                if (i.downloads.classifiers!==undefined) {
                     artifacts.push(i.downloads.classifiers[i.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
                 for (const artifact of artifacts) {
