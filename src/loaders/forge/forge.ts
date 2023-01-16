@@ -57,7 +57,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
         
         if("processors" in metadata){ // 1.13+
-            await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
+            if (fs.existsSync(`${installer}/maven`)) await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
             await MCVersion.completeLibraries(metadata.libraries);
             const target: MCVersion = MCVersion.versionObject;
             const source: MCVersion = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
