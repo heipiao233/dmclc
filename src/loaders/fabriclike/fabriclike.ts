@@ -64,7 +64,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}`)).body);
         const result: string[] = [];
         versions.forEach(v => {
-            this.cachedLoaderVersions.set(`${MCVersion}-${v.loader.version}`, v);
+            this.cachedLoaderVersions.set(`${MCVersion.extras.version}-${v.loader.version}`, v);
             result.push(v.loader.version);
         });
         return result;

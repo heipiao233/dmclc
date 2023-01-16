@@ -43,7 +43,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         const res = await got(this.metadata);
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
-        return versions.filter((v: string) => v.startsWith(`${MCVersion}-`));
+        return versions.filter((v: string) => v.startsWith(`${MCVersion.extras.version}-`));
     }
 
     async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
