@@ -1,5 +1,6 @@
 export { Account } from "./auth/account.js";
 export { UserData } from "./auth/user_data.js";
+export * from "./errors/FormattedError.js";
 export { Installer } from "./install.js";
 export { Launcher } from "./launcher.js";
 export { Loader } from "./loaders/loader.js";

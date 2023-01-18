@@ -103,11 +103,36 @@ async function findForLinux(): Promise<Pair<string, string>[]> {
 
 async function findForMac(): Promise<Pair<string, string>[]> {
     const ret: Pair<string, string>[] = [];
-    // TODO: MAC
+    let i = "/Library/Java/JavaVirtualMachines";
+    for (const j of fs.readdirSync(i)) {
+        let exec = `${i}/${j}/Contents/Home/bin/java`;
+        if(fs.existsSync(exec)){
+            ret.push(new Pair(await getJavaVersion(exec), exec));
+        }
+        exec = `${i}/${j}/Contents/Home/jre/bin/java`;
+        if(fs.existsSync(exec)){
+            ret.push(new Pair(await getJavaVersion(exec), exec));
+        }
+    }
+    i = "/System/Library/Java/JavaVirtualMachines";
+    for (const j of fs.readdirSync(i)) {
+        const exec = `${i}/${j}/Contents/Home/bin/java`;
+        if(fs.existsSync(exec)){
+            ret.push(new Pair(await getJavaVersion(exec), exec));
+        }
+    }
+    let exec = "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java";
+    if(fs.existsSync(exec)){
+        ret.push(new Pair(await getJavaVersion(exec), exec));
+    }
+    exec = "/Applications/Xcode.app/Contents/Applications/Application Loader.app/Contents/MacOS/itms/java/bin/java";
+    if(fs.existsSync(exec)){
+        ret.push(new Pair(await getJavaVersion(exec), exec));
+    }
     return ret;
 }
 
-async function getJavaVersion(javaExec: string): Promise<string> {
+export async function getJavaVersion(javaExec: string): Promise<string> {
     return new Promise(resolve=>{
         const proc = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]);
         let stderr = "";
