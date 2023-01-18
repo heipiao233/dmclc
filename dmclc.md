@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [FormattedError](./dmclc.formattederror.md) |  |
 |  [Installer](./dmclc.installer.md) | Install new Minecraft versions. |
 |  [Launcher](./dmclc.launcher.md) | The core of DMCLC. |
 |  [Pair](./dmclc.pair.md) |  |
@@ -18,6 +19,7 @@
 |  Function | Description |
 |  --- | --- |
 |  [findAllJava()](./dmclc.findalljava.md) | Find all java. |
+|  [getJavaVersion(javaExec)](./dmclc.getjavaversion.md) |  |
 
 ## Interfaces
 
