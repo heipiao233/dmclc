@@ -32,12 +32,13 @@ export declare class Launcher
 |  [mirror](./dmclc.launcher.mirror.md) |  | string \| undefined | BMCLAPI |
 |  [name](./dmclc.launcher.name.md) |  | string |  |
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
-|  [rootPath](./dmclc.launcher.rootpath.md) |  | string |  |
+|  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |
 |  [separator](./dmclc.launcher.separator.md) |  | string | : or ; |
 |  [specialArch?](./dmclc.launcher.specialarch.md) |  | string | <i>(Optional)</i> |
 |  [specialNatives?](./dmclc.launcher.specialnatives.md) |  | Record&lt;string, Library&gt; | <i>(Optional)</i> |
 |  [systemType](./dmclc.launcher.systemtype.md) |  | NodeJS.Platform |  |
 |  [usingJava](./dmclc.launcher.usingjava.md) |  | string | Using Java executable |
+|  [version](./dmclc.launcher.version.md) |  | string |  |
 
 ## Methods
 

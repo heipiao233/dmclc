@@ -4,6 +4,7 @@
 
 ## FormattedError class
 
+
 <b>Signature:</b>
 
 ```typescript

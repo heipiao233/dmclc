@@ -26,5 +26,5 @@ The versions of loader.
 
 ## Exceptions
 
-{<!-- -->FormattedError<!-- -->}
+[FormattedError](./dmclc.formattederror.md)
 

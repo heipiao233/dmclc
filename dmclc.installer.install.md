@@ -15,7 +15,7 @@ install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  ver | [VersionInfo](./dmclc.versioninfo.md) | The version to install. |
-|  versionName | string | The  of the new version. |
+|  versionName | string | The [Version.name](./dmclc.version.name.md) of the new version. |
 
 <b>Returns:</b>
 

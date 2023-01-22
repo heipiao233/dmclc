@@ -24,5 +24,5 @@ constructor(rootPath: string, name: string, javaExec: string, downloader?: ((url
 
 ## Exceptions
 
-{<!-- -->FormattedError<!-- -->}
+[FormattedError](./dmclc.formattederror.md)
 

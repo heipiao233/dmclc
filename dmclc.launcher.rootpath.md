@@ -4,8 +4,12 @@
 
 ## Launcher.rootPath property
 
+The path to the ".minecraft" directory.
+
 <b>Signature:</b>
 
 ```typescript
+get rootPath(): string;
+
 set rootPath(path: string);
 ```

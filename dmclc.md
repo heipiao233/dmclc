@@ -19,7 +19,7 @@
 |  Function | Description |
 |  --- | --- |
 |  [findAllJava()](./dmclc.findalljava.md) | Find all java. |
-|  [getJavaVersion(javaExec)](./dmclc.getjavaversion.md) |  |
+|  [getJavaVersion(javaExec)](./dmclc.getjavaversion.md) | Get the version of a Java executable. |
 
 ## Interfaces
 

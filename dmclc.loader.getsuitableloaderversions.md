@@ -24,5 +24,5 @@ Promise&lt;string\[\]&gt;
 
 ## Exceptions
 
-{<!-- -->FormattedError<!-- -->}
+[FormattedError](./dmclc.formattederror.md)
 

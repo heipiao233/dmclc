@@ -14,7 +14,7 @@ readUserExtraContent(content: Map<string, string>): Promise<void>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  content | Map&lt;string, string&gt; | A map, keys must contain all keys of return values from , values are from user input. |
+|  content | Map&lt;string, string&gt; | A map, keys must contain all keys of return values from [Account.getUserExtraContent()](./dmclc.account.getuserextracontent.md)<!-- -->, values are from user input. |
 
 <b>Returns:</b>
 
@@ -22,5 +22,5 @@ Promise&lt;void&gt;
 
 ## Exceptions
 
-{<!-- -->FormattedError<!-- -->}
+[FormattedError](./dmclc.formattederror.md)
 

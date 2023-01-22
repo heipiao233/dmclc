@@ -4,6 +4,8 @@
 
 ## getJavaVersion() function
 
+Get the version of a Java executable.
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,11 @@ export declare function getJavaVersion(javaExec: string): Promise<string>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  javaExec | string |  |
+|  javaExec | string | Java executable |
 
 <b>Returns:</b>
 
 Promise&lt;string&gt;
+
+Version.
 

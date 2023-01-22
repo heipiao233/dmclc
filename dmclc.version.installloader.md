@@ -25,5 +25,5 @@ Promise&lt;void&gt;
 
 ## Exceptions
 
-{<!-- -->FormattedError<!-- -->}
+[FormattedError](./dmclc.formattederror.md)
 
