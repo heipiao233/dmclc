@@ -34,9 +34,9 @@ jobs:
       - run: npx api-documenter markdown -i ./temp
       - uses: actions/checkout@v3
         with:
-          repository: 'heipiao233/dmclc-docs'
+          repository: 'heipiao233/dmclc'
           path: 'docs'
-          ref: 'main'
+          ref: 'docs'
       - run: |
           cp ./markdown/* ./docs/ -r
           tar cvzf locales.tar.gz locales

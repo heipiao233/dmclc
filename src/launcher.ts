@@ -46,7 +46,7 @@ export class Launcher {
     specialArch?: string;
     specialNatives?: Record<string, Library>;
     private realRootPath = "";
-    version = "3.6.7";
+    version = "3.6.8";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -91,7 +91,7 @@ export class Launcher {
             this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
         }
         if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== this.version) {
-            await download("https://heipiao233.github.io/dmclc-docs/locales.tar.gz", "./locales.tar.gz", this);
+            await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);
             await compressing.tgz.uncompress("./locales.tar.gz", ".");
         }
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
