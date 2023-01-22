@@ -89,8 +89,10 @@ export class Launcher {
             await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
             this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
         }
-        await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);
-        await compressing.tgz.uncompress("./locales.tar.gz", ".");
+        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== (await import("../package.json")).version) {
+            await download("https://heipiao233.github.io/dmclc-docs/locales.tar.gz", "./locales.tar.gz", this);
+            await compressing.tgz.uncompress("./locales.tar.gz", ".");
+        }
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
