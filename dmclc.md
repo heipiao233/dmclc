@@ -4,6 +4,8 @@
 
 ## dmclc package
 
+You can create Minecraft launchers with this package.
+
 ## Classes
 
 |  Class | Description |
@@ -12,14 +14,18 @@
 |  [Installer](./dmclc.installer.md) | Install new Minecraft versions. |
 |  [Launcher](./dmclc.launcher.md) | The core of DMCLC. |
 |  [Pair](./dmclc.pair.md) |  |
+|  [UserData](./dmclc.userdata.md) |  |
 |  [Version](./dmclc.version.md) | Version. |
 
 ## Functions
 
 |  Function | Description |
 |  --- | --- |
+|  [checkRule(rule)](./dmclc.checkrule.md) |  |
+|  [checkRules(rules)](./dmclc.checkrules.md) |  |
 |  [findAllJava()](./dmclc.findalljava.md) | Find all java. |
 |  [getJavaVersion(javaExec)](./dmclc.getjavaversion.md) | Get the version of a Java executable. |
+|  [isCurrent(platform)](./dmclc.iscurrent.md) |  |
 
 ## Interfaces
 
@@ -32,6 +38,20 @@
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [Argument](./dmclc.argument.md) |  |
+|  [Asset](./dmclc.asset.md) |  |
+|  [AssetIndexInfo](./dmclc.assetindexinfo.md) |  |
+|  [AssetsIndex](./dmclc.assetsindex.md) |  |
+|  [JavaInfo](./dmclc.javainfo.md) |  |
+|  [Library](./dmclc.library.md) |  |
+|  [LibraryArtifact](./dmclc.libraryartifact.md) |  |
+|  [LoggingInfo](./dmclc.logginginfo.md) |  |
+|  [MCVersion](./dmclc.mcversion.md) |  |
+|  [OSPlatform](./dmclc.osplatform.md) |  |
+|  [OSType](./dmclc.ostype.md) |  |
+|  [Resource](./dmclc.resource.md) |  |
+|  [ResourceWithID](./dmclc.resourcewithid.md) |  |
+|  [Rule](./dmclc.rule.md) |  |
 |  [VersionInfo](./dmclc.versioninfo.md) |  |
 |  [VersionInfos](./dmclc.versioninfos.md) |  |
 

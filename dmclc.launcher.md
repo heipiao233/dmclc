@@ -23,6 +23,7 @@ export declare class Launcher
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
+|  [archInfo?](./dmclc.launcher.archinfo.md) |  | { specialArch: string; specialNatives: Record&lt;string, [Library](./dmclc.library.md)<!-- -->&gt;; } | <i>(Optional)</i> |
 |  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
 |  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
 |  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
@@ -33,9 +34,6 @@ export declare class Launcher
 |  [name](./dmclc.launcher.name.md) |  | string |  |
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |
-|  [separator](./dmclc.launcher.separator.md) |  | string | : or ; |
-|  [specialArch?](./dmclc.launcher.specialarch.md) |  | string | <i>(Optional)</i> |
-|  [specialNatives?](./dmclc.launcher.specialnatives.md) |  | Record&lt;string, Library&gt; | <i>(Optional)</i> |
 |  [systemType](./dmclc.launcher.systemtype.md) |  | NodeJS.Platform |  |
 |  [usingJava](./dmclc.launcher.usingjava.md) |  | string | Using Java executable |
 |  [version](./dmclc.launcher.version.md) |  | string |  |

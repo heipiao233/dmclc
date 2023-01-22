@@ -17,5 +17,5 @@ constructor(launcher: Launcher, object: MCVersion);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  launcher | [Launcher](./dmclc.launcher.md) | The launcher instance. |
-|  object | MCVersion | The Version JSON object. |
+|  object | [MCVersion](./dmclc.mcversion.md) | The Version JSON object. |
 

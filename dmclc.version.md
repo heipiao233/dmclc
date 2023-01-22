@@ -25,7 +25,7 @@ export declare class MinecraftVersion
 |  [extras](./dmclc.version.extras.md) |  | DMCLCExtraVersionInfo |  |
 |  [name](./dmclc.version.name.md) |  | string |  |
 |  [versionJarPath](./dmclc.version.versionjarpath.md) |  | string |  |
-|  [versionObject](./dmclc.version.versionobject.md) |  | MCVersion |  |
+|  [versionObject](./dmclc.version.versionobject.md) |  | [MCVersion](./dmclc.mcversion.md) |  |
 |  [versionRoot](./dmclc.version.versionroot.md) |  | string |  |
 
 ## Methods

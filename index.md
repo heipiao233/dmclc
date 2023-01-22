@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [dmclc](./dmclc.md) |  |
+|  [dmclc](./dmclc.md) | You can create Minecraft launchers with this package. |
 

@@ -16,7 +16,7 @@ findInVersion(MCVersion: MCVersion): string | undefined;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  MCVersion | MCVersion | Minecraft version manifest. |
+|  MCVersion | [MCVersion](./dmclc.mcversion.md) | Minecraft version manifest. |
 
 <b>Returns:</b>
 
