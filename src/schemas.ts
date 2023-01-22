@@ -1,10 +1,10 @@
 import os from "os";
 /**
- * @internal
+ * @public
  */
 export type OSType = "linux"|"windows"|"osx";
 /**
- * @internal
+ * @public
  */
 export type OSPlatform = {
     name: OSType;
@@ -12,7 +12,7 @@ export type OSPlatform = {
     arch: string;
 }
 /**
- * @internal
+ * @public
  */
 export function isCurrent(platform: OSPlatform): boolean {
     if (platform === undefined) return true;
@@ -26,32 +26,32 @@ export function isCurrent(platform: OSPlatform): boolean {
     }
 }
 /**
- * @internal
+ * @public
  */
 export function checkRule(rule: Rule): boolean {
     return rule.action === "allow";
 }
 /**
- * @internal
+ * @public
  */
 export function checkRules(rules: Rule[]): boolean {
     return rules.filter(v => isCurrent(v.os)).some(checkRule);
 }
 /**
- * @internal
+ * @public
  */
 export type Asset = {
     hash: string;
     size: number;
 }
 /**
- * @internal
+ * @public
  */
 export type AssetsIndex = {
     objects: { [index: string]: Asset };
 }
 /**
- * @internal
+ * @public
  */
 export type Rule = {
     action: "allow" | "disallow";
@@ -59,14 +59,14 @@ export type Rule = {
     os: OSPlatform;
 }
 /**
- * @internal
+ * @public
  */
 export type Argument = {
     rules: Rule[];
     value: string[] | string;
 }
 /**
- * @internal
+ * @public
  */
 export type Resource = {
     url: string;
@@ -74,32 +74,32 @@ export type Resource = {
     size: number;
 }
 /**
- * @internal
+ * @public
  */
 export type ResourceWithID = {
     id: string;
 } & Resource
 /**
- * @internal
+ * @public
  */
 export type AssetIndexInfo = {
     totalSize: number;
 } & ResourceWithID
 /**
- * @internal
+ * @public
  */
 export type LibraryArtifact = {
     path: string;
 } & Resource
 /**
- * @internal
+ * @public
  */
 export type JavaInfo = {
     component: string;
     majorVersion: number;
 }
 /**
- * @internal
+ * @public
  */
 export type Library = {
     downloads?: {
@@ -120,7 +120,7 @@ export type Library = {
     };
 }
 /**
- * @internal
+ * @public
  */
 export type LoggingInfo = {
     argument: string;
@@ -128,15 +128,10 @@ export type LoggingInfo = {
     type: string;
 }
 /**
- * @internal
+ * @public
  */
-export type MCVersion = {
+type MCVersionBase = {
     inheritsFrom?: string;
-    arguments?: {
-        game?: Array<string | Argument>
-        jvm?: Array<string | Argument>
-    };
-
     assetIndex: AssetIndexInfo;
     assets: string;
     complianceLevel: number;
@@ -159,8 +154,17 @@ export type MCVersion = {
     releaseTime: string;
     time: string;
     type: "snapshot" | "release" | "old_beta" | "old_alpha";
-    minecraftArguments?: string;
 }
+type MCVersionOldArgs = MCVersionBase & {
+    minecraftArguments: string;
+}
+type MCVersionNewArgs = MCVersionBase & {
+    arguments: {
+        game?: Array<string | Argument>
+        jvm?: Array<string | Argument>
+    };
+}
+export type MCVersion = MCVersionNewArgs | MCVersionOldArgs;
 /**
  * @public
  */

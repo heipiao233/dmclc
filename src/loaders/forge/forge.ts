@@ -6,6 +6,7 @@ import got from "got";
 import { ArtifactVersion, VersionRange } from "maven-artifact-version";
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
+import nodePath from "path";
 import toml from "toml";
 import { parseStringPromise } from "xml2js";
 import { FormattedError } from "../../errors/FormattedError.js";
@@ -71,7 +72,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                     const args = ["-cp",
                         `${item.classpath.map((i) => {
                             return `${this.launcher.rootPath}/libraries/${expandMavenId(i)}`;
-                        }).join(this.launcher.separator)};${jar}`,
+                        }).join(nodePath.delimiter)};${jar}`,
                         await getMainClass(jar),
                         ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata))];
                     execFileSync(this.launcher.usingJava, args);
@@ -161,8 +162,8 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 if(mod.data.deps)
                     for (const dep of mod.data.deps) {
                         if(dep.mandatory) {
-                            const range = VersionRange.createFromVersionSpec(dep.versionRange)!;
-                            if(!(dep.modId in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
+                            const range = VersionRange.createFromVersionSpec(dep.versionRange);
+                            if(!(dep.modId in modIdVersions&&range?.containsVersion(ArtifactVersion.of(modIdVersions[dep.modId])))) {
                                 ret.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
                                     {
                                         source: mod.data.info.modId,
@@ -178,8 +179,8 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                         for (const dep of mod.data.requiredMods) {
                             if(dep.includes("@")) {
                                 const [depid, depver] = dep.split("@");
-                                const range = VersionRange.createFromVersionSpec(depver)!;
-                                if(!(depid in modIdVersions&&range.containsVersion(ArtifactVersion.of(modIdVersions[depid])))) {
+                                const range = VersionRange.createFromVersionSpec(depver);
+                                if(!(depid in modIdVersions&&range?.containsVersion(ArtifactVersion.of(modIdVersions[depid])))) {
                                     ret.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
                                         {
                                             source: mod.data.modid,

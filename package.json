@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "3.6.8",
+  "version": "3.6.9",
   "description": "Dolphin Minecraft Launcher Core",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -15,8 +15,8 @@
     "@types/node": "^18.11.3",
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.11",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.27.0",
     "eslint-config-standard-with-typescript": "^4.0.0",
     "eslint-plugin-import": "^1.11.0",

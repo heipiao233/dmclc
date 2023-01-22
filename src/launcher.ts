@@ -27,8 +27,6 @@ import { MinecraftVersion } from "./version.js";
 export class Launcher {
     /** @see os.platform */
     systemType = os.platform();
-    /** : or ; */
-    separator: string;
     natives: "linux" | "osx" | "windows";
     /** BMCLAPI */
     mirror: string | undefined;
@@ -43,8 +41,10 @@ export class Launcher {
     /** All installed versions. */
     installedVersions: Map<string, MinecraftVersion> = new Map();
     i18n: i18next.TFunction = i18next.t;
-    specialArch?: string;
-    specialNatives?: Record<string, Library>;
+    archInfo?: {
+        specialArch: string;
+        specialNatives: Record<string, Library>;
+    };
     private realRootPath = "";
     version = "3.6.8";
     /**
@@ -60,15 +60,10 @@ export class Launcher {
         this.rootPath = fs.realpathSync(rootPath);
         this.usingJava = javaExec;
         if (this.systemType === "win32") {
-            this.separator = ";";
             this.natives = "windows";
         } else {
-            this.separator = ":";
             if (this.systemType === "linux") {
                 this.natives = "linux";
-                if(process.arch !== "x64" && process.arch !== "ia32") {
-                    this.specialArch = process.arch;
-                }
             } else if(this.systemType === "darwin") {
                 this.natives = "osx";
             }else{
@@ -86,9 +81,15 @@ export class Launcher {
 
     async init(lang = "en_us") {
         // HMCL, pioneer of cross-architecture launcher.
-        if(this.specialArch) {
-            await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
-            this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
+        if(os.platform() === "linux") {
+            if(process.arch !== "x64" && process.arch !== "ia32") {
+                await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
+                const specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
+                this.archInfo = {
+                    specialArch: process.arch,
+                    specialNatives
+                };
+            }
         }
         if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== this.version) {
             await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);

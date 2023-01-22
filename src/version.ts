@@ -195,8 +195,8 @@ export class MinecraftVersion {
                 if (i.downloads.artifact!==undefined) {
                     artifacts.push(i.downloads.artifact);
                 }
-                if (i.downloads.classifiers!==undefined) {
-                    artifacts.push(i.downloads.classifiers[i.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")]);
+                if (i.downloads.classifiers!==undefined && i.natives) {
+                    artifacts.push(i.downloads.classifiers[i.natives[this.launcher.natives].replaceAll("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
                 for (const artifact of artifacts) {
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
@@ -238,8 +238,8 @@ export class MinecraftVersion {
             .replaceAll("${launcher_name}", `${this.launcher.name}`)
             .replaceAll("${launcher_version}", "0.1")
             .replaceAll("${library_directory}", `${this.launcher.rootPath}/libraries/`)
-            .replaceAll("${classpath_separator}", this.launcher.separator)
-            .replaceAll("${classpath}", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
+            .replaceAll("${classpath_separator}", path.delimiter)
+            .replaceAll("${classpath}", this.getClassPath(versionObject, versionName).join(path.delimiter));
         argOverrides.forEach((v, k) => {
             argVal = argVal.replaceAll("${" + k + "}", v);
         });
@@ -249,7 +249,7 @@ export class MinecraftVersion {
     private async getArguments (versionObject: MCVersion, versionName: string, account: Account<never>): Promise<string[]> {
         const res: string[] = [];
         const args = await account.getLaunchGameArgs();
-        if (versionObject.arguments !== undefined) {
+        if ("arguments" in versionObject) {
             versionObject.arguments.jvm?.map(async i => {
                 if (typeof (i) === "string") {
                     res.push(this.parseArgument(i, versionObject, versionName, account, args));
@@ -263,9 +263,9 @@ export class MinecraftVersion {
             });
         } else {
             res.push(`-Djava.library.path=${this.launcher.rootPath}/versions/${versionName}/natives`);
-            res.push("-cp", this.getClassPath(versionObject, versionName).join(this.launcher.separator));
+            res.push("-cp", this.getClassPath(versionObject, versionName).join(path.delimiter));
             res.push(versionObject.mainClass);
-            versionObject.minecraftArguments!.split(" ").map(async i => {
+            versionObject.minecraftArguments.split(" ").map(async i => {
                 if (typeof (i) === "string") {
                     res.push(this.parseArgument(i, versionObject, versionName, account, args));
                 }
@@ -275,9 +275,12 @@ export class MinecraftVersion {
     }
     private async extractNative(version: MCVersion, name: string){
         Promise.all(version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
-            .filter(lib=>lib.downloads?.classifiers!==undefined).map(
+            .map(
                 async lib=>{
-                    const native = lib.downloads!.classifiers[lib.natives![this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")];
+                    if (!lib.downloads) return;
+                    if (!lib.downloads.classifiers) return;
+                    if (!lib.natives) return;
+                    const native = lib.downloads.classifiers[lib.natives[this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")];
                     const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
                     await compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/versions/${name}/natives`);
                 }
@@ -342,7 +345,7 @@ export class MinecraftVersion {
      */
     async checkMods(): Promise<ModLoadingIssue[]> {
         if(this.extras.loaders.length===0)return [];
-        const loader = this.launcher.loaders.get(this.extras.loaders[0].name)!;
-        return loader.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.extras.version, this.extras.loaders[0].version);
+        const loader = this.launcher.loaders.get(this.extras.loaders[0].name);
+        return loader?.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.extras.version, this.extras.loaders[0].version) ?? [];
     }
 }

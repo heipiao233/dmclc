@@ -1,3 +1,8 @@
+/**
+ * You can create Minecraft launchers with this package.
+ * @packageDocumentation
+ */
+
 export { Account } from "./auth/account.js";
 export { UserData } from "./auth/user_data.js";
 export * from "./errors/FormattedError.js";

@@ -52,12 +52,12 @@ export class Installer {
     }
 }
 function transformNatives(libraries: Library[], launcher: Launcher) {
-    if (launcher.specialArch) 
+    if (launcher.archInfo) 
         for (let i = 0; i < libraries.length; i++) {
             if (libraries[i].natives) {
-                libraries[i] = launcher.specialNatives![libraries[i].name + ":natives"] ?? libraries[i];
+                libraries[i] = launcher.archInfo.specialNatives[libraries[i].name + ":natives"] ?? libraries[i];
             } else {
-                libraries[i] = launcher.specialNatives![libraries[i].name] ?? libraries[i];
+                libraries[i] = launcher.archInfo.specialNatives[libraries[i].name] ?? libraries[i];
             }
         }
 }

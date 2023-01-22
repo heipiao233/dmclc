@@ -1,5 +1,5 @@
 /**
- * @internal
+ * @public
  */
 export class UserData {
     name?: string;

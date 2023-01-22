@@ -22,7 +22,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         const at = await this.getAccessToken();
         map.set("auth_access_token", at);
         map.set("auth_session", at);
-        map.set("auth_player_name", this.data.name!);
+        map.set("auth_player_name", this.data.name ?? "Steve");
         map.set("user_type", "mojang");
         map.set("user_properties", "{}");
         return map;
@@ -37,7 +37,10 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     async readUserExtraContent(content: Map<string, string>): Promise<void> {
-        const profileID: number = Number.parseInt(content.get("profileID")!);
+        if (!(content.has("profileID") && content.has("username") && content.has("password"))) {
+            throw new Error();
+        }
+        const profileID: number = Number.parseInt(content.get("profileID") ?? "0");
         const res: Response<ATCT & {
             availableProfiles: {
                 id: string,
@@ -68,7 +71,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
             meta: {
                 serverName: string
             }
-        } = await got(this.data.apiurl!).json();
+        } = await got(this.data.apiurl ?? "").json();
         this.data.serverName = meta.meta.serverName;
     }
 
@@ -102,10 +105,10 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     getUUID(): string {
-        return this.data.uuid!;
+        return this.data.uuid ?? "ffffffff-ffff-ffff-ffff-ffffffffffff";
     }
 
     async getAccessToken(): Promise<string> {
-        return this.data.accessToken!;
+        return this.data.accessToken ?? "LOGIN_FAILS";
     }
 }
