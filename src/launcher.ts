@@ -46,9 +46,10 @@ export class Launcher {
     specialArch?: string;
     specialNatives?: Record<string, Library>;
     private realRootPath = "";
+    version = "3.6.7";
     /**
      * Create a new Launcher object.
-     * @throws {FormattedError}
+     * @throws {@link FormattedError}
      * @param rootPath - {@link Launcher.rootPath}
      * @param name - {@link Launcher.name}
      * @param javaExec - {@link Launcher.usingJava}
@@ -89,7 +90,7 @@ export class Launcher {
             await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
             this.specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
         }
-        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== (await import("../package.json")).version) {
+        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== this.version) {
             await download("https://heipiao233.github.io/dmclc-docs/locales.tar.gz", "./locales.tar.gz", this);
             await compressing.tgz.uncompress("./locales.tar.gz", ".");
         }
@@ -117,13 +118,13 @@ export class Launcher {
     /**
      * The path to the ".minecraft" directory.
      */
+    public get rootPath(): string {
+        return this.realRootPath;
+    }
+
     public set rootPath(path: string) {
         this.realRootPath = fs.realpathSync(path);
         this.refreshInstalledVersion();
-    }
-
-    public get rootPath(): string {
-        return this.realRootPath;
     }
     
     private getArchString(): string {

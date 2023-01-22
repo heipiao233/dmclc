@@ -22,8 +22,8 @@ export interface Account<T extends UserData> {
   getUserExtraContent(): Record<string, string>
 
   /**
-   * @throws {FormattedError}
-   * @param content A map, keys must contain all keys of return values from {@link getUserExtraContent}, values are from user input.
+   * @throws {@link FormattedError}
+   * @param content - A map, keys must contain all keys of return values from {@link Account.getUserExtraContent}, values are from user input.
    */
   readUserExtraContent(content: Map<string, string>): Promise<void>
   /**
@@ -37,12 +37,12 @@ export interface Account<T extends UserData> {
   /**
    * Get extra JVM arguments.
    * For example:
-   * {
-   *   'auth_access_token' => '***',
-   *   'user_type' => 'mojang',
-   *   'user_properties' => '{}',
-   *   'auth_player_name' => 'Steve'
-   * }
+   * \{
+   *   'auth_access_token' =\> '***',
+   *   'user_type' =\> 'mojang',
+   *   'user_properties' =\> '\{\}',
+   *   'auth_player_name' =\> 'Steve'
+   * \}
    */
   getLaunchGameArgs(): Promise<Map<string, string>>
   /**

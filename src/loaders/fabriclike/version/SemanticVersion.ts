@@ -49,7 +49,7 @@ export abstract class SemanticVersion extends Version {
 	 * <p>If the pos exceeds the number of components, returns {@link #COMPONENT_WILDCARD}
 	 * if the version {@linkplain #hasWildcard() has wildcard}; otherwise returns {@code 0}.</p>
 	 *
-	 * @param pos the position to check
+	 * @param pos - the position to check
 	 * @return the version component
 	 */
     abstract getVersionComponent(pos: number): number;

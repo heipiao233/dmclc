@@ -31,7 +31,7 @@ export class Installer {
     /**
      * 
      * @param ver - The version to install.
-     * @param versionName - The {@link MinecraftVersion.name} of the new version.
+     * @param versionName - The {@link version#MinecraftVersion.name} of the new version.
      * @returns The new version.
      */
     async install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion> {

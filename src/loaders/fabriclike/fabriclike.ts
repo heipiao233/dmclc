@@ -53,8 +53,8 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     private readonly cachedLoaderVersions: Map<string, T> = new Map();
     /**
      * 
-     * @throws {FormattedError}
-     * @param MCVersion Minecraft version.
+     * @throws {@link FormattedError}
+     * @param MCVersion - Minecraft version.
      * @returns Loader versions.
      */
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
@@ -86,7 +86,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
 
 /**
  * See net.fabricmc.loader.impl.game.minecraft.McVersionLookup#normalizeVersion
- * @param mc 
+ * @param mc - Original Minecraft version.
  */
 export function normalizeVersion(mc: string): string {
     let matcher;

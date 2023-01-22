@@ -12,10 +12,10 @@ export function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher)
     return promises;
 }
 /**
- * @throws {FormattedError}
- * @param url URL.
- * @param filename File name.
- * @param mirror BMCLAPI mirror.
+ * @throws {@link FormattedError}
+ * @param url - URL.
+ * @param filename - File name.
+ * @param mirror - BMCLAPI mirror.
  */
 export async function download(url: string, filename: fs.PathLike, launcher: Launcher): Promise<void> {
     if(url.length===0)return;

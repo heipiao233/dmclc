@@ -286,7 +286,7 @@ export class MinecraftVersion {
 
     /**
      * Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts.
-     * @throws {FormattedError}
+     * @throws {@link FormattedError}
      * @param name - The name of loader.
      * @returns The versions of loader.
      */
@@ -299,9 +299,9 @@ export class MinecraftVersion {
     }
     /**
      * Install a mod loader.
-     * @throws {FormattedError}
-     * @param name Loader name.
-     * @param loaderVersion Loader version.
+     * @throws {@link FormattedError}
+     * @param name - Loader name.
+     * @param loaderVersion - Loader version.
      */
     async installLoader(name: string, loaderVersion: string): Promise<void> {
         const loader = this.launcher.loaders.get(name);

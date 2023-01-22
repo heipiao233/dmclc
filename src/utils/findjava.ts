@@ -132,6 +132,12 @@ async function findForMac(): Promise<Pair<string, string>[]> {
     return ret;
 }
 
+/**
+ * Get the version of a Java executable.
+ * @param javaExec - Java executable
+ * @returns Version.
+ * @public
+ */
 export async function getJavaVersion(javaExec: string): Promise<string> {
     return new Promise(resolve=>{
         const proc = cp.execFile(javaExec, ["-XshowSettings:properties", "-version"]);
