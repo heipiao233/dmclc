@@ -16,8 +16,8 @@ constructor(rootPath: string, name: string, javaExec: string, downloader?: ((url
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  rootPath | string | [Launcher.rootPath](./dmclc.launcher.rootpath.md) |
-|  name | string | [Launcher.name](./dmclc.launcher.name.md) |
+|  rootPath | string | path to .minecraft |
+|  name | string | Launcher name. |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
 |  downloader | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
 |  copy | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |

@@ -24,6 +24,7 @@ export declare class Launcher
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
 |  [archInfo?](./dmclc.launcher.archinfo.md) |  | { specialArch: string; specialNatives: Record&lt;string, [Library](./dmclc.library.md)<!-- -->&gt;; } | <i>(Optional)</i> |
+|  [contentServices](./dmclc.launcher.contentservices.md) |  | Map&lt;string, ContentService&gt; |  |
 |  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
 |  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
 |  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
