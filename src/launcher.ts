@@ -17,6 +17,9 @@ import { VersionParser } from "./loaders/fabriclike/version/VersionParser.js";
 import { ForgeLoader } from "./loaders/forge/forge.js";
 import { Loader } from "./loaders/loader.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
+import { ContentService } from "./mods/download/ContentService.js";
+import CurseForgeContentService from "./mods/download/curseforge/CurseForgeContentService.js";
+import ModrinthContentService from "./mods/download/modrinth/ModrinthContentService.js";
 import { Library } from "./schemas.js";
 import { download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
@@ -36,6 +39,7 @@ export class Launcher {
     /** All account types. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     accountTypes: Map<string, (data: Record<string, unknown>) => Account<any>> = new Map();
+    contentServices: Map<string, ContentService> = new Map();
     /** Using Java executable */
     usingJava: string;
     /** All installed versions. */
@@ -50,8 +54,8 @@ export class Launcher {
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
-     * @param rootPath - {@link Launcher.rootPath}
-     * @param name - {@link Launcher.name}
+     * @param rootPath - path to .minecraft
+     * @param name - Launcher name.
      * @param javaExec - {@link Launcher.usingJava}
      */
     constructor (rootPath: string, public name: string, javaExec: string,
@@ -77,6 +81,8 @@ export class Launcher {
         this.accountTypes.set("offline", (data)=>new OfflineAccount(data, this));
         this.accountTypes.set("authlib_injector", (data)=>new AuthlibInjectorAccount(data, this));
         this.accountTypes.set("minecraft_universal_login", (data)=>new MinecraftUniversalLoginAccount(data, this));
+        this.contentServices.set("modrinth", new ModrinthContentService(this));
+        this.contentServices.set("curseforge", new CurseForgeContentService(this));
     }
 
     async init(lang = "en_us") {

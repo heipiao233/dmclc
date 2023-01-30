@@ -1,8 +1,9 @@
 node_modules
-test
 .vscode
 run
 lib
 markdown
 dist
 temp
+*/.minecraft
+test/run

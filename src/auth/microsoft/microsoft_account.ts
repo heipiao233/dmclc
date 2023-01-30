@@ -42,7 +42,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             }
         }).json();
         if (this.launcher.copy) this.launcher.copy(device_response.user_code);
-        copy(device_response.user_code);
+        else copy(device_response.user_code);
         open(device_response.verification_uri);
         let interval = device_response.interval;
         const startTime = Date.now() / 1000;
@@ -179,7 +179,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     getUUID(): string {
-        return this.data.uuid!;
+        return this.data.uuid ?? "ffffffff-ffff-ffff-ffff-ffffffffffff";
     }
 
     getUserExtraContent(): Record<string, string> {
