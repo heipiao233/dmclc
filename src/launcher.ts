@@ -50,7 +50,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.6.8";
+    version = "3.8.0";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -59,6 +59,7 @@ export class Launcher {
      * @param javaExec - {@link Launcher.usingJava}
      */
     constructor (rootPath: string, public name: string, javaExec: string,
+        public client_id: string,
         public downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         public copy?: (arg: string) => void) {
         this.rootPath = fs.realpathSync(rootPath);
