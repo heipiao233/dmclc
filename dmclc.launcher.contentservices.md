@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-contentServices: Map<string, ContentService>;
+contentServices: Map<string, ContentService<unknown>>;
 ```

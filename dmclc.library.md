@@ -8,23 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-export type Library = {
-    downloads?: {
-        artifact: LibraryArtifact;
-        classifiers: {
-            [index: string]: LibraryArtifact;
-        };
-    };
-    name: string;
-    serverreq?: boolean;
-    clientreq?: boolean;
-    checksum: string[];
-    rules?: Rule[];
-    url?: string;
-    natives?: {
-        [index in OSType]: string;
-    };
-};
+export type Library = LibraryFabricOldForgeBaseAndLiteLoader | LibraryOldForge | LibraryVanillaAndNewForge | LibraryVanillaNatives | LibraryBase;
 ```
-<b>References:</b> [LibraryArtifact](./dmclc.libraryartifact.md)<!-- -->, [Rule](./dmclc.rule.md)<!-- -->, [OSType](./dmclc.ostype.md)
-
