@@ -13,7 +13,7 @@ type Processor = {
     jar: string;
     classpath: string[];
     args: string[];
-    output: {
+    outputs: {
         [index: string]: string
     };
 }

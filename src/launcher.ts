@@ -39,7 +39,7 @@ export class Launcher {
     /** All account types. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     accountTypes: Map<string, (data: Record<string, unknown>) => Account<any>> = new Map();
-    contentServices: Map<string, ContentService> = new Map();
+    contentServices: Map<string, ContentService<unknown>> = new Map();
     /** Using Java executable */
     usingJava: string;
     /** All installed versions. */
@@ -50,7 +50,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.8.0";
+    version = "3.9.0-alpha.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}

@@ -98,27 +98,61 @@ export type JavaInfo = {
     component: string;
     majorVersion: number;
 }
+
+type LibraryBase = {
+    name: string;
+    rules?: Rule[];
+}
+
+type LibraryVanillaNatives = {
+    downloads: {
+        classifiers: {
+            [index: string]: LibraryArtifact;
+        };
+    };
+    natives: {
+        [index: string]: string
+    };
+} & LibraryBase;
+
+type LibraryVanillaAndNewForge = {
+    downloads: {
+        artifact: LibraryArtifact;
+    }
+} & LibraryBase;
+
+type LibraryOldForge = {
+    checksum?: string[];
+    clientreq?: boolean
+} & LibraryFabricOldForgeBaseAndLiteLoader;
+
+type LibraryFabricOldForgeBaseAndLiteLoader = {
+    url: string;
+} & LibraryBase;
+
 /**
  * @public
  */
-export type Library = {
-    downloads?: {
-        artifact: LibraryArtifact
-        classifiers: {
-            [index: string]: LibraryArtifact
-        }
-    };
+export type Library = LibraryFabricOldForgeBaseAndLiteLoader | LibraryOldForge | LibraryVanillaAndNewForge
+                    | LibraryVanillaNatives | LibraryBase;
+// {
+//     downloads?: {
+//         artifact?: LibraryArtifact
+//         classifiers?: {
+//             [index: string]: LibraryArtifact
+//         }
+//     };
 
-    name: string;
-    serverreq?: boolean;
-    clientreq?: boolean;
-    checksum: string[];
-    rules?: Rule[];
-    url?: string;
-    natives?: {
-        [index in OSType]: string;
-    };
-}
+//     name: string;
+//     serverreq?: boolean;
+//     clientreq?: boolean;
+//     checksum?: string[];
+//     rules?: Rule[];
+//     url?: string;
+//     natives?: {
+//         [index in OSType]: string;
+//     };
+// }
 /**
  * @public
  */

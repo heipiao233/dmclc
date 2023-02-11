@@ -27,11 +27,6 @@ export interface ContentVersionDependContentVersion extends ContentVersionBase {
     listDependencies(): Promise<ContentVersion[]>;
 }
 
-/**
- * A content version.
- */
-export type ContentVersion = ContentVersionDependContentVersion | ContentVersionDependContent;
-
 export enum ContentType {
     MODPACK,
     SHADER,
@@ -41,17 +36,15 @@ export enum ContentType {
     WORLD
 }
 
-export enum SortField {
-    RELEVANCE,
-    DOWNLOADS,
-    DATE_CREATED,
-    LAST_UPDATED
-}
+/**
+ * A content version.
+ */
+export type ContentVersion = ContentVersionDependContentVersion | ContentVersionDependContent;
 
 /**
  * A Content posting service. For example: Modrinth, CurseForge.
  */
-export interface ContentService {
+export interface ContentService<SortField> {
     /**
      * @param name Searching string.
      * @param skip How many results to skip.
@@ -59,6 +52,8 @@ export interface ContentService {
      * @param forVersion The Minecraft version you download for.
      */
     searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: SortField, forVersion?: MinecraftVersion): Promise<Content[]>;
+    getUnsupportedContentTypes(): ContentType[];
+    getSortFields(): Record<string, SortField>;
 }
 
 export interface Content {

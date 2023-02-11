@@ -1,28 +1,32 @@
 import got, { Got, SearchParameters } from "got";
 import { Launcher } from "../../../launcher.js";
 import { MinecraftVersion } from "../../../version.js";
-import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContent, SortField } from "../ContentService.js";
+import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContent } from "../ContentService.js";
 import { Algorithm, CurseForgeMod, CurseForgeModFile, RelationType } from "./CurseForgeModels.js";
-
-const contentTypeToCurseForge = {
-    [ContentType.MOD]: 6,
-    [ContentType.RESOURCE_PACK]: 12,
-    [ContentType.WORLD]: 17,
-    [ContentType.MODPACK]: 4471,
-    [ContentType.SHADER]: 4546,
-};
-
-const sortFieldToCurseForge = {
-    [SortField.DATE_CREATED]: 1,
-    [SortField.LAST_UPDATED]: 3,
-    [SortField.RELEVANCE]: 2,
-    [SortField.DOWNLOADS]: 6,
-};
 
 const loaderToCurseForge: Record<string, number> = {
     forge: 1,
     fabric: 2,
     quilt: 3
+};
+
+const CurseForgeContentType = {
+    [ContentType.MODPACK]: 4471,
+    [ContentType.SHADER]: 4546,
+    [ContentType.MOD]: 6,
+    [ContentType.RESOURCE_PACK]: 12,
+    [ContentType.WORLD]: 17
+};
+
+export const CurseForgeSortField = {
+    FEATURED: 1,
+    POPULARITY: 2,
+    LAST_UPDATED: 3,
+    NAME: 4,
+    AUTHOR: 5,
+    TOTAL_DOWNLOADS: 6,
+    CATEGORY: 7,
+    GAME_VERSION: 8
 };
 
 export class CurseForgeContentVersion implements ContentVersionDependContent {
@@ -66,7 +70,7 @@ export class CurseForgeContent implements Content {
         return files.data.filter(v => v.isAvailable).map(v => new CurseForgeContentVersion(v, this.got));
     }
 }
-export default class CurseForgeContentService implements ContentService {
+export default class CurseForgeContentService implements ContentService<number> {
     private got: Got;
     constructor(private launcher: Launcher) {
         this.got = got.extend({
@@ -76,16 +80,22 @@ export default class CurseForgeContentService implements ContentService {
             }
         });
     }
+    getUnsupportedContentTypes(): ContentType[] {
+        return [ContentType.DATA_PACK];
+    }
+    getSortFields(): Record<string, number> {
+        return CurseForgeSortField;
+    }
 
-    async searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: SortField, forVersion?: MinecraftVersion | undefined): Promise<Content[]> {
+    async searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: number, forVersion?: MinecraftVersion | undefined): Promise<Content[]> {
         if (type === ContentType.DATA_PACK) return [];
         const searchParams: SearchParameters = {
             gameId: 432,
-            classId: contentTypeToCurseForge[type],
+            classId: CurseForgeContentType[type],
             searchFilter: name,
             index: skip,
             pageSize: limit,
-            sortField: sortFieldToCurseForge[sortField]
+            sortField: sortField
         };
         if (forVersion) {
             searchParams.gameVersion = forVersion.extras.version;
@@ -98,5 +108,4 @@ export default class CurseForgeContentService implements ContentService {
         }).json();
         return response.data.map(v => new CurseForgeContent(v, this.got));
     }
-
 }

@@ -152,8 +152,8 @@ export class MinecraftVersion {
         let assetJson;
         if (!fs.existsSync(indexPath)) {
             assetJson = (await got(transformURL(asset.url, this.launcher.mirror))).body;
-            mkdirs(`${this.launcher.rootPath}/assets/indexes`);
-            writeFile(indexPath, assetJson);
+            await mkdirs(`${this.launcher.rootPath}/assets/indexes`);
+            await writeFile(indexPath, assetJson);
         } else {
             assetJson = (await readFile(indexPath)).toString();
         }
@@ -183,19 +183,19 @@ export class MinecraftVersion {
             return i.rules === undefined || checkRules(i.rules);
         });
         for (const i of used) {
-            if (i.downloads === undefined) {
+            if (!("downloads" in i)) {
                 const filePath = expandMavenId(i.name);
                 await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
                 let url: string;
-                if(i.url===undefined)url = "https://libraries.minecraft.net/";
+                if (!("url" in i)) url = "https://libraries.minecraft.net/";
                 else url = i.url;
                 allDownloads.set(`${url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
             } else {
                 const artifacts: LibraryArtifact[]=[];
-                if (i.downloads.artifact!==undefined) {
+                if ("artifact" in i.downloads) {
                     artifacts.push(i.downloads.artifact);
                 }
-                if (i.downloads.classifiers!==undefined && i.natives) {
+                if ("natives" in i) {
                     artifacts.push(i.downloads.classifiers[i.natives[this.launcher.natives].replaceAll("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
                 for (const artifact of artifacts) {
@@ -212,9 +212,9 @@ export class MinecraftVersion {
     private getClassPath (versionObject: MCVersion, versionName: string): string[] {
         const res: string[] = [];
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
-            if (i.downloads === undefined) {
+            if (!("downloads" in i)) {
                 res.push(`${this.launcher.rootPath}/libraries/${expandMavenId(i.name)}`);
-            } else if (i.downloads.artifact !== undefined){
+            } else if ("artifact" in i.downloads) {
                 res.push(`${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`);
             }
         });
@@ -277,9 +277,8 @@ export class MinecraftVersion {
         Promise.all(version.libraries.filter(i => i.rules === undefined || checkRules(i.rules))
             .map(
                 async lib=>{
-                    if (!lib.downloads) return;
-                    if (!lib.downloads.classifiers) return;
-                    if (!lib.natives) return;
+                    if (!("downloads" in lib)) return;
+                    if (!("natives" in lib)) return;
                     const native = lib.downloads.classifiers[lib.natives[this.launcher.natives].replace("${arch}", os.arch().includes("64")?"64":"32")];
                     const libpath = `${this.launcher.rootPath}/libraries/${native?.path}`;
                     await compressing.zip.uncompress(libpath, `${this.launcher.rootPath}/versions/${name}/natives`);

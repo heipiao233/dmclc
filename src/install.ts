@@ -47,6 +47,7 @@ export class Installer {
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
         const version = MinecraftVersion.fromVersionName(this.launcher, versionName);
+        this.launcher.installedVersions.set(versionName, version);
         await version.completeVersionInstall();
         return version;
     }
@@ -54,7 +55,7 @@ export class Installer {
 function transformNatives(libraries: Library[], launcher: Launcher) {
     if (launcher.archInfo) 
         for (let i = 0; i < libraries.length; i++) {
-            if (libraries[i].natives) {
+            if ("natives" in libraries[i]) {
                 libraries[i] = launcher.archInfo.specialNatives[libraries[i].name + ":natives"] ?? libraries[i];
             } else {
                 libraries[i] = launcher.archInfo.specialNatives[libraries[i].name] ?? libraries[i];

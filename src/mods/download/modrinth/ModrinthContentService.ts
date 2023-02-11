@@ -1,7 +1,7 @@
 import got, { Got } from "got";
 import { Launcher } from "../../../launcher.js";
 import { MinecraftVersion } from "../../../version.js";
-import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContentVersion, SortField } from "../ContentService.js";
+import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContentVersion } from "../ContentService.js";
 import { ModrinthVersionModel, SearchResult } from "./ModrinthModels.js";
 
 const contentTypeToModrinth = {
@@ -12,11 +12,12 @@ const contentTypeToModrinth = {
     [ContentType.SHADER]: "shader",
 };
 
-const sortFieldToModrinth = {
-    [SortField.DATE_CREATED]: "newest",
-    [SortField.LAST_UPDATED]: "updated",
-    [SortField.RELEVANCE]: "relevance",
-    [SortField.DOWNLOADS]: "downloads",
+export const ModrinthSortField = {
+    NEWEST: "newest",
+    UPDATED: "updated",
+    RELEVANCE: "relevance",
+    DOWNLOADS: "downloads",
+    FOLLOWS: "follows"
 };
 
 export class ModrinthContentVersion implements ContentVersionDependContentVersion {
@@ -77,18 +78,24 @@ export class ModrinthContent implements Content {
         });
     }
 }
-export default class ModrinthContentService implements ContentService {
+export default class ModrinthContentService implements ContentService<string> {
     private got: Got;
     constructor(private launcher: Launcher) {
         this.got = got.extend({
             prefixUrl: "https://api.modrinth.com/v2/",
             headers: {
-                "user-agent": `${this.launcher.name}, using heipiao233/dmclc/${this.launcher.version} (contact@launcher.com)`
+                "user-agent": `${this.launcher.name}, using heipiao233/dmclc/${this.launcher.version} (heipiao233@outlook.com)`
             }
         });
     }
+    getUnsupportedContentTypes(): ContentType[] {
+        return [ContentType.WORLD];
+    }
+    getSortFields(): Record<string, string> {
+        return ModrinthSortField;
+    }
 
-    async searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: SortField, forVersion?: MinecraftVersion | undefined): Promise<Content[]> {
+    async searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: string, forVersion?: MinecraftVersion | undefined): Promise<Content[]> {
         if (type === ContentType.WORLD) return [];
         const facets = [
             ["project_type:" + contentTypeToModrinth[type]]
@@ -109,7 +116,7 @@ export default class ModrinthContentService implements ContentService {
                 facets: JSON.stringify(facets),
                 offset: skip,
                 limit,
-                index: sortFieldToModrinth[sortField]
+                index: sortField
             }
         }).json();
         const result = [];

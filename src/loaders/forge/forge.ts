@@ -13,6 +13,7 @@ import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
+import { checkFile } from "../../utils/check_file.js";
 import { download } from "../../utils/downloads.js";
 import { expandMavenId } from "../../utils/maven.js";
 import { merge } from "../../utils/MergeVersionJSONs.js";
@@ -41,6 +42,12 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         if(MCVersion.extras.version === "Unknown") {
             throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
         }
+        const [, major, minor] = MCVersion.extras.version.split(".");
+        const majorn = parseInt(major);
+        const minorn = parseInt(minor);
+        if (majorn < 5 || (majorn === 5 && minorn != 2) ) {
+            return [];
+        }
         const res = await got(this.metadata);
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
@@ -58,6 +65,19 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
         
         if("processors" in metadata){ // 1.13+
+            if ("MOJMAPS" in metadata.data) {
+                const id = metadata.data.MOJMAPS.client.substring(1, metadata.data.MOJMAPS.client.length - 1);
+                await MCVersion.completeLibraries([
+                    {
+                        downloads: {
+                            artifact: Object.assign({
+                                path: expandMavenId(id)
+                            }, MCVersion.versionObject.downloads.client_mappings),
+                        },
+                        name: id,
+                    },
+                ]);
+            }
             if (fs.existsSync(`${installer}/maven`)) await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
             await Promise.all(await MCVersion.completeLibraries(metadata.libraries));
             const target: MCVersion = MCVersion.versionObject;
@@ -67,7 +87,22 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             await Promise.all(await MCVersion.completeLibraries(source.libraries));
             
             for (const item of metadata.processors) {
+                if (item.args.includes("DOWNLOAD_MOJMAPS")) {
+                    continue;
+                }
                 if (item.sides === undefined || item.sides.includes("client")) {
+                    let res = false;
+                    if ("outputs" in item) {
+                        const outputs = item.outputs;
+                        res = true;
+                        for (const k in outputs) {
+                            if (Object.prototype.hasOwnProperty.call(outputs, k)) {
+                                const v = outputs[k];
+                                res &&= checkFile(this.transformArguments(k, MCVersion, metadata), this.transformArguments(v, MCVersion, metadata));
+                            }
+                        }
+                    }
+                    if (res) continue;
                     const jar = `${this.launcher.rootPath}/libraries/${expandMavenId(item.jar)}`;
                     const args = ["-cp",
                         `${item.classpath.map((i) => {
@@ -80,12 +115,12 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             }
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
         } else { // 1.12-
-            const metadata1: InstallerProfileOld = metadata;
             const target: MCVersion = MCVersion.versionObject;
-            const source: MCVersion = metadata1.versionInfo;
+            const source: MCVersion = metadata.versionInfo;
             const result = merge(target, source);
             MCVersion.versionObject = result;
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
+            fsextra.copyFile(`${installer}/${metadata.install.filePath}`, `${this.launcher.rootPath}/libraries/${expandMavenId(metadata.install.path)}`);
         }
     }
 
