@@ -1,4 +1,4 @@
-import { FabricLikeVersionInfo, Version } from "../fabriclike/fabriclike_version_info";
+import { FabricLikeVersionInfo, Version } from "../fabriclike/fabriclike_version_info.js";
 
 export type QuiltVersionInfo = {
     hashed: Version;

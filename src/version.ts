@@ -7,15 +7,15 @@ import got from "got";
 import StreamZip from "node-stream-zip";
 import os from "os";
 import path from "path";
-import { Account } from "./auth/account";
-import { FormattedError } from "./errors/FormattedError";
-import { Launcher } from "./launcher";
-import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas";
-import { transformURL } from "./utils/TransformURL";
-import { checkFile } from "./utils/check_file";
-import { download, downloadAll } from "./utils/downloads";
-import { expandInheritsFrom } from "./utils/expand_inherits_from";
-import { expandMavenId } from "./utils/maven";
+import { Account } from "./auth/account.js";
+import { FormattedError } from "./errors/FormattedError.js";
+import { Launcher } from "./launcher.js";
+import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas.js";
+import { transformURL } from "./utils/TransformURL.js";
+import { checkFile } from "./utils/check_file.js";
+import { download, downloadAll } from "./utils/downloads.js";
+import { expandInheritsFrom } from "./utils/expand_inherits_from.js";
+import { expandMavenId } from "./utils/maven.js";
 
 /**
  * @internal

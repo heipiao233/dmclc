@@ -1,12 +1,12 @@
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
-import { ModDisplayInfo, ModInfo } from "../../mods/mod";
-import { MCVersion } from "../../schemas";
-import { checkFabricDeps } from "../fabric";
-import { FabricModJson } from "../fabric_schemas";
-import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike";
-import { ModLoadingIssue } from "../loader";
-import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas";
+import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
+import { MCVersion } from "../../schemas.js";
+import { checkFabricDeps } from "../fabric.js";
+import { FabricModJson } from "../fabric_schemas.js";
+import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike.js";
+import { ModLoadingIssue } from "../loader.js";
+import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";

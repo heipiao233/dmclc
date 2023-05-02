@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
 import * as uuid from "uuid";
-import { Launcher } from "../launcher";
-import { Account } from "./account";
-import { UserData } from "./user_data";
+import { Launcher } from "../launcher.js";
+import { Account } from "./account.js";
+import { UserData } from "./user_data.js";
 export class OfflineAccount implements Account<UserData> {
     constructor (public data: UserData, private launcher: Launcher) {
     }

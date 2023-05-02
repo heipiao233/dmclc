@@ -1,4 +1,4 @@
-import { SideEnv } from '../../download/modrinth/ModrinthModels';
+import { SideEnv } from '../../download/modrinth/ModrinthModels.js';
 export type ModrinthModpackIndexV1 = {
     formatVersion: 1;
     game: "minecraft";

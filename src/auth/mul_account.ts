@@ -1,8 +1,8 @@
 import fs from "fs";
-import { Launcher } from "../launcher";
-import { download } from "../utils/downloads";
-import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account";
-import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data";
+import { Launcher } from "../launcher.js";
+import { download } from "../utils/downloads.js";
+import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
+import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
 
 export class MinecraftUniversalLoginUserData extends YggdrasilUserData {
     serverID?: string;

@@ -1,9 +1,9 @@
 import fs from "fs";
 import got, { HTTPError } from "got";
 import * as streamPromises from "stream/promises";
-import { FormattedError } from "../errors/FormattedError";
-import { Launcher } from "../launcher";
-import { transformURL } from "./TransformURL";
+import { FormattedError } from "../errors/FormattedError.js";
+import { Launcher } from "../launcher.js";
+import { transformURL } from "./TransformURL.js";
 export function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher): Promise<void>[] {
     const promises: Array<Promise<void>> = new Array<Promise<void>>();
     files.forEach((v, k) => {

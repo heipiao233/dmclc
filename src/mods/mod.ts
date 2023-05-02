@@ -1,4 +1,4 @@
-import { Launcher } from "../launcher";
+import { Launcher } from "../launcher.js";
 
 export type ModDisplayInfo = {
     id: string,

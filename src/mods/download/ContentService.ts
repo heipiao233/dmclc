@@ -1,4 +1,4 @@
-import { MinecraftVersion } from "../../version";
+import { MinecraftVersion } from "../../version.js";
 
 interface ContentVersionBase {
     getVersionFileURL(): Promise<string>;

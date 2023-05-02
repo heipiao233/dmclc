@@ -1,4 +1,4 @@
-import { Library } from "../../schemas";
+import { Library } from "../../schemas.js";
 // Only include fields that we care about.
 export type FabricLikeVersionInfo = {
     loader: Version;

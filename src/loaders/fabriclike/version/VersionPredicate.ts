@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import { Version } from "./Version";
-import { VersionComparisonOperator } from "./VersionComparisonOperator";
-import { VersionInterval } from "./VersionInterval";
-import { VersionPredicateParser } from "./VersionPredicateParser";
+import { Version } from "./Version.js";
+import { VersionComparisonOperator } from "./VersionComparisonOperator.js";
+import { VersionInterval } from "./VersionInterval.js";
+import { VersionPredicateParser } from "./VersionPredicateParser.js";
 
 export abstract class VersionPredicate {
     /**

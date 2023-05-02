@@ -1,11 +1,11 @@
 import { got } from "got";
 import open from "open";
 import { setTimeout as sleep } from "timers/promises";
-import { FormattedError } from "../../errors/FormattedError";
-import { Launcher } from "../../launcher";
-import copy from "../../utils/copy";
-import { Account } from "../account";
-import { MicrosoftUserData } from "./microsoft_user_data";
+import { FormattedError } from "../../errors/FormattedError.js";
+import { Launcher } from "../../launcher.js";
+import copy from "../../utils/copy.js";
+import { Account } from "../account.js";
+import { MicrosoftUserData } from "./microsoft_user_data.js";
 const scope = "XboxLive.signin offline_access";
 type STEP1_1 = {
     device_code: string,

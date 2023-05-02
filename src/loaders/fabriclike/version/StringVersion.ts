@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Version } from "./Version";
+import { Version } from "./Version.js";
 
 export class StringVersion implements Version {
     private readonly version: string;

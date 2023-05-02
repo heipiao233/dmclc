@@ -1,4 +1,4 @@
-import { MCVersion } from "../../schemas";
+import { MCVersion } from "../../schemas.js";
 
 type InstallerInformation = {
     filePath: string;

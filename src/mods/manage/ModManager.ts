@@ -1,10 +1,10 @@
 import fsPromises from 'fs/promises';
-import { Launcher } from '../../launcher';
-import { ModLoadingIssue } from '../../loaders/loader';
-import { download } from '../../utils/downloads';
-import { MinecraftVersion } from '../../version';
-import { Content, ContentType, ContentVersion } from '../download/ContentService';
-import { ModJarInfo } from '../mod';
+import { Launcher } from '../../launcher.js';
+import { ModLoadingIssue } from '../../loaders/loader.js';
+import { download } from '../../utils/downloads.js';
+import { MinecraftVersion } from '../../version.js';
+import { Content, ContentType, ContentVersion } from '../download/ContentService.js';
+import { ModJarInfo } from '../mod.js';
 export default class ModManager {
     constructor(public version: MinecraftVersion, private launcher: Launcher) {
         

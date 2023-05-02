@@ -2,12 +2,12 @@ import fs from 'fs';
 import fsPromises from 'fs/promises';
 import StreamZip, { StreamZipAsync } from 'node-stream-zip';
 import path from 'path';
-import { FormattedError } from '../../../errors/FormattedError';
-import { Launcher } from '../../../launcher';
-import { downloadAll } from '../../../utils/downloads';
-import { LoaderInfo } from "../../../version";
-import { Modpack, ModpackFormat } from "../Modpack";
-import { ModrinthModpackIndexV1 } from "./ModrinthModpackSchemas";
+import { FormattedError } from '../../../errors/FormattedError.js';
+import { Launcher } from '../../../launcher.js';
+import { downloadAll } from '../../../utils/downloads.js';
+import { LoaderInfo } from "../../../version.js";
+import { Modpack, ModpackFormat } from "../Modpack.js";
+import { ModrinthModpackIndexV1 } from "./ModrinthModpackSchemas.js";
 
 export class ModrinthModpack implements Modpack {
     private unzipDir?: string;

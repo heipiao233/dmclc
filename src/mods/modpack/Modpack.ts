@@ -1,5 +1,5 @@
-import { Launcher } from "../../launcher";
-import { LoaderInfo } from "../../version";
+import { Launcher } from "../../launcher.js";
+import { LoaderInfo } from "../../version.js";
 
 export type LoaderType = "forge" | "fabric" | "quilt";
 

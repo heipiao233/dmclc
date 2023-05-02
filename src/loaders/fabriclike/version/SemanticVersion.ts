@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import { Version } from "./Version";
+import { Version } from "./Version.js";
 
 /**
  * Represents a <a href="https://semver.org/">Sematic Version</a>.

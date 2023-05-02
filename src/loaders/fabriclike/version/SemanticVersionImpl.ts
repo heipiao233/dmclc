@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import { SemanticVersion } from "./SemanticVersion";
-import { Version } from "./Version";
-import { VersionParsingException } from "./VersionParsingException";
+import { SemanticVersion } from "./SemanticVersion.js";
+import { Version } from "./Version.js";
+import { VersionParsingException } from "./VersionParsingException.js";
 
 /**
  * Parser for a superset of the semantic version format described at <a href="https://semver.org">semver.org</a>.

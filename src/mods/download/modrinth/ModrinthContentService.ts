@@ -3,10 +3,10 @@ import crypto from "crypto";
 import fsPromises from "fs/promises";
 import got, { Got } from "got";
 import { marked } from "marked";
-import { Launcher } from "../../../launcher";
-import { MinecraftVersion } from "../../../version";
-import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService";
-import { ModrinthFile, ModrinthProject, ModrinthVersionModel, SearchResult } from "./ModrinthModels";
+import { Launcher } from "../../../launcher.js";
+import { MinecraftVersion } from "../../../version.js";
+import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService.js";
+import { ModrinthFile, ModrinthProject, ModrinthVersionModel, SearchResult } from "./ModrinthModels.js";
 
 const contentTypeToModrinth = {
     [ContentType.MODPACK]: "modpack",

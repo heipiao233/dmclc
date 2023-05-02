@@ -1,10 +1,10 @@
 import fsPromises from 'fs/promises';
 import got, { Got, SearchParameters } from "got";
 import { murmur2 } from 'murmurhash2';
-import { Launcher } from "../../../launcher";
-import { MinecraftVersion } from "../../../version";
-import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContent, Screenshot } from "../ContentService";
-import { Algorithm, CurseForgeMod, CurseForgeModFile, RelationType } from "./CurseForgeModels";
+import { Launcher } from "../../../launcher.js";
+import { MinecraftVersion } from "../../../version.js";
+import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContent, Screenshot } from "../ContentService.js";
+import { Algorithm, CurseForgeMod, CurseForgeModFile, RelationType } from "./CurseForgeModels.js";
 
 const loaderToCurseForge: Record<string, number> = {
     forge: 1,

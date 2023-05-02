@@ -16,9 +16,9 @@
  */
 
 import assert from "assert";
-import { SemanticVersion } from "./SemanticVersion";
-import { Version } from "./Version";
-import { VersionInterval } from "./VersionInterval";
+import { SemanticVersion } from "./SemanticVersion.js";
+import { Version } from "./Version.js";
+import { VersionInterval } from "./VersionInterval.js";
 
 export class VersionIntervalImpl extends VersionInterval {
     static INFINITE: VersionInterval = new VersionIntervalImpl(undefined, false, undefined, false);
