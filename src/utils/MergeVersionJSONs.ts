@@ -1,5 +1,5 @@
 import assert from "assert";
-import { MCVersion } from "../schemas.js";
+import { MCVersion } from "../schemas";
 
 export function merge(a: MCVersion, b: MCVersion, mergeID = false): MCVersion {
     const c = a;

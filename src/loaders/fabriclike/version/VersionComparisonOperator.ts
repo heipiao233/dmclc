@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import { SemanticVersion } from "./SemanticVersion.js";
-import { SemanticVersionImpl } from "./SemanticVersionImpl.js";
-import { Version } from "./Version.js";
+import { SemanticVersion } from "./SemanticVersion";
+import { SemanticVersionImpl } from "./SemanticVersionImpl";
+import { Version } from "./Version";
 
 export class VersionComparisonOperator {
     // order is important to match the longest substring (e.g. try >= before >)

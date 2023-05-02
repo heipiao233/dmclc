@@ -1,11 +1,11 @@
 import { got } from "got";
 import open from "open";
 import { setTimeout as sleep } from "timers/promises";
-import { FormattedError } from "../../errors/FormattedError.js";
-import { Launcher } from "../../launcher.js";
-import copy from "../../utils/copy.js";
-import { Account } from "../account.js";
-import { MicrosoftUserData } from "./microsoft_user_data.js";
+import { FormattedError } from "../../errors/FormattedError";
+import { Launcher } from "../../launcher";
+import copy from "../../utils/copy";
+import { Account } from "../account";
+import { MicrosoftUserData } from "./microsoft_user_data";
 const scope = "XboxLive.signin offline_access";
 type STEP1_1 = {
     device_code: string,
@@ -36,7 +36,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     private async step1_new(): Promise<STEP1> {
         const device_response: STEP1_1 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode", {
             form: {
-                client_id: this.launcher.client_id,
+                client_id: this.launcher.clientId,
                 scope
             }
         }).json();
@@ -56,7 +56,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
                 form: {
                     grant_type: "urn:ietf:params:oauth:grant-type:device_code",
                     code: device_response.device_code,
-                    client_id: this.launcher.client_id
+                    client_id: this.launcher.clientId
                 },
                 throwHttpErrors: false,
                 retry: {
@@ -80,7 +80,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     private async step1_refresh(): Promise<string> {
         const res: { access_token: string } = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", {
             form: {
-                client_id: this.launcher.client_id,
+                client_id: this.launcher.clientId,
                 grant_type: "refresh_token",
                 refresh_token: this.data.refresh_token!
             }
@@ -178,7 +178,7 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     }
 
     getUUID(): string {
-        return this.data.uuid ?? "ffffffff-ffff-ffff-ffff-ffffffffffff";
+        return this.data.uuid!;
     }
 
     getUserExtraContent(): Record<string, string> {

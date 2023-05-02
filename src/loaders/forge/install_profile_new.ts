@@ -1,4 +1,4 @@
-import { Library } from "../../schemas.js";
+import { Library } from "../../schemas";
 
 export type InstallerProfileNew = {
     data: {

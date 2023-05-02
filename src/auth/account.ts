@@ -1,5 +1,5 @@
-import { MinecraftVersion } from "../version.js";
-import { UserData } from "./user_data.js";
+import { MinecraftVersion } from "../version";
+import { UserData } from "./user_data";
 /**
  * An account.
  * @public

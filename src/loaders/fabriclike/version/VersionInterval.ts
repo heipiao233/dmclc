@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-import { Version } from "./Version.js";
-import { VersionIntervalImpl } from "./VersionIntervalImpl.js";
+import { Version } from "./Version";
+import { VersionIntervalImpl } from "./VersionIntervalImpl";
 
 /**
  * Representation of a version interval, closed or open.

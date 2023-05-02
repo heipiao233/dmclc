@@ -1,8 +1,9 @@
 import got, { Got } from "got";
-import { Launcher } from "../../../launcher.js";
-import { MinecraftVersion } from "../../../version.js";
-import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContentVersion } from "../ContentService.js";
-import { ModrinthVersionModel, SearchResult } from "./ModrinthModels.js";
+import { marked } from "marked";
+import { Launcher } from "../../../launcher";
+import { MinecraftVersion } from "../../../version";
+import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService";
+import { ModrinthFile, ModrinthProject, ModrinthVersionModel, SearchResult } from "./ModrinthModels";
 
 const contentTypeToModrinth = {
     [ContentType.MODPACK]: "modpack",

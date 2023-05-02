@@ -1,10 +1,10 @@
 import fs from "fs";
 import got from "got";
-import { checkFile } from "../utils/check_file.js";
-import { download } from "../utils/downloads.js";
-import { MinecraftVersion } from "../version.js";
-import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account.js";
-import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data.js";
+import { checkFile } from "../utils/check_file";
+import { download } from "../utils/downloads";
+import { MinecraftVersion } from "../version";
+import { YggdrasilAccount } from "./yggdrasil/yggdrasil_account";
+import { YggdrasilUserData } from "./yggdrasil/yggdrasil_data";
 
 type AuthlibInjectorArtifact = {
     download_url: string;

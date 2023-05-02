@@ -3,14 +3,14 @@
  * @packageDocumentation
  */
 
-export { Account } from "./auth/account.js";
-export { UserData } from "./auth/user_data.js";
-export * from "./errors/FormattedError.js";
-export { Installer } from "./install.js";
-export { Launcher } from "./launcher.js";
-export { Loader } from "./loaders/loader.js";
-export * from "./schemas.js";
-export * from "./utils/findjava.js";
-export { Pair } from "./utils/pair.js";
-export { DMCLCExtraVersionInfo, LoaderInfo, MinecraftVersion as Version } from "./version.js";
+export { Account } from "./auth/account";
+export { UserData } from "./auth/user_data";
+export * from "./errors/FormattedError";
+export { Installer } from "./install";
+export { Launcher } from "./launcher";
+export { Loader } from "./loaders/loader";
+export * from "./schemas";
+export * from "./utils/findjava";
+export { Pair } from "./utils/pair";
+export { DMCLCExtraVersionInfo, LoaderInfo, MinecraftVersion as Version } from "./version";
 

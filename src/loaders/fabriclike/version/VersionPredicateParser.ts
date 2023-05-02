@@ -16,16 +16,15 @@
  */
 
 import assert from "assert";
-import { SemanticVersion } from "./SemanticVersion.js";
-import { SemanticVersionImpl } from "./SemanticVersionImpl.js";
-import { VersionParser } from "./VersionParser.js";
-import { VersionParsingException } from "./VersionParsingException.js";
-import { VersionPredicate } from "./VersionPredicate.js";
-import { Version } from "./Version.js";
-import { VersionInterval } from "./VersionInterval.js";
-import { VersionIntervalImpl } from "./VersionIntervalImpl.js";
-import { VersionComparisonOperator } from "./VersionComparisonOperator.js";
-import { PredicateTerm } from "./VersionPredicate.js";
+import { SemanticVersion } from "./SemanticVersion";
+import { SemanticVersionImpl } from "./SemanticVersionImpl";
+import { Version } from "./Version";
+import { VersionComparisonOperator } from "./VersionComparisonOperator";
+import { VersionInterval } from "./VersionInterval";
+import { VersionIntervalImpl } from "./VersionIntervalImpl";
+import { VersionParser } from "./VersionParser";
+import { VersionParsingException } from "./VersionParsingException";
+import { PredicateTerm, VersionPredicate } from "./VersionPredicate";
 
 export class VersionPredicateParser {
     private static readonly OPERATORS: VersionComparisonOperator[] = VersionComparisonOperator.values;

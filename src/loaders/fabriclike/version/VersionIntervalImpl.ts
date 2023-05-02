@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-import { VersionInterval } from "./VersionInterval.js";
-import { Version } from "./Version.js";
 import assert from "assert";
-import { SemanticVersion } from "./SemanticVersion.js";
+import { SemanticVersion } from "./SemanticVersion";
+import { Version } from "./Version";
+import { VersionInterval } from "./VersionInterval";
 
 export class VersionIntervalImpl extends VersionInterval {
     static INFINITE: VersionInterval = new VersionIntervalImpl(undefined, false, undefined, false);

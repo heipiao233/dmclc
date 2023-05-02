@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SemanticVersion } from "./SemanticVersion.js";
-import { Version } from "./Version.js";
-import { VersionParsingException } from "./VersionParsingException.js";
-import { SemanticVersionImpl } from "./SemanticVersionImpl.js";
-import { StringVersion } from "./StringVersion.js";
+import { SemanticVersion } from "./SemanticVersion";
+import { SemanticVersionImpl } from "./SemanticVersionImpl";
+import { StringVersion } from "./StringVersion";
+import { Version } from "./Version";
+import { VersionParsingException } from "./VersionParsingException";
 
 export class VersionParser {
     public static parse(s: string, storeX: boolean): Version {

@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import test from "node:test";
-import { VersionInfo } from "../lib/schemas.js";
-import { Account, findAllJava, Launcher } from "../src/index.js";
-import { MinecraftVersion } from "../src/version.js";
+import { VersionInfo } from "../lib/schemas";
+import { Account, findAllJava, Launcher } from "../src/index";
+import { MinecraftVersion } from "../src/version";
 
 const launcher = new Launcher("./.minecraft", "dmclc_test", (await findAllJava())[0].b, "71dd081b-dc92-4d36-81ac-3a2bde5527ba");
 let account: Account<never>;

@@ -1,8 +1,8 @@
 import test from "node:test";
-import { findAllJava, Launcher } from "../src/index.js";
-import { ContentType } from "../src/mods/download/ContentService.js";
-import CurseForgeContentService, { CurseForgeSortField } from "../src/mods/download/curseforge/CurseForgeContentService.js";
-import ModrinthContentService, { ModrinthSortField } from "../src/mods/download/modrinth/ModrinthContentService.js";
+import { findAllJava, Launcher } from "../src/index";
+import { ContentType } from "../src/mods/download/ContentService";
+import CurseForgeContentService, { CurseForgeSortField } from "../src/mods/download/curseforge/CurseForgeContentService";
+import ModrinthContentService, { ModrinthSortField } from "../src/mods/download/modrinth/ModrinthContentService";
 
 const launcher = new Launcher("./.minecraft", "dmclc_test", (await findAllJava())[0].b, "71dd081b-dc92-4d36-81ac-3a2bde5527ba");
 await launcher.init();

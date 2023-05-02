@@ -1,7 +1,7 @@
 import { TFunction } from "i18next";
-import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
-import { MCVersion } from "../schemas.js";
-import { MinecraftVersion } from "../version.js";
+import { ModDisplayInfo, ModInfo } from "../mods/mod";
+import { MCVersion } from "../schemas";
+import { MinecraftVersion } from "../version";
 
 export type IssueLevel = "error" | "warning";
 

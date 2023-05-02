@@ -1,10 +1,12 @@
 import fs from "fs";
 import { mkdirs } from "fs-extra";
 import got from "got";
-import { Launcher } from "./launcher.js";
-import { Library, MCVersion, VersionInfo, VersionInfos } from "./schemas.js";
-import { transformURL } from "./utils/TransformURL.js";
-import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version.js";
+import { FormattedError } from "./errors/FormattedError";
+import { Launcher } from "./launcher";
+import { Modpack } from "./mods/modpack/Modpack";
+import { Library, MCVersion, VersionInfo, VersionInfos } from "./schemas";
+import { transformURL } from "./utils/TransformURL";
+import { DMCLCExtraVersionInfo, MinecraftVersion } from "./version";
 /**
  * Install new Minecraft versions.
  * @public

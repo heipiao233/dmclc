@@ -1,9 +1,9 @@
-import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
-import { MCVersion } from "../schemas.js";
-import { checkMatch, FabricLikeLoader, formatDepVersion, normalizeVersion } from "./fabriclike/fabriclike.js";
-import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info.js";
-import { FabricModJson } from "./fabric_schemas.js";
-import { ModLoadingIssue } from "./loader.js";
+import { ModDisplayInfo, ModInfo } from "../mods/mod";
+import { MCVersion } from "../schemas";
+import { FabricModJson } from "./fabric_schemas";
+import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from "./fabriclike/fabriclike";
+import { FabricLikeVersionInfo } from "./fabriclike/fabriclike_version_info";
+import { ModLoadingIssue } from "./loader";
 export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, FabricModJson> {
     metaURL = "https://meta.fabricmc.net/v2";
     loaderMaven = "https://maven.fabricmc.net/";

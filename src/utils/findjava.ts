@@ -3,7 +3,7 @@
 import * as cp from "child_process";
 import fs from "fs";
 import os from "os";
-import { Pair } from "./pair.js";
+import { Pair } from "./pair";
 
 /**
  * Find all java.

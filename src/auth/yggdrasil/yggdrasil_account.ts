@@ -1,9 +1,9 @@
 import got, { Response } from "got";
-import { FormattedError } from "../../errors/FormattedError.js";
-import { Launcher } from "../../launcher.js";
-import { MinecraftVersion } from "../../version.js";
-import { Account } from "../account.js";
-import { YggdrasilUserData } from "./yggdrasil_data.js";
+import { FormattedError } from "../../errors/FormattedError";
+import { Launcher } from "../../launcher";
+import { MinecraftVersion } from "../../version";
+import { Account } from "../account";
+import { YggdrasilUserData } from "./yggdrasil_data";
 
 type ATCT = {
     accessToken: string,
