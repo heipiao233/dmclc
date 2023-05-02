@@ -1,3 +1,4 @@
+import { Launcher } from "../../launcher";
 import { LoaderInfo } from "../../version";
 
 export type LoaderType = "forge" | "fabric" | "quilt";
@@ -8,7 +9,7 @@ export interface Modpack {
     getVersion(): string;
     getLoaders(): LoaderInfo[];
     getMinecraftVersion(): string;
-    downloadMods(moddir: string): Promise<void>;
+    downloadMods(mcdir: string): Promise<void>;
     getOverrideDirs(): Promise<string[]>;
 }
 
@@ -17,5 +18,5 @@ export interface ModpackFormat {
      * Reads a modpack.
      * @param file The modpack file
      */
-    readModpack(file: string): Promise<Modpack>;
+    readModpack(file: string, launcher: Launcher): Promise<Modpack>;
 }

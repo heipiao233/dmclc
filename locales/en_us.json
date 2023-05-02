@@ -37,7 +37,10 @@
         "version": "Version",
         "name": "Name",
         "description": "Description",
-        "license": "License"
+        "license": "License",
+        "modpack": {
+            "invalid": "Invalid modpack file!"
+        }
     },
 
     "version": {

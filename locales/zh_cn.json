@@ -37,7 +37,10 @@
         "version": "版本",
         "name": "名称",
         "description": "描述",
-        "license": "许可证"
+        "license": "许可证",
+        "modpack": {
+            "invalid": "无效整合包！"
+        }
     },
 
     "version": {
