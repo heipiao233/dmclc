@@ -15,8 +15,13 @@ await test("contentServices", async ctx => {
     await ctx.test("modrinth", async ctxModrinth => {
         const service: ModrinthContentService = launcher.contentServices.get("modrinth")! as ModrinthContentService;
         const field = ModrinthSortField.RELEVANCE;
-        const mods = await service.searchContent("Fabulously Optimized", 0, 1, ContentType.MODPACK, field);
-        console.log(await (await mods[0].listVersions())[0].getVersionFileURL());
-        // ctxModrinth.test();
+        const pack = await service.searchContent("Fabulously Optimized", 0, 1, ContentType.MODPACK, field);
+        const url = await (await pack[0].listVersions())[0].getVersionFileURL();
+        console.log(url);
+        await ctxModrinth.test("modpack",async () => {
+            // await download(url, "fo.mrpack", launcher);
+            const modpack = await launcher.modpackFormats.get("modrinth")?.readModpack("fo.mrpack", launcher)!;
+            await launcher.installer.installModpack(modpack, modpack.getName())
+        });
     });
 });

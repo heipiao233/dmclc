@@ -33,7 +33,7 @@ export class Installer {
     /**
      * Install.
      * @param ver - The version to install.
-     * @param versionName - The {@link Version.name} of the new version.
+     * @param versionName - The {@link MinecraftVersion.name} of the new version.
      * @returns The new version.
      */
     async install(ver: VersionInfo, versionName: string, enableIndependentGameDir: boolean = false): Promise<MinecraftVersion> {
@@ -45,7 +45,7 @@ export class Installer {
         const extras: DMCLCExtraVersionInfo = {
             version: ver.id,
             loaders: [],
-            enableIndependentGameDir: false
+            enableIndependentGameDir
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
         const version = MinecraftVersion.fromVersionName(this.launcher, versionName);
@@ -63,7 +63,7 @@ export class Installer {
     async installVersion(versionId: string, name: string, enableIndependentGameDir: boolean = false): Promise<MinecraftVersion> {
         const version = (await this.getVersionList()).versions.find(v => v.id === versionId);
         if (version === undefined) throw new FormattedError(`${this.launcher.i18n("version.version_not_found")}${versionId}`);
-        return await this.install(version, name);
+        return await this.install(version, name, enableIndependentGameDir);
     }
 
     /**
