@@ -17,7 +17,7 @@ install(ver: VersionInfo, versionName: string, enableIndependentGameDir?: boolea
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  ver | [VersionInfo](./dmclc.versioninfo.md) | The version to install. |
-|  versionName | string | The [Version.name](./dmclc.version.name.md) of the new version. |
+|  versionName | string | The  of the new version. |
 |  enableIndependentGameDir | boolean | <i>(Optional)</i> |
 
 <b>Returns:</b>
