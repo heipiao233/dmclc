@@ -3,8 +3,8 @@ export type SearchResult = {
     title: string,
     description: string,
     categories: string[],
-    client_side: "required" | "optional" | "unsupported",
-    server_side: "required" | "optional" | "unsupported",
+    client_side: SideEnv,
+    server_side: SideEnv,
     project_type: "mod",
     downloads: number,
     icon_url?: string,
@@ -27,7 +27,7 @@ export type Dependency = {
     dependency_type?: "required" | "optional" | "incompatible" | "embedded"
 }
 
-export type File = {
+export type ModrinthFile = {
     hashes: {
         sha512: string,
         sha1: string
@@ -47,10 +47,12 @@ export type ModrinthVersionModel = {
     version_type: "release" | "beta" | "alpha",
     loaders: string[],
     featured: boolean,
+    status: "approved" | "rejected" | "draft" | "unlisted" | "archived" | "processing" | "unknown",
+    requested_status: "listed" | "archived" | "draft" | "unlisted"
     id: string,
     project_id: string,
     author_id: string,
     date_published: string,
     downloads: number,
-    files: File[]
+    files: ModrinthFile[]
 }

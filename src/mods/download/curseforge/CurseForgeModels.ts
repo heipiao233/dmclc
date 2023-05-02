@@ -80,6 +80,7 @@ export enum RelationType {
 
 export type CurseForgeModFile = {
     id: number,
+    modId: number,
     isAvailable: boolean,
     displayName: string,
     fileName: string,
