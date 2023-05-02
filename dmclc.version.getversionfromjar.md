@@ -7,9 +7,9 @@
 <b>Signature:</b>
 
 ```typescript
-getVersionFromJar(): Promise<void>;
+getVersionFromJar(): void;
 ```
 <b>Returns:</b>
 
-Promise&lt;void&gt;
+void
 

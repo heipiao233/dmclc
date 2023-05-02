@@ -9,7 +9,7 @@ Create a new Launcher object.
 <b>Signature:</b>
 
 ```typescript
-constructor(rootPath: string, name: string, javaExec: string, client_id: string, downloader?: ((url: string, filename: fs.PathLike, oldURL: string) => Promise<void>) | undefined, copy?: ((arg: string) => void) | undefined);
+protected constructor(rootPath: string, name: string, javaExec: string, clientId: string, downloader?: ((url: string, filename: fs.PathLike, oldURL: string) => Promise<void>) | undefined, copy?: ((arg: string) => void) | undefined);
 ```
 
 ## Parameters
@@ -19,7 +19,7 @@ constructor(rootPath: string, name: string, javaExec: string, client_id: string,
 |  rootPath | string | path to .minecraft |
 |  name | string | Launcher name. |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
-|  client\_id | string |  |
+|  clientId | string |  |
 |  downloader | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
 |  copy | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
 

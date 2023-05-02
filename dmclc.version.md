@@ -12,12 +12,6 @@ Version.
 export declare class MinecraftVersion 
 ```
 
-## Constructors
-
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(launcher, object)](./dmclc.version._constructor_.md) |  | Creates a new version from JSON object. |
-
 ## Properties
 
 |  Property | Modifiers | Type | Description |
@@ -25,6 +19,7 @@ export declare class MinecraftVersion
 |  [extras](./dmclc.version.extras.md) |  | DMCLCExtraVersionInfo |  |
 |  [name](./dmclc.version.name.md) |  | string |  |
 |  [versionJarPath](./dmclc.version.versionjarpath.md) |  | string |  |
+|  [versionLaunchWorkDir](./dmclc.version.versionlaunchworkdir.md) |  | string |  |
 |  [versionObject](./dmclc.version.versionobject.md) |  | [MCVersion](./dmclc.mcversion.md) |  |
 |  [versionRoot](./dmclc.version.versionroot.md) |  | string |  |
 
@@ -32,10 +27,8 @@ export declare class MinecraftVersion
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [checkMods()](./dmclc.version.checkmods.md) |  | Check mod dependencies. You should warn your users that the result is not always correct. |
 |  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
-|  [findMods()](./dmclc.version.findmods.md) |  |  |
-|  [fromVersionName(launcher, name)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
+|  [fromVersionName(launcher, name, enableIndependentGameDir)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
 |  [getVersionFromJar()](./dmclc.version.getversionfromjar.md) |  |  |
 |  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  | Install a mod loader. |

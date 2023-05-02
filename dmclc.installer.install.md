@@ -4,10 +4,12 @@
 
 ## Installer.install() method
 
+Install.
+
 <b>Signature:</b>
 
 ```typescript
-install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion>;
+install(ver: VersionInfo, versionName: string, enableIndependentGameDir?: boolean): Promise<MinecraftVersion>;
 ```
 
 ## Parameters
@@ -16,6 +18,7 @@ install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion>;
 |  --- | --- | --- |
 |  ver | [VersionInfo](./dmclc.versioninfo.md) | The version to install. |
 |  versionName | string | The [Version.name](./dmclc.version.name.md) of the new version. |
+|  enableIndependentGameDir | boolean | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

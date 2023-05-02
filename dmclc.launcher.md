@@ -16,7 +16,7 @@ export declare class Launcher
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(rootPath, name, javaExec, client\_id, downloader, copy)](./dmclc.launcher._constructor_.md) |  | Create a new Launcher object. |
+|  [(constructor)(rootPath, name, javaExec, clientId, downloader, copy)](./dmclc.launcher._constructor_.md) | <code>protected</code> | Create a new Launcher object. |
 
 ## Properties
 
@@ -24,7 +24,7 @@ export declare class Launcher
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
 |  [archInfo?](./dmclc.launcher.archinfo.md) |  | { specialArch: string; specialNatives: Record&lt;string, [Library](./dmclc.library.md)<!-- -->&gt;; } | <i>(Optional)</i> |
-|  [client\_id](./dmclc.launcher.client_id.md) |  | string |  |
+|  [clientId](./dmclc.launcher.clientid.md) |  | string |  |
 |  [contentServices](./dmclc.launcher.contentservices.md) |  | Map&lt;string, ContentService&lt;unknown&gt;&gt; |  |
 |  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
 |  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
@@ -33,6 +33,7 @@ export declare class Launcher
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
 |  [loaders](./dmclc.launcher.loaders.md) |  | Map&lt;string, [Loader](./dmclc.loader.md)<!-- -->&lt;unknown&gt;&gt; | All loaders. |
 |  [mirror](./dmclc.launcher.mirror.md) |  | string \| undefined | BMCLAPI |
+|  [modpackFormats](./dmclc.launcher.modpackformats.md) |  | Map&lt;string, ModpackFormat&gt; |  |
 |  [name](./dmclc.launcher.name.md) |  | string |  |
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |
@@ -44,6 +45,6 @@ export declare class Launcher
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [init(lang)](./dmclc.launcher.init.md) |  |  |
+|  [create(rootPath, name, javaExec, clientId, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
 |  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
 

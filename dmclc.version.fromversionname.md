@@ -9,7 +9,7 @@ Creates a new version from name.
 <b>Signature:</b>
 
 ```typescript
-static fromVersionName(launcher: Launcher, name: string): MinecraftVersion;
+static fromVersionName(launcher: Launcher, name: string, enableIndependentGameDir?: boolean): MinecraftVersion;
 ```
 
 ## Parameters
@@ -18,6 +18,7 @@ static fromVersionName(launcher: Launcher, name: string): MinecraftVersion;
 |  --- | --- | --- |
 |  launcher | [Launcher](./dmclc.launcher.md) | The launcher instance |
 |  name | string | The name of this version. The directory name, not always Minecraft version. |
+|  enableIndependentGameDir | boolean | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
