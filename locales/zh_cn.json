@@ -41,7 +41,8 @@
     },
 
     "version": {
-        "loader_not_found": "找不到加载器："
+        "loader_not_found": "找不到加载器：",
+        "version_not_found": "找不到版本："
     },
 
     "loaders": {

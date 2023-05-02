@@ -1,5 +1,5 @@
 import fs from "fs";
-import { mkdirs } from "fs-extra";
+import fsextra, { mkdirs } from 'fs-extra';
 import got from "got";
 import { FormattedError } from "./errors/FormattedError";
 import { Launcher } from "./launcher";
@@ -31,12 +31,12 @@ export class Installer {
     }
 
     /**
-     * 
+     * Install.
      * @param ver - The version to install.
      * @param versionName - The {@link Version.name} of the new version.
      * @returns The new version.
      */
-    async install(ver: VersionInfo, versionName: string): Promise<MinecraftVersion> {
+    async install(ver: VersionInfo, versionName: string, enableIndependentGameDir: boolean = false): Promise<MinecraftVersion> {
         const obj = await got(transformURL(ver.url, this.launcher.mirror)).json<MCVersion>();
         obj.id = versionName;
         transformNatives(obj.libraries, this.launcher);
@@ -53,7 +53,38 @@ export class Installer {
         await version.completeVersionInstall();
         return version;
     }
+
+    /**
+     * Install.
+     * @param versionId - The version ID.
+     * @param name The name of the new version.
+     * @returns The new version.
+     */
+    async installVersion(versionId: string, name: string, enableIndependentGameDir: boolean = false): Promise<MinecraftVersion> {
+        const version = (await this.getVersionList()).versions.find(v => v.id === versionId);
+        if (version === undefined) throw new FormattedError(`${this.launcher.i18n("version.version_not_found")}${versionId}`);
+        return await this.install(version, name);
+    }
+
+    /**
+     * Install modpack.
+     * @param modpack - The modpack.
+     * @param name The name of the new version.
+     * @returns The new version.
+     */
+    async installModpack(modpack: Modpack, name: string): Promise<MinecraftVersion> {
+        const version = await this.installVersion(modpack.getMinecraftVersion(), name, true);
+        for (const loader of modpack.getLoaders()) {
+            await version.installLoader(loader.name, loader.version);
+        }
+        await modpack.downloadMods(`${version.versionLaunchWorkDir}/mods`);
+        for (const dir of await modpack.getOverrideDirs()) {
+            await fsextra.copy(dir, version.versionLaunchWorkDir);
+        }
+        return version;
+    }
 }
+
 function transformNatives(libraries: Library[], launcher: Launcher) {
     if (launcher.archInfo) 
         for (let i = 0; i < libraries.length; i++) {

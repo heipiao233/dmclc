@@ -4,9 +4,8 @@ import { VersionInfo } from "../lib/schemas";
 import { Account, findAllJava, Launcher } from "../src/index";
 import { MinecraftVersion } from "../src/version";
 
-const launcher = new Launcher("./.minecraft", "dmclc_test", (await findAllJava())[0].b, "71dd081b-dc92-4d36-81ac-3a2bde5527ba");
+const launcher = await Launcher.create("./.minecraft", "dmclc_test", (await findAllJava())[0].b, "71dd081b-dc92-4d36-81ac-3a2bde5527ba");
 let account: Account<never>;
-await launcher.init();
 await test("java", async () => {
     for (const i of await findAllJava()) {
         if (i.a.includes("17")) launcher.usingJava = i.b;

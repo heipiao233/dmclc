@@ -41,7 +41,8 @@
     },
 
     "version": {
-        "loader_not_found": "Loader not found: "
+        "loader_not_found": "Loader not found: ",
+        "version_not_found": "Version not found: "
     },
 
     "loaders": {

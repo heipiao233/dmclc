@@ -20,27 +20,18 @@ import { expandMavenId } from "./utils/maven";
 /**
  * @internal
  */
-export class DMCLCExtraVersionInfo {
+export interface DMCLCExtraVersionInfo {
     version: string;
     loaders: LoaderInfo[];
     enableIndependentGameDir: boolean;
-    constructor() {
-        this.version = "Unknown";
-        this.loaders = [];
-        this.enableIndependentGameDir = false;
-    }
 }
 
 /**
  * @internal
  */
-export class LoaderInfo {
+export interface LoaderInfo {
     name: string;
     version: string;
-    constructor(name: string, version: string){
-        this.name = name;
-        this.version = version;
-    }
 }
 
 /**
@@ -52,6 +43,7 @@ export class MinecraftVersion {
     extras: DMCLCExtraVersionInfo;
     name: string;
     versionRoot: string;
+    versionLaunchWorkDir: string;
     versionJarPath: string;
     /**
      * Creates a new version from name.
@@ -59,8 +51,8 @@ export class MinecraftVersion {
      * @param name - The name of this version. The directory name, not always Minecraft version.
      * @returns The new created version object.
      */
-    static fromVersionName(launcher: Launcher, name: string): MinecraftVersion {
-        const version = new MinecraftVersion(launcher, expandInheritsFrom(JSON.parse(fs.readFileSync(`${launcher.rootPath}/versions/${name}/${name}.json`).toString()), launcher.rootPath));
+    static fromVersionName(launcher: Launcher, name: string, enableIndependentGameDir: boolean = false): MinecraftVersion {
+        const version = new MinecraftVersion(launcher, expandInheritsFrom(JSON.parse(fs.readFileSync(`${launcher.rootPath}/versions/${name}/${name}.json`).toString()), launcher.rootPath), enableIndependentGameDir);
         return version;
     }
 
@@ -69,47 +61,58 @@ export class MinecraftVersion {
      * @param launcher - The launcher instance.
      * @param object - The Version JSON object.
      */
-    constructor(private launcher: Launcher, object: MCVersion){
+    private constructor(private launcher: Launcher, object: MCVersion, enableIndependentGameDir: boolean) {
         this.versionObject = object;
         this.name = object.id;
         this.versionRoot = `${this.launcher.rootPath}/versions/${this.name}`;
         this.versionJarPath = `${this.versionRoot}/${this.name}.jar`;
         const extraPath = `${this.versionRoot}/dmclc_extras.json`;
         if(!fs.existsSync(extraPath)){
-            this.extras = this.detectExtras();
+            this.extras = this.detectExtras(enableIndependentGameDir);
             this.saveExtras();
         } else {
             this.extras = JSON.parse(fs.readFileSync(extraPath).toString());
         }
+        this.versionLaunchWorkDir = this.extras.enableIndependentGameDir
+            ? this.versionRoot
+            : this.launcher.rootPath.toString();
     }
 
-    private detectExtras(): DMCLCExtraVersionInfo {
-        const ret = new DMCLCExtraVersionInfo();
+    private detectExtras(enableIndependentGameDir: boolean): DMCLCExtraVersionInfo {
+        const loaders: LoaderInfo[] = [];
+        let version = "Unknown";
         this.launcher.loaders.forEach((v, k)=>{
             const version = v.findInVersion(this.versionObject);
             if(version){
-                ret.loaders.push(new LoaderInfo(k, version));
+                loaders.push({
+                    name: k,
+                    version: version
+                });
             }
         });
         for (const v of this.versionObject.libraries) {
             if(v.name.includes(":forge:")||v.name.includes(":liteloader:")){
-                ret.version = v.name.split(":")[2].split("-")[0];
+                version = v.name.split(":")[2].split("-")[0];
                 break;
             }
         }
-        if(ret.version === "Unknown") {
+        if(version === "Unknown") {
             this.getVersionFromJar();
         }
-        return ret;
+        return {
+            version,
+            loaders,
+            enableIndependentGameDir
+        };
     }
-    async getVersionFromJar() {
-        const zip = new StreamZip.async({file: this.versionJarPath});
-        const entry = await zip.entry("version.json");
+    getVersionFromJar() {
+        const zip = new StreamZip({file: this.versionJarPath});
+        const entry = zip.entry("version.json");
         if(entry) {
-            const obj = JSON.parse((await zip.entryData(entry)).toString());
+            const obj = JSON.parse((zip.entryDataSync(entry)).toString());
             this.extras.version = obj.id;
         }
-        await zip.close();
+        zip.close();
         this.saveExtras();
     }
 
@@ -125,9 +128,7 @@ export class MinecraftVersion {
         const args = await this.getArguments(this.versionObject, this.name, account);
         const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
         return cp.execFile(this.launcher.usingJava, allArguments, {
-            cwd: this.extras.enableIndependentGameDir
-                ? this.versionRoot
-                : this.launcher.rootPath.toString()
+            cwd: this.versionLaunchWorkDir
         });
     }
 
@@ -318,31 +319,5 @@ export class MinecraftVersion {
 
     saveExtras() {
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
-    }
-
-    async findMods(): Promise<ModJarInfo[]> {
-        const moddir = `${
-            this.extras.enableIndependentGameDir
-                ? this.versionRoot
-                : this.launcher.rootPath.toString()
-        }/mods`;
-        const val: ModJarInfo[] = [];
-        for (const mod of fs.readdirSync(moddir)) {
-            const modJar = `${moddir}/${mod}`;
-            if(fs.statSync(modJar).isFile()&&mod.endsWith(".jar")) {
-                val.push(await ModJarInfo.of(modJar, this.launcher, this.extras.loaders.map(v=>v.name)));
-            }
-        }
-        return val;
-    }
-
-    /**
-     * Check mod dependencies. You should warn your users that the result is not always correct.
-     * @returns All mod loading issues.
-     */
-    async checkMods(): Promise<ModLoadingIssue[]> {
-        if(this.extras.loaders.length===0)return [];
-        const loader = this.launcher.loaders.get(this.extras.loaders[0].name);
-        return loader?.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.extras.version, this.extras.loaders[0].version) ?? [];
     }
 }

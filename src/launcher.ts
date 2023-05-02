@@ -42,6 +42,7 @@ export class Launcher {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     accountTypes: Map<string, (data: Record<string, unknown>) => Account<any>> = new Map();
     contentServices: Map<string, ContentService<unknown>> = new Map();
+    modpackFormats: Map<string, ModpackFormat> = new Map();
     /** Using Java executable */
     usingJava: string;
     /** All installed versions. */
@@ -60,8 +61,8 @@ export class Launcher {
      * @param name - Launcher name.
      * @param javaExec - {@link Launcher.usingJava}
      */
-    constructor (rootPath: string, public name: string, javaExec: string,
-        public client_id: string,
+    protected constructor (rootPath: string, public name: string, javaExec: string,
+        public clientId: string,
         public downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         public copy?: (arg: string) => void) {
         this.rootPath = fs.realpathSync(rootPath);
@@ -86,9 +87,31 @@ export class Launcher {
         this.accountTypes.set("minecraft_universal_login", (data)=>new MinecraftUniversalLoginAccount(data, this));
         this.contentServices.set("modrinth", new ModrinthContentService(this));
         this.contentServices.set("curseforge", new CurseForgeContentService(this));
+        this.modpackFormats.set("modrinth", new ModrinthModpackFormat());
     }
 
-    async init(lang = "en_us") {
+    /**
+     * Create a new Launcher object.
+     * @throws {@link FormattedError}
+     * @param rootPath - path to .minecraft
+     * @param name - Launcher name.
+     * @param javaExec - {@link Launcher.usingJava}
+     * @param clientId - Microsoft identify platform APP id.
+     * @param downloader - Custom downloading function.
+     * @param copy - Custom clipboard function.
+     * @returns Launcher.
+     */
+    static async create(rootPath: string, name: string, javaExec: string,
+        clientId: string,
+        downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
+        copy?: (arg: string) => void
+    ): Promise<Launcher> {
+        const launcher = new Launcher(rootPath, name, javaExec, clientId, downloader, copy);
+        await launcher.init();
+        return launcher;
+    }
+
+    private async init(lang = "en_us") {
         // HMCL, pioneer of cross-architecture launcher.
         if(os.platform() === "linux") {
             if(process.arch !== "x64" && process.arch !== "ia32") {
