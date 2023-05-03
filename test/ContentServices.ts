@@ -1,5 +1,5 @@
 import test from "node:test";
-import { findAllJava, Launcher } from "../lib/index.js";
+import { Account, findAllJava, Launcher } from "../lib/index.js";
 import { ContentType } from "../lib/mods/download/ContentService.js";
 import CurseForgeContentService, { CurseForgeSortField } from "../lib/mods/download/curseforge/CurseForgeContentService.js";
 import ModrinthContentService, { ModrinthSortField } from "../lib/mods/download/modrinth/ModrinthContentService.js";
@@ -21,7 +21,10 @@ await test("contentServices", async ctx => {
         await ctxModrinth.test("modpack",async () => {
             // await download(url, "fo.mrpack", launcher);
             const modpack = await launcher.modpackFormats.get("modrinth")?.readModpack("fo.mrpack", launcher)!;
-            await launcher.installer.installModpack(modpack, modpack.getName())
+            const version = await launcher.installer.installModpack(modpack, modpack.getName());
+            const account = launcher.accountTypes.get("microsoft")!({}) as Account<never>;
+            await account.readUserExtraContent(new Map());
+            version.run(account);
         });
     });
 });

@@ -294,7 +294,7 @@ export class MinecraftVersion {
     async getSuitableLoaderVersions(name: string): Promise<string[]> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
-            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}: ${loader}`);
+            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}: ${name}`);
         }
         return loader.getSuitableLoaderVersions(this);
     }
@@ -307,7 +307,7 @@ export class MinecraftVersion {
     async installLoader(name: string, loaderVersion: string): Promise<void> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
-            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}${loader}`);
+            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}${name}`);
         }
         await loader.install(this, loaderVersion);
         this.extras.loaders.push({

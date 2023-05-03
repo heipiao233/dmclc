@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { mkdirs } from 'fs-extra';
 import fsPromises from 'fs/promises';
 import StreamZip, { StreamZipAsync } from 'node-stream-zip';
 import path from 'path';
@@ -21,10 +22,14 @@ export class ModrinthModpack implements Modpack {
                 if (i.env.client === "unsupported") continue;
             }
             const outPath = `${mcdir}/${i.path}`;
-            if (!path.resolve(outPath).startsWith(mcdir)) throw new FormattedError(this.launcher.i18n("mod.modpack.invalid"))
+            if (!path.resolve(outPath).startsWith(path.resolve(mcdir))) throw new FormattedError(this.launcher.i18n("mod.modpack.invalid"))
+            const dir = path.dirname(outPath);
+            if (!fs.existsSync(dir)) {
+                await mkdirs(dir);
+            }
             map.set(i.downloads[0], outPath)
         }
-        Promise.all(downloadAll(map, this.launcher));
+        await Promise.all(downloadAll(map, this.launcher));
     }
     async getOverrideDirs(): Promise<string[]> {
         if (this.unzipDir === undefined) {
@@ -51,7 +56,7 @@ export class ModrinthModpack implements Modpack {
     }
     getLoaders(): LoaderInfo[] {
         const loaders = Object.entries(this.manifest.dependencies);
-        return loaders.map(v => {
+        return loaders.filter(v => v[0]!=="minecraft").map(v => {
             return {
                 name: v[0].replace("-loader", ""),
                 version: v[1]

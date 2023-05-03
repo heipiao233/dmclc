@@ -77,7 +77,7 @@ export class Installer {
         for (const loader of modpack.getLoaders()) {
             await version.installLoader(loader.name, loader.version);
         }
-        await modpack.downloadMods(`${version.versionLaunchWorkDir}/mods`);
+        await modpack.downloadMods(version.versionLaunchWorkDir);
         for (const dir of await modpack.getOverrideDirs()) {
             await fsextra.copy(dir, version.versionLaunchWorkDir);
         }
