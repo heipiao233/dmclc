@@ -21,6 +21,7 @@ import ContentService from "./mods/download/ContentService.js";
 import CurseForgeContentService from "./mods/download/curseforge/CurseForgeContentService.js";
 import ModrinthContentService from "./mods/download/modrinth/ModrinthContentService.js";
 import { ModpackFormat } from "./mods/modpack/Modpack.js";
+import { CurseForgeModpackFormat } from "./mods/modpack/curseforge/CurseForgeModpack.js";
 import { ModrinthModpackFormat } from "./mods/modpack/modrinth/ModrinthModpack.js";
 import { Library } from "./schemas.js";
 import { download } from "./utils/downloads.js";
@@ -53,7 +54,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.10.0-alpha.7";
+    version = "3.10.0-alpha.8";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -88,6 +89,7 @@ export class Launcher {
         this.contentServices.set("modrinth", new ModrinthContentService(this));
         this.contentServices.set("curseforge", new CurseForgeContentService(this));
         this.modpackFormats.set("modrinth", new ModrinthModpackFormat());
+        this.modpackFormats.set("curseforge", new CurseForgeModpackFormat());
     }
 
     /**
