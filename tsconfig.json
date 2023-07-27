@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": [
       "ESNext"
     ],
-    "moduleResolution": "nodenext",
+    "moduleResolution": "NodeNext",
     "allowJs": true,
     "declaration": true,
     "outDir": "./lib",

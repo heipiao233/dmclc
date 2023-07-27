@@ -1,4 +1,6 @@
+import { FormattedError } from "../index.js";
 import { Launcher } from "../launcher.js";
+import { ContentVersion } from "./download/ContentService.js";
 
 export type ModDisplayInfo = {
     id: string,
@@ -29,15 +31,23 @@ export class ModJarInfo {
     // Some mod jars may have two or more manifests for many loaders.
     // For example, there are both META-INF/mods.toml and fabric.mod.json in a jar.
     manifests: ModInfo<unknown>[] = [];
-    private constructor(public path: string) {
+    private constructor(public path: string, private launcher: Launcher) {
         // do nothing
     }
     static async of(path: string, launcher: Launcher, loaders: string[]): Promise<ModJarInfo> {
-        const obj = new ModJarInfo(path);
+        const obj = new ModJarInfo(path, launcher);
         for (const name of loaders) {
             const loader = launcher.loaders.get(name)!;
             obj.manifests.push(...await loader.findModInfos(path));
         }
         return obj;
+    }
+
+    async tryGetModOnline(service: string): Promise<ContentVersion | null> {
+        const contentService = this.launcher.contentServices.get(service);
+        if (contentService == undefined) {
+            throw new FormattedError(`${this.launcher.i18n("content_service.not_found")}`)
+        }
+        return contentService.getVersionFromFile(this.path);
     }
 }

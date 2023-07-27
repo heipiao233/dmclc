@@ -22,7 +22,7 @@ export async function download(url: string, filename: fs.PathLike, launcher: Lau
     let realURL = transformURL(url, launcher.mirror);
     realURL = realURL.replaceAll("http://", "https://");
     if (launcher.downloader) await launcher.downloader(realURL, filename, url);
-    await downloader(realURL, filename, url);
+    else await downloader(realURL, filename, url);
 }
 
 async function downloader(url: string, filename: fs.PathLike, oldURL: string) {

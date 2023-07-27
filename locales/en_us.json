@@ -43,6 +43,10 @@
         }
     },
 
+    "content_service": {
+        "not_found": "No such content service!"
+    },
+
     "version": {
         "loader_not_found": "Loader not found: ",
         "version_not_found": "Version not found: "

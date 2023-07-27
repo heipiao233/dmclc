@@ -10,6 +10,7 @@ import path from "path";
 import { Account } from "./auth/account.js";
 import { FormattedError } from "./errors/FormattedError.js";
 import { Launcher } from "./launcher.js";
+import ModManager from "./mods/manage/ModManager.js";
 import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas.js";
 import { transformURL } from "./utils/TransformURL.js";
 import { checkFile } from "./utils/check_file.js";
@@ -45,6 +46,7 @@ export class MinecraftVersion {
     versionRoot: string;
     versionLaunchWorkDir: string;
     versionJarPath: string;
+    modManager: ModManager;
     /**
      * Creates a new version from name.
      * @param launcher - The launcher instance
@@ -76,6 +78,7 @@ export class MinecraftVersion {
         this.versionLaunchWorkDir = this.extras.enableIndependentGameDir
             ? this.versionRoot
             : this.launcher.rootPath.toString();
+        this.modManager = new ModManager(this, launcher);
     }
 
     private detectExtras(enableIndependentGameDir: boolean): DMCLCExtraVersionInfo {

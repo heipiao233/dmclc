@@ -43,6 +43,10 @@
         }
     },
 
+    "content_service": {
+        "not_found": "无此内容服务！"
+    },
+
     "version": {
         "loader_not_found": "找不到加载器：",
         "version_not_found": "找不到版本："

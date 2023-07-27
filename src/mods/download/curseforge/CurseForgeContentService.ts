@@ -70,10 +70,10 @@ export class CurseForgeContentVersion implements ContentVersionDependContent {
         }
         return result;
     }
+
     async getVersionFileURL(): Promise<string> {
         return this.model.downloadUrl;
     }
-    
 }
 export class CurseForgeContent implements Content {
     constructor(private model: CurseForgeMod, private got: Got) {
@@ -197,5 +197,12 @@ export default class CurseForgeContentService implements ContentService<number> 
             searchParams
         }).json();
         return response.data.map(v => new CurseForgeContent(v, this.got));
+    }
+
+    async getContentVersion(projectID: number, fileID: number): Promise<CurseForgeContentVersion> {
+        const response: {
+            data: CurseForgeModFile
+        } = await this.got(`mods/${projectID}/files/${fileID}`).json();
+        return new CurseForgeContentVersion(response.data, this.got);
     }
 }
