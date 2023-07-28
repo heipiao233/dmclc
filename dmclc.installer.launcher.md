@@ -4,7 +4,7 @@
 
 ## Installer.launcher property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 launcher: Launcher;

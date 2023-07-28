@@ -5,12 +5,12 @@
 ## AssetIndexInfo type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type AssetIndexInfo = {
     totalSize: number;
 } & ResourceWithID;
 ```
-<b>References:</b> [ResourceWithID](./dmclc.resourcewithid.md)
+**References:** [ResourceWithID](./dmclc.resourcewithid.md)
 

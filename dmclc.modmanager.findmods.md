@@ -4,12 +4,12 @@
 
 ## ModManager.findMods() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 findMods(): Promise<ModJarInfo[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;ModJarInfo\[\]&gt;
 

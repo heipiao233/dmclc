@@ -4,12 +4,12 @@
 
 ## ContentService.getSortFields() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getSortFields(): Record<string, SortField>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Record&lt;string, SortField&gt;
 

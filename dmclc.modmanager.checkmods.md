@@ -6,12 +6,12 @@
 
 Check mod dependencies. You should warn your users that the result is not always correct.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 checkMods(): Promise<ModLoadingIssue[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;ModLoadingIssue\[\]&gt;
 

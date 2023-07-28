@@ -5,7 +5,7 @@
 ## isCurrent() function
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function isCurrent(platform: OSPlatform): boolean;
@@ -17,7 +17,7 @@ export declare function isCurrent(platform: OSPlatform): boolean;
 |  --- | --- | --- |
 |  platform | [OSPlatform](./dmclc.osplatform.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean
 

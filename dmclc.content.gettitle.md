@@ -4,12 +4,12 @@
 
 ## Content.getTitle() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getTitle(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

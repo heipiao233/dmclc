@@ -6,7 +6,7 @@
 
 Install new Minecraft versions.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Installer 

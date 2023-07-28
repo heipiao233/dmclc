@@ -4,7 +4,7 @@
 
 ## Launcher.downloader property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 downloader?: ((url: string, filename: fs.PathLike, oldURL: string) => Promise<void>) | undefined;

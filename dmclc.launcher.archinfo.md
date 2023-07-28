@@ -4,7 +4,7 @@
 
 ## Launcher.archInfo property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 archInfo?: {

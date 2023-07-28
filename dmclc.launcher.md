@@ -6,7 +6,7 @@
 
 The core of DMCLC.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Launcher 
@@ -23,11 +23,11 @@ export declare class Launcher
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [accountTypes](./dmclc.launcher.accounttypes.md) |  | Map&lt;string, (data: Record&lt;string, unknown&gt;) =&gt; [Account](./dmclc.account.md)<!-- -->&lt;any&gt;&gt; | All account types. |
-|  [archInfo?](./dmclc.launcher.archinfo.md) |  | { specialArch: string; specialNatives: Record&lt;string, [Library](./dmclc.library.md)<!-- -->&gt;; } | <i>(Optional)</i> |
+|  [archInfo?](./dmclc.launcher.archinfo.md) |  | { specialArch: string; specialNatives: Record&lt;string, [Library](./dmclc.library.md)<!-- -->&gt;; } | _(Optional)_ |
 |  [clientId](./dmclc.launcher.clientid.md) |  | string |  |
 |  [contentServices](./dmclc.launcher.contentservices.md) |  | Map&lt;string, [ContentService](./dmclc.contentservice.md)<!-- -->&lt;unknown&gt;&gt; |  |
-|  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
-|  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
+|  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | _(Optional)_ |
+|  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | _(Optional)_ |
 |  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
 |  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |

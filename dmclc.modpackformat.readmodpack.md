@@ -6,7 +6,7 @@
 
 Reads a modpack.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readModpack(file: string, launcher: Launcher): Promise<Modpack>;
@@ -19,7 +19,7 @@ readModpack(file: string, launcher: Launcher): Promise<Modpack>;
 |  file | string | The modpack file |
 |  launcher | [Launcher](./dmclc.launcher.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Modpack](./dmclc.modpack.md)<!-- -->&gt;
 

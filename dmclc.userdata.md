@@ -5,7 +5,7 @@
 ## UserData class
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class UserData 
@@ -15,7 +15,7 @@ export declare class UserData
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [accessToken?](./dmclc.userdata.accesstoken.md) |  | string | <i>(Optional)</i> |
-|  [name?](./dmclc.userdata.name.md) |  | string | <i>(Optional)</i> |
-|  [uuid?](./dmclc.userdata.uuid.md) |  | string | <i>(Optional)</i> |
+|  [accessToken?](./dmclc.userdata.accesstoken.md) |  | string | _(Optional)_ |
+|  [name?](./dmclc.userdata.name.md) |  | string | _(Optional)_ |
+|  [uuid?](./dmclc.userdata.uuid.md) |  | string | _(Optional)_ |
 

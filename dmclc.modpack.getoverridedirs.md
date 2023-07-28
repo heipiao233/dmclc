@@ -4,12 +4,12 @@
 
 ## Modpack.getOverrideDirs() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getOverrideDirs(): Promise<string[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string\[\]&gt;
 

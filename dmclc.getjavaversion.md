@@ -6,7 +6,7 @@
 
 Get the version of a Java executable.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function getJavaVersion(javaExec: string): Promise<string>;
@@ -18,7 +18,7 @@ export declare function getJavaVersion(javaExec: string): Promise<string>;
 |  --- | --- | --- |
 |  javaExec | string | Java executable |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

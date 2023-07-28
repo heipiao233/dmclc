@@ -4,7 +4,7 @@
 
 ## Pair.b property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 b: B;

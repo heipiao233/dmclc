@@ -6,12 +6,12 @@
 
 Prepare for launch. For example, download your Java Agent.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 prepareLaunch(): Promise<void>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

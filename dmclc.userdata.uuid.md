@@ -4,7 +4,7 @@
 
 ## UserData.uuid property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 uuid?: string;

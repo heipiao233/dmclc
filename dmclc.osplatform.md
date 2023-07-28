@@ -5,7 +5,7 @@
 ## OSPlatform type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type OSPlatform = {
@@ -14,5 +14,5 @@ export type OSPlatform = {
     arch: string;
 };
 ```
-<b>References:</b> [OSType](./dmclc.ostype.md)
+**References:** [OSType](./dmclc.ostype.md)
 

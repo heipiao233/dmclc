@@ -4,7 +4,7 @@
 
 ## ContentService.getVersionFromFile() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVersionFromFile(path: string): Promise<ContentVersion | null>;
@@ -16,7 +16,7 @@ getVersionFromFile(path: string): Promise<ContentVersion | null>;
 |  --- | --- | --- |
 |  path | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[ContentVersion](./dmclc.contentversion.md) \| null&gt;
 

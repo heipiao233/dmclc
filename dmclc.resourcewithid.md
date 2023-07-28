@@ -5,12 +5,12 @@
 ## ResourceWithID type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type ResourceWithID = {
     id: string;
 } & Resource;
 ```
-<b>References:</b> [Resource](./dmclc.resource.md)
+**References:** [Resource](./dmclc.resource.md)
 

@@ -4,7 +4,7 @@
 
 ## ContentVersionDependContentVersion.dependencyType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 dependencyType: "version";

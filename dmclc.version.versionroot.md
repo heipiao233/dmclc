@@ -4,7 +4,7 @@
 
 ## Version.versionRoot property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 versionRoot: string;

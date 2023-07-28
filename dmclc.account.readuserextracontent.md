@@ -4,7 +4,7 @@
 
 ## Account.readUserExtraContent() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 readUserExtraContent(content: Map<string, string>): Promise<void>;
@@ -16,7 +16,7 @@ readUserExtraContent(content: Map<string, string>): Promise<void>;
 |  --- | --- | --- |
 |  content | Map&lt;string, string&gt; | A map, keys must contain all keys of return values from [Account.getUserExtraContent()](./dmclc.account.getuserextracontent.md)<!-- -->, values are from user input. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

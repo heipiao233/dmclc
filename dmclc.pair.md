@@ -5,7 +5,7 @@
 ## Pair class
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class Pair<A, B> 

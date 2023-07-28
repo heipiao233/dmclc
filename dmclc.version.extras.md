@@ -4,7 +4,7 @@
 
 ## Version.extras property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 extras: DMCLCExtraVersionInfo;

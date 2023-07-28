@@ -4,12 +4,12 @@
 
 ## Modpack.getSummary() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getSummary(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

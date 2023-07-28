@@ -5,12 +5,12 @@
 ## LibraryArtifact type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type LibraryArtifact = {
     path: string;
 } & Resource;
 ```
-<b>References:</b> [Resource](./dmclc.resource.md)
+**References:** [Resource](./dmclc.resource.md)
 

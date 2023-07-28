@@ -6,7 +6,7 @@
 
 Constructs a new instance of the `Pair` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(a: A, b: B);

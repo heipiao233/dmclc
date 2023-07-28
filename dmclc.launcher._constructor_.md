@@ -6,7 +6,7 @@
 
 Create a new Launcher object.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 protected constructor(rootPath: string, name: string, javaExec: string, clientId: string, downloader?: ((url: string, filename: fs.PathLike, oldURL: string) => Promise<void>) | undefined, copy?: ((arg: string) => void) | undefined);
@@ -20,8 +20,8 @@ protected constructor(rootPath: string, name: string, javaExec: string, clientId
 |  name | string | Launcher name. |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
 |  clientId | string |  |
-|  downloader | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | <i>(Optional)</i> |
-|  copy | ((arg: string) =&gt; void) \| undefined | <i>(Optional)</i> |
+|  downloader | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | _(Optional)_ |
+|  copy | ((arg: string) =&gt; void) \| undefined | _(Optional)_ |
 
 ## Exceptions
 

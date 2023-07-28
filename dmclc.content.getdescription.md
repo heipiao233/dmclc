@@ -4,12 +4,12 @@
 
 ## Content.getDescription() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getDescription(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

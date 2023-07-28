@@ -4,12 +4,12 @@
 
 ## Version.getVersionFromJar() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVersionFromJar(): void;
 ```
-<b>Returns:</b>
+**Returns:**
 
 void
 

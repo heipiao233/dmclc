@@ -5,7 +5,7 @@
 ## OSType type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type OSType = "linux" | "windows" | "osx";

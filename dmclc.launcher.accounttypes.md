@@ -6,7 +6,7 @@
 
 All account types.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 accountTypes: Map<string, (data: Record<string, unknown>) => Account<any>>;

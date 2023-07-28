@@ -6,12 +6,12 @@
 
 Get UUID of this account.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUUID(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

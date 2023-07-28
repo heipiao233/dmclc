@@ -6,7 +6,7 @@
 
 List versions.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 listVersions(forVersion?: MinecraftVersion): Promise<ContentVersion[]>;
@@ -16,9 +16,9 @@ listVersions(forVersion?: MinecraftVersion): Promise<ContentVersion[]>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  forVersion | [MinecraftVersion](./dmclc.version.md) | <i>(Optional)</i> The Minecraft version you download for. |
+|  forVersion | [MinecraftVersion](./dmclc.version.md) | _(Optional)_ The Minecraft version you download for. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[ContentVersion](./dmclc.contentversion.md)<!-- -->\[\]&gt;
 

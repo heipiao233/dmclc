@@ -4,12 +4,12 @@
 
 ## Modpack.getName() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getName(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

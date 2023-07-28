@@ -4,12 +4,12 @@
 
 ## Modpack.getLoaders() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLoaders(): LoaderInfo[];
 ```
-<b>Returns:</b>
+**Returns:**
 
 LoaderInfo\[\]
 

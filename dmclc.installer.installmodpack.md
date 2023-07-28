@@ -6,7 +6,7 @@
 
 Install modpack.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 installModpack(modpack: Modpack, name: string): Promise<MinecraftVersion>;
@@ -19,7 +19,7 @@ installModpack(modpack: Modpack, name: string): Promise<MinecraftVersion>;
 |  modpack | [Modpack](./dmclc.modpack.md) | The modpack. |
 |  name | string | The name of the new version. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[MinecraftVersion](./dmclc.version.md)<!-- -->&gt;
 

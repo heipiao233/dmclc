@@ -5,7 +5,7 @@
 ## Rule type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Rule = {
@@ -16,5 +16,5 @@ export type Rule = {
     os: OSPlatform;
 };
 ```
-<b>References:</b> [OSPlatform](./dmclc.osplatform.md)
+**References:** [OSPlatform](./dmclc.osplatform.md)
 

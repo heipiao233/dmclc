@@ -6,12 +6,12 @@
 
 A content version, dependencies are contents.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ContentVersionDependContent extends ContentVersionBase 
 ```
-<b>Extends:</b> ContentVersionBase
+**Extends:** ContentVersionBase
 
 ## Properties
 

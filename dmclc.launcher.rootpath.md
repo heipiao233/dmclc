@@ -6,7 +6,7 @@
 
 The path to the ".minecraft" directory.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 get rootPath(): string;

@@ -6,12 +6,12 @@
 
 If a key is `password`<!-- -->, please mask!
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUserExtraContent(): Record<string, string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Record&lt;string, string&gt;
 

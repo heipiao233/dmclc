@@ -4,7 +4,7 @@
 
 ## Launcher.natives property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 natives: "linux" | "osx" | "windows";

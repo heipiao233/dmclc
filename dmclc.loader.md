@@ -6,7 +6,7 @@
 
 Used to install loaders.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Loader<T> 

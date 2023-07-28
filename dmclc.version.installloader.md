@@ -6,7 +6,7 @@
 
 Install a mod loader.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 installLoader(name: string, loaderVersion: string): Promise<void>;
@@ -19,7 +19,7 @@ installLoader(name: string, loaderVersion: string): Promise<void>;
 |  name | string | Loader name. |
 |  loaderVersion | string | Loader version. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

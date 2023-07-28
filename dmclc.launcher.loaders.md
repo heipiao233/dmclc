@@ -6,7 +6,7 @@
 
 All loaders.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 loaders: Map<string, Loader<unknown>>;

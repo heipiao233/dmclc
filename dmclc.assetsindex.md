@@ -5,7 +5,7 @@
 ## AssetsIndex type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type AssetsIndex = {
@@ -14,5 +14,5 @@ export type AssetsIndex = {
     };
 };
 ```
-<b>References:</b> [Asset](./dmclc.asset.md)
+**References:** [Asset](./dmclc.asset.md)
 

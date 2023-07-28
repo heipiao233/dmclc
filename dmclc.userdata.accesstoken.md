@@ -4,7 +4,7 @@
 
 ## UserData.accessToken property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 accessToken?: string;

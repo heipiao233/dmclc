@@ -6,10 +6,10 @@
 
 A content version.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type ContentVersion = ContentVersionDependContentVersion | ContentVersionDependContent;
 ```
-<b>References:</b> [ContentVersionDependContentVersion](./dmclc.contentversiondependcontentversion.md)<!-- -->, [ContentVersionDependContent](./dmclc.contentversiondependcontent.md)
+**References:** [ContentVersionDependContentVersion](./dmclc.contentversiondependcontentversion.md)<!-- -->, [ContentVersionDependContent](./dmclc.contentversiondependcontent.md)
 

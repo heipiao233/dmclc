@@ -5,7 +5,7 @@
 ## checkRules() function
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function checkRules(rules: Rule[]): boolean;
@@ -17,7 +17,7 @@ export declare function checkRules(rules: Rule[]): boolean;
 |  --- | --- | --- |
 |  rules | [Rule](./dmclc.rule.md)<!-- -->\[\] |  |
 
-<b>Returns:</b>
+**Returns:**
 
 boolean
 

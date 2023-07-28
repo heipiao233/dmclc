@@ -4,12 +4,12 @@
 
 ## Content.getScreenshots() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getScreenshots(): Promise<Screenshot[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Screenshot](./dmclc.screenshot.md)<!-- -->\[\]&gt;
 

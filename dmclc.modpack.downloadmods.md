@@ -4,7 +4,7 @@
 
 ## Modpack.downloadMods() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 downloadMods(mcdir: string): Promise<void>;
@@ -16,7 +16,7 @@ downloadMods(mcdir: string): Promise<void>;
 |  --- | --- | --- |
 |  mcdir | string |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

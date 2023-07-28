@@ -4,12 +4,12 @@
 
 ## Content.getBody() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getBody(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

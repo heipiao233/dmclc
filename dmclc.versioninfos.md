@@ -5,7 +5,7 @@
 ## VersionInfos type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type VersionInfos = {
@@ -16,5 +16,5 @@ export type VersionInfos = {
     versions: VersionInfo[];
 };
 ```
-<b>References:</b> [VersionInfo](./dmclc.versioninfo.md)
+**References:** [VersionInfo](./dmclc.versioninfo.md)
 

@@ -6,7 +6,7 @@
 
 Install.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 install(ver: VersionInfo, versionName: string, enableIndependentGameDir?: boolean): Promise<MinecraftVersion>;
@@ -18,9 +18,9 @@ install(ver: VersionInfo, versionName: string, enableIndependentGameDir?: boolea
 |  --- | --- | --- |
 |  ver | [VersionInfo](./dmclc.versioninfo.md) | The version to install. |
 |  versionName | string | The  of the new version. |
-|  enableIndependentGameDir | boolean | <i>(Optional)</i> |
+|  enableIndependentGameDir | boolean | _(Optional)_ |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[MinecraftVersion](./dmclc.version.md)<!-- -->&gt;
 

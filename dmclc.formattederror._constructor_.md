@@ -6,7 +6,7 @@
 
 Constructs a new instance of the `FormattedError` class
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(message: string | undefined | null);

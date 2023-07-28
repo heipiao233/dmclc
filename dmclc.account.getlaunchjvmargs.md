@@ -6,7 +6,7 @@
 
 Get extra JVM arguments. For example, Java Agent.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
@@ -18,7 +18,7 @@ getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
 |  --- | --- | --- |
 |  mc | [MinecraftVersion](./dmclc.version.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string\[\]&gt;
 

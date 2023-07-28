@@ -4,7 +4,7 @@
 
 ## Version.versionLaunchWorkDir property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 versionLaunchWorkDir: string;

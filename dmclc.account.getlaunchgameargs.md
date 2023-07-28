@@ -6,12 +6,12 @@
 
 Get extra JVM arguments. For example: { 'auth\_access\_token' =<!-- -->&gt; '\*\*\*', 'user\_type' =<!-- -->&gt; 'mojang', 'user\_properties' =<!-- -->&gt; '<!-- -->{<!-- -->}<!-- -->', 'auth\_player\_name' =<!-- -->&gt; 'Steve' }
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getLaunchGameArgs(): Promise<Map<string, string>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;Map&lt;string, string&gt;&gt;
 

@@ -4,7 +4,7 @@
 
 ## ModManager.installMod() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 installMod(mod: Content): Promise<void>;
@@ -16,7 +16,7 @@ installMod(mod: Content): Promise<void>;
 |  --- | --- | --- |
 |  mod | [Content](./dmclc.content.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

@@ -6,7 +6,7 @@
 
 All installed versions.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 installedVersions: Map<string, MinecraftVersion>;

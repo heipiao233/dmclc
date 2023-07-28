@@ -6,12 +6,12 @@
 
 Get localized human-readable string. For example: Steve (Offline), Alex (微软账号).
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 toString(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

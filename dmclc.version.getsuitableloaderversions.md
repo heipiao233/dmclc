@@ -6,7 +6,7 @@
 
 Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getSuitableLoaderVersions(name: string): Promise<string[]>;
@@ -18,7 +18,7 @@ getSuitableLoaderVersions(name: string): Promise<string[]>;
 |  --- | --- | --- |
 |  name | string | The name of loader. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string\[\]&gt;
 

@@ -4,7 +4,7 @@
 
 ## ContentService.searchContent() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 searchContent(name: string, skip: number, limit: number, type: ContentType, sortField: SortField, forVersion?: MinecraftVersion): Promise<Content[]>;
@@ -19,9 +19,9 @@ searchContent(name: string, skip: number, limit: number, type: ContentType, sort
 |  limit | number | The number of results will return. |
 |  type | [ContentType](./dmclc.contenttype.md) |  |
 |  sortField | SortField |  |
-|  forVersion | [MinecraftVersion](./dmclc.version.md) | <i>(Optional)</i> The Minecraft version you download for. |
+|  forVersion | [MinecraftVersion](./dmclc.version.md) | _(Optional)_ The Minecraft version you download for. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Content](./dmclc.content.md)<!-- -->\[\]&gt;
 

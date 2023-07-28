@@ -4,12 +4,12 @@
 
 ## Modpack.getMinecraftVersion() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getMinecraftVersion(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

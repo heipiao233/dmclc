@@ -6,7 +6,7 @@
 
 Version.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class MinecraftVersion 

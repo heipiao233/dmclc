@@ -4,12 +4,12 @@
 
 ## Content.getOtherInformation() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getOtherInformation(): Promise<Map<string, string>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;Map&lt;string, string&gt;&gt;
 

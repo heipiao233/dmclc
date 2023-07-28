@@ -4,7 +4,7 @@
 
 ## Launcher.i18n property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 i18n: i18next.TFunction;

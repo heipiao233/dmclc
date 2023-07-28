@@ -4,7 +4,7 @@
 
 ## Launcher.systemType property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 systemType: NodeJS.Platform;

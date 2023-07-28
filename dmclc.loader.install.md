@@ -6,7 +6,7 @@
 
 Install.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 install(MCVersion: MinecraftVersion, version: string): Promise<void>;
@@ -19,7 +19,7 @@ install(MCVersion: MinecraftVersion, version: string): Promise<void>;
 |  MCVersion | [MinecraftVersion](./dmclc.version.md) | Minecraft version. |
 |  version | string | Loader version. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

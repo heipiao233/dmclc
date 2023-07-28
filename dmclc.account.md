@@ -6,7 +6,7 @@
 
 An account.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface Account<T extends UserData> 

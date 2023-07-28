@@ -4,7 +4,7 @@
 
 ## Launcher.clientId property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 clientId: string;

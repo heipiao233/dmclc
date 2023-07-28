@@ -6,7 +6,7 @@
 
 BMCLAPI
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 mirror: string | undefined;

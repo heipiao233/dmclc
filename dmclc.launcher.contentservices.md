@@ -4,7 +4,7 @@
 
 ## Launcher.contentServices property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 contentServices: Map<string, ContentService<unknown>>;

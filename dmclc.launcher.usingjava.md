@@ -6,7 +6,7 @@
 
 Using Java executable
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 usingJava: string;

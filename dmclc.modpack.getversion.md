@@ -4,12 +4,12 @@
 
 ## Modpack.getVersion() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVersion(): string;
 ```
-<b>Returns:</b>
+**Returns:**
 
 string
 

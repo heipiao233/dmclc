@@ -6,12 +6,12 @@
 
 Get all the versions from Mojang.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getVersionList(): Promise<VersionInfos>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[VersionInfos](./dmclc.versioninfos.md)<!-- -->&gt;
 

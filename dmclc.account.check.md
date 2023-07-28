@@ -6,12 +6,12 @@
 
 Check if this account can use without input any other information again, and refresh access token.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 check(): Promise<boolean>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;
 

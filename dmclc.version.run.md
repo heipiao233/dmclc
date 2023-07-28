@@ -6,7 +6,7 @@
 
 Run this version!
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 run(account: Account<never>): Promise<ChildProcess>;
@@ -18,7 +18,7 @@ run(account: Account<never>): Promise<ChildProcess>;
 |  --- | --- | --- |
 |  account | [Account](./dmclc.account.md)<!-- -->&lt;never&gt; | The using account. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;ChildProcess&gt;
 

@@ -6,7 +6,7 @@
 
 A Content posting service. For example: Modrinth, CurseForge.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export interface ContentService<SortField> 

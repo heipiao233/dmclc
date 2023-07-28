@@ -6,7 +6,7 @@
 
 Get the version installed, or null if not installed or can't find.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 findInVersion(MCVersion: MCVersion): string | undefined;
@@ -18,7 +18,7 @@ findInVersion(MCVersion: MCVersion): string | undefined;
 |  --- | --- | --- |
 |  MCVersion | [MCVersion](./dmclc.mcversion.md) | Minecraft version manifest. |
 
-<b>Returns:</b>
+**Returns:**
 
 string \| undefined
 

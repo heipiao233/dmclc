@@ -4,7 +4,7 @@
 
 ## ModManager.version property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 version: MinecraftVersion;

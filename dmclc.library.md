@@ -5,7 +5,7 @@
 ## Library type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Library = LibraryFabricOldForgeBaseAndLiteLoader | LibraryOldForge | LibraryVanillaAndNewForge | LibraryVanillaNatives | LibraryBase;

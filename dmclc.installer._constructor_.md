@@ -6,7 +6,7 @@
 
 Creates a new Installer.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 constructor(launcher: Launcher);

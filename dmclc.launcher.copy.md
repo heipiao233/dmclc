@@ -4,7 +4,7 @@
 
 ## Launcher.copy property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 copy?: ((arg: string) => void) | undefined;

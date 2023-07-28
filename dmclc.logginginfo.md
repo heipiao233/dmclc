@@ -5,7 +5,7 @@
 ## LoggingInfo type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type LoggingInfo = {
@@ -14,5 +14,5 @@ export type LoggingInfo = {
     type: string;
 };
 ```
-<b>References:</b> [ResourceWithID](./dmclc.resourcewithid.md)
+**References:** [ResourceWithID](./dmclc.resourcewithid.md)
 

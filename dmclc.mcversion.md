@@ -4,7 +4,7 @@
 
 ## MCVersion type
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type MCVersion = MCVersionNewArgs | MCVersionOldArgs;

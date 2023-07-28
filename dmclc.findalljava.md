@@ -6,12 +6,12 @@
 
 Find all java.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare function findAllJava(): Promise<Pair<string, string>[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Pair](./dmclc.pair.md)<!-- -->&lt;string, string&gt;\[\]&gt;
 

@@ -4,12 +4,12 @@
 
 ## ContentService.getUnsupportedContentTypes() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getUnsupportedContentTypes(): ContentType[];
 ```
-<b>Returns:</b>
+**Returns:**
 
 [ContentType](./dmclc.contenttype.md)<!-- -->\[\]
 

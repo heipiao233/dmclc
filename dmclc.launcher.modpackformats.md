@@ -4,7 +4,7 @@
 
 ## Launcher.modpackFormats property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 modpackFormats: Map<string, ModpackFormat>;

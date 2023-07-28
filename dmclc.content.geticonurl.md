@@ -4,12 +4,12 @@
 
 ## Content.getIconURL() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getIconURL(): Promise<string>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;string&gt;
 

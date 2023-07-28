@@ -6,12 +6,12 @@
 
 List all dependencies.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 listDependencies(): Promise<ContentVersion[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[ContentVersion](./dmclc.contentversion.md)<!-- -->\[\]&gt;
 

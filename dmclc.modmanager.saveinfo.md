@@ -4,12 +4,12 @@
 
 ## ModManager.saveInfo() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 saveInfo(): Promise<void>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 

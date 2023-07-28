@@ -6,7 +6,7 @@
 
 Get mod display info for end user.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getModInfo(mod: T): ModDisplayInfo;
@@ -18,7 +18,7 @@ getModInfo(mod: T): ModDisplayInfo;
 |  --- | --- | --- |
 |  mod | T | Mod info. |
 
-<b>Returns:</b>
+**Returns:**
 
 ModDisplayInfo
 

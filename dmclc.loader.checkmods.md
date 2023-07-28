@@ -6,7 +6,7 @@
 
 Check installed mods.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
@@ -20,7 +20,7 @@ checkMods(mods: ModInfo<T>[], mc: string, loader: string): ModLoadingIssue[];
 |  mc | string | Minecraft version. |
 |  loader | string | Loader version. |
 
-<b>Returns:</b>
+**Returns:**
 
 ModLoadingIssue\[\]
 

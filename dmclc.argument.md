@@ -5,7 +5,7 @@
 ## Argument type
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export type Argument = {
@@ -13,5 +13,5 @@ export type Argument = {
     value: string[] | string;
 };
 ```
-<b>References:</b> [Rule](./dmclc.rule.md)
+**References:** [Rule](./dmclc.rule.md)
 

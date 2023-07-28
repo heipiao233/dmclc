@@ -4,7 +4,7 @@
 
 ## ModManager.searchMod() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 searchMod(name: string, skip: number, limit: number): Promise<Content[]>;
@@ -18,7 +18,7 @@ searchMod(name: string, skip: number, limit: number): Promise<Content[]>;
 |  skip | number |  |
 |  limit | number |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;[Content](./dmclc.content.md)<!-- -->\[\]&gt;
 

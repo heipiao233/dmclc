@@ -4,12 +4,12 @@
 
 ## Content.isLibrary() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 isLibrary(): Promise<boolean>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;boolean&gt;
 

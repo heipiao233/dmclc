@@ -4,7 +4,7 @@
 
 ## Version.versionObject property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 versionObject: MCVersion;

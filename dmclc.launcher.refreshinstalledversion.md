@@ -6,12 +6,12 @@
 
 Refresh installed versions.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 refreshInstalledVersion(): void;
 ```
-<b>Returns:</b>
+**Returns:**
 
 void
 

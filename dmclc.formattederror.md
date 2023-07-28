@@ -5,12 +5,12 @@
 ## FormattedError class
 
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 export declare class FormattedError extends Error 
 ```
-<b>Extends:</b> Error
+**Extends:** Error
 
 ## Constructors
 

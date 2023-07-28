@@ -6,7 +6,7 @@
 
 Get all mod informations.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 findModInfos(path: string): Promise<ModInfo<T>[]>;
@@ -18,7 +18,7 @@ findModInfos(path: string): Promise<ModInfo<T>[]>;
 |  --- | --- | --- |
 |  path | string | Mod jar. |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;ModInfo&lt;T&gt;\[\]&gt;
 

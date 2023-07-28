@@ -6,12 +6,12 @@
 
 Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 completeVersionInstall(): Promise<void[]>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void\[\]&gt;
 

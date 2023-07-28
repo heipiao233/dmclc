@@ -4,7 +4,7 @@
 
 ## Version.versionJarPath property
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 versionJarPath: string;

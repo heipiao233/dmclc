@@ -4,12 +4,12 @@
 
 ## Content.getURLs() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 getURLs(): Promise<Map<string, string>>;
 ```
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;Map&lt;string, string&gt;&gt;
 

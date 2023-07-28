@@ -4,7 +4,7 @@
 
 ## ModManager.installModVersion() method
 
-<b>Signature:</b>
+**Signature:**
 
 ```typescript
 installModVersion(version: ContentVersion): Promise<void>;
@@ -16,7 +16,7 @@ installModVersion(version: ContentVersion): Promise<void>;
 |  --- | --- | --- |
 |  version | [ContentVersion](./dmclc.contentversion.md) |  |
 
-<b>Returns:</b>
+**Returns:**
 
 Promise&lt;void&gt;
 
