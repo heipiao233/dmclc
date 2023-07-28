@@ -54,7 +54,7 @@ export type ContentVersion = ContentVersionDependContentVersion | ContentVersion
 /**
  * A Content posting service. For example: Modrinth, CurseForge.
  */
-export default interface ContentService<SortField> {
+export interface ContentService<SortField> {
     /**
      * @param name Searching string.
      * @param skip The number of results to skip.

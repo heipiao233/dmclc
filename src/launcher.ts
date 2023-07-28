@@ -17,7 +17,7 @@ import { VersionParser } from "./loaders/fabriclike/version/VersionParser.js";
 import { ForgeLoader } from "./loaders/forge/forge.js";
 import { Loader } from "./loaders/loader.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
-import ContentService from "./mods/download/ContentService.js";
+import { ContentService } from "./mods/download/ContentService.js";
 import CurseForgeContentService from "./mods/download/curseforge/CurseForgeContentService.js";
 import ModrinthContentService from "./mods/download/modrinth/ModrinthContentService.js";
 import { ModpackFormat } from "./mods/modpack/Modpack.js";
@@ -54,7 +54,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.10.0";
+    version = "3.10.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}

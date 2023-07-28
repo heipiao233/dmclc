@@ -5,7 +5,7 @@ import got, { Got } from "got";
 import { marked } from "marked";
 import { Launcher } from "../../../launcher.js";
 import { MinecraftVersion } from "../../../version.js";
-import ContentService, { Content, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService.js";
+import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService.js";
 import { ModrinthFile, ModrinthProject, ModrinthVersionModel, SearchResult } from "./ModrinthModels.js";
 
 const contentTypeToModrinth = {
