@@ -10,7 +10,7 @@ import path from "path";
 import { Account } from "./auth/account.js";
 import { FormattedError } from "./errors/FormattedError.js";
 import { Launcher } from "./launcher.js";
-import ModManager from "./mods/manage/ModManager.js";
+import { ModManager } from "./mods/manage/ModManager.js";
 import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas.js";
 import { transformURL } from "./utils/TransformURL.js";
 import { checkFile } from "./utils/check_file.js";
