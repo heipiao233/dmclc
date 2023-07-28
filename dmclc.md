@@ -40,6 +40,7 @@ You can create Minecraft launchers with this package.
 |  --- | --- |
 |  [Account](./dmclc.account.md) | An account. |
 |  [Content](./dmclc.content.md) |  |
+|  [ContentService](./dmclc.contentservice.md) | A Content posting service. For example: Modrinth, CurseForge. |
 |  [ContentVersionDependContent](./dmclc.contentversiondependcontent.md) | A content version, dependencies are contents. |
 |  [ContentVersionDependContentVersion](./dmclc.contentversiondependcontentversion.md) | A content version, dependencies are content versions. |
 |  [Loader](./dmclc.loader.md) | Used to install loaders. |
