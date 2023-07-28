@@ -16,7 +16,7 @@ installModpack(modpack: Modpack, name: string): Promise<MinecraftVersion>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  modpack | Modpack | The modpack. |
+|  modpack | [Modpack](./dmclc.modpack.md) | The modpack. |
 |  name | string | The name of the new version. |
 
 <b>Returns:</b>

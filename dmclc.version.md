@@ -17,7 +17,7 @@ export declare class MinecraftVersion
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [extras](./dmclc.version.extras.md) |  | DMCLCExtraVersionInfo |  |
-|  [modManager](./dmclc.version.modmanager.md) |  | ModManager |  |
+|  [modManager](./dmclc.version.modmanager.md) |  | [ModManager](./dmclc.modmanager.md) |  |
 |  [name](./dmclc.version.name.md) |  | string |  |
 |  [versionJarPath](./dmclc.version.versionjarpath.md) |  | string |  |
 |  [versionLaunchWorkDir](./dmclc.version.versionlaunchworkdir.md) |  | string |  |

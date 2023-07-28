@@ -33,7 +33,7 @@ export declare class Launcher
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
 |  [loaders](./dmclc.launcher.loaders.md) |  | Map&lt;string, [Loader](./dmclc.loader.md)<!-- -->&lt;unknown&gt;&gt; | All loaders. |
 |  [mirror](./dmclc.launcher.mirror.md) |  | string \| undefined | BMCLAPI |
-|  [modpackFormats](./dmclc.launcher.modpackformats.md) |  | Map&lt;string, ModpackFormat&gt; |  |
+|  [modpackFormats](./dmclc.launcher.modpackformats.md) |  | Map&lt;string, [ModpackFormat](./dmclc.modpackformat.md)<!-- -->&gt; |  |
 |  [name](./dmclc.launcher.name.md) |  | string |  |
 |  [natives](./dmclc.launcher.natives.md) |  | "linux" \| "osx" \| "windows" |  |
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |

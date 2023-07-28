@@ -13,9 +13,16 @@ You can create Minecraft launchers with this package.
 |  [FormattedError](./dmclc.formattederror.md) |  |
 |  [Installer](./dmclc.installer.md) | Install new Minecraft versions. |
 |  [Launcher](./dmclc.launcher.md) | The core of DMCLC. |
+|  [ModManager](./dmclc.modmanager.md) |  |
 |  [Pair](./dmclc.pair.md) |  |
 |  [UserData](./dmclc.userdata.md) |  |
 |  [Version](./dmclc.version.md) | Version. |
+
+## Enumerations
+
+|  Enumeration | Description |
+|  --- | --- |
+|  [ContentType](./dmclc.contenttype.md) |  |
 
 ## Functions
 
@@ -32,7 +39,12 @@ You can create Minecraft launchers with this package.
 |  Interface | Description |
 |  --- | --- |
 |  [Account](./dmclc.account.md) | An account. |
+|  [Content](./dmclc.content.md) |  |
+|  [ContentVersionDependContent](./dmclc.contentversiondependcontent.md) | A content version, dependencies are contents. |
+|  [ContentVersionDependContentVersion](./dmclc.contentversiondependcontentversion.md) | A content version, dependencies are content versions. |
 |  [Loader](./dmclc.loader.md) | Used to install loaders. |
+|  [Modpack](./dmclc.modpack.md) |  |
+|  [ModpackFormat](./dmclc.modpackformat.md) |  |
 
 ## Type Aliases
 
@@ -42,9 +54,11 @@ You can create Minecraft launchers with this package.
 |  [Asset](./dmclc.asset.md) |  |
 |  [AssetIndexInfo](./dmclc.assetindexinfo.md) |  |
 |  [AssetsIndex](./dmclc.assetsindex.md) |  |
+|  [ContentVersion](./dmclc.contentversion.md) | A content version. |
 |  [JavaInfo](./dmclc.javainfo.md) |  |
 |  [Library](./dmclc.library.md) |  |
 |  [LibraryArtifact](./dmclc.libraryartifact.md) |  |
+|  [LoaderType](./dmclc.loadertype.md) |  |
 |  [LoggingInfo](./dmclc.logginginfo.md) |  |
 |  [MCVersion](./dmclc.mcversion.md) |  |
 |  [OSPlatform](./dmclc.osplatform.md) |  |
@@ -52,6 +66,7 @@ You can create Minecraft launchers with this package.
 |  [Resource](./dmclc.resource.md) |  |
 |  [ResourceWithID](./dmclc.resourcewithid.md) |  |
 |  [Rule](./dmclc.rule.md) |  |
+|  [Screenshot](./dmclc.screenshot.md) |  |
 |  [VersionInfo](./dmclc.versioninfo.md) |  |
 |  [VersionInfos](./dmclc.versioninfos.md) |  |
 
