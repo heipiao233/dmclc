@@ -22,7 +22,7 @@ export class ModrinthModpack implements Modpack {
                 if (i.env.client === "unsupported") continue;
             }
             const outPath = `${mcdir}/${i.path}`;
-            if (!path.resolve(outPath).startsWith(path.resolve(mcdir))) throw new FormattedError(this.launcher.i18n("mod.modpack.invalid"))
+            if (!path.resolve(outPath).startsWith(path.resolve(mcdir))) throw new FormattedError(this.launcher.i18n("mod.modpack.invalid"));
             const dir = path.dirname(outPath);
             if (!fs.existsSync(dir)) {
                 await mkdirs(dir);

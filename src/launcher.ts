@@ -54,7 +54,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.10.0-alpha.8";
+    version = "3.10.0-beta.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}

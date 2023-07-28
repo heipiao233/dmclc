@@ -41,7 +41,7 @@ async function downloader(url: string, filename: fs.PathLike, oldURL: string) {
             }
         }
     }
-    if(failed) {
+    if (failed) {
         throw new FormattedError("Download failed!");
     }
 }

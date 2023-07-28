@@ -1,8 +1,9 @@
 import test from "node:test";
-import { Account, findAllJava, Launcher } from "../lib/index.js";
-import { ContentType } from "../lib/mods/download/ContentService.js";
-import CurseForgeContentService, { CurseForgeSortField } from "../lib/mods/download/curseforge/CurseForgeContentService.js";
-import ModrinthContentService, { ModrinthSortField } from "../lib/mods/download/modrinth/ModrinthContentService.js";
+import { Account, findAllJava, Launcher } from "../src/index.js";
+import { ContentType } from "../src/mods/download/ContentService.js";
+import CurseForgeContentService, { CurseForgeSortField } from "../src/mods/download/curseforge/CurseForgeContentService.js";
+import ModrinthContentService, { ModrinthSortField } from "../src/mods/download/modrinth/ModrinthContentService.js";
+import { download } from "../src/utils/downloads.js";
 
 const launcher = await Launcher.create("./.minecraft", "dmclc_test", (await findAllJava())[0].b, "71dd081b-dc92-4d36-81ac-3a2bde5527ba");
 await test("contentServices", async ctx => {
@@ -12,9 +13,9 @@ await test("contentServices", async ctx => {
         const mods = await service.searchContent("Fabulously Optimized", 0, 20, ContentType.MODPACK, field);
         const url = await (await mods[0].listVersions())[0].getVersionFileURL();
         console.log(url);
-        await ctxCurseForge.test("modpack",async () => {
-            // await download(url, "fo.mrpack", launcher);
-            const modpack = await launcher.modpackFormats.get("curseforge")?.readModpack("fo.mrpack", launcher)!;
+        await ctxCurseForge.test("modpack", async () => {
+            await download(url, "fo.zip", launcher);
+            const modpack = await launcher.modpackFormats.get("curseforge")?.readModpack("fo.zip", launcher)!;
             const version = await launcher.installer.installModpack(modpack, modpack.getName());
             const account = launcher.accountTypes.get("microsoft")!({}) as Account<never>;
             await account.readUserExtraContent(new Map());
@@ -28,7 +29,7 @@ await test("contentServices", async ctx => {
         const url = await (await pack[0].listVersions())[0].getVersionFileURL();
         console.log(url);
         await ctxModrinth.test("modpack",async () => {
-            // await download(url, "fo.mrpack", launcher);
+            await download(url, "fo.mrpack", launcher);
             const modpack = await launcher.modpackFormats.get("modrinth")?.readModpack("fo.mrpack", launcher)!;
             const version = await launcher.installer.installModpack(modpack, modpack.getName());
             const account = launcher.accountTypes.get("microsoft")!({}) as Account<never>;

@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { mkdirs } from 'fs-extra';
 import fsPromises from 'fs/promises';
 import StreamZip, { StreamZipAsync } from 'node-stream-zip';
 import { Launcher } from '../../../launcher.js';
@@ -15,13 +16,17 @@ export class CurseForgeModpack implements Modpack {
     }
     async downloadMods(mcdir: string): Promise<void> {
         const map = new Map();
+        if (!fs.existsSync(`${mcdir}/mods`)) {
+            await mkdirs(`${mcdir}/mods`);
+        }
         for (const i of this.manifest.files) {
             if (!i.required) {
                 continue;
             }
             const cf: CurseForgeContentService = this.launcher.contentServices.get("curseforge") as CurseForgeContentService;
             const version = await cf.getContentVersion(i.projectID, i.fileID);
-            map.set(version.getVersionFileURL(), `${mcdir}/mods/${version.getVersionFileName()}`);
+            if (!(typeof await version.getVersionFileURL() == "string")) continue;
+            map.set(await version.getVersionFileURL(), `${mcdir}/mods/${await version.getVersionFileName()}`);
         }
         await Promise.all(downloadAll(map, this.launcher));
     }
