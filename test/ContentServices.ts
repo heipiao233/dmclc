@@ -1,6 +1,5 @@
 import test from "node:test";
-import { Account, findAllJava, Launcher } from "../src/index.js";
-import { ContentType } from "../src/mods/download/ContentService.js";
+import { Account, ContentType, Launcher, findAllJava } from "../src/index.js";
 import CurseForgeContentService, { CurseForgeSortField } from "../src/mods/download/curseforge/CurseForgeContentService.js";
 import ModrinthContentService, { ModrinthSortField } from "../src/mods/download/modrinth/ModrinthContentService.js";
 import { download } from "../src/utils/downloads.js";

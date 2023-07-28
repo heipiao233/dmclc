@@ -5,7 +5,7 @@ import { download } from '../../utils/downloads.js';
 import { MinecraftVersion } from '../../version.js';
 import { Content, ContentType, ContentVersion } from '../download/ContentService.js';
 import { ModJarInfo } from '../mod.js';
-export default class ModManager {
+export class ModManager {
     constructor(public version: MinecraftVersion, private launcher: Launcher) {
         
     }
