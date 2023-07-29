@@ -217,7 +217,7 @@ export class MinecraftVersion {
             if (!("downloads" in i)) {
                 res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${expandMavenId(i.name)}`);
             } else if ("artifact" in i.downloads) {
-                res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${i.downloads.artifact.path.replace("/", path.sep)}`);
+                res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${i.downloads.artifact.path.replaceAll("/", path.sep)}`);
             }
         });
         return res;
