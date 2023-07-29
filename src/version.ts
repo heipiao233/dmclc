@@ -128,7 +128,7 @@ export class MinecraftVersion {
         await account.prepareLaunch();
         await this.completeVersionInstall();
         await this.extractNative(this.versionObject, this.name);
-        const args = await this.getArguments(this.versionObject, this.name, account);
+        const args = await this.getArguments(this.versionObject, account);
         const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
         return cp.execFile(this.launcher.usingJava, allArguments, {
             cwd: this.versionLaunchWorkDir
@@ -211,65 +211,64 @@ export class MinecraftVersion {
         return downloadAll(allDownloads, this.launcher);
     }
 
-    private getClassPath (versionObject: MCVersion, versionName: string): string[] {
+    private getClassPath (versionObject: MCVersion): string[] {
         const res: string[] = [];
         versionObject.libraries.filter(i => i.rules === undefined || checkRules(i.rules)).forEach((i) => {
             if (!("downloads" in i)) {
-                res.push(`${this.launcher.rootPath}/libraries/${expandMavenId(i.name)}`);
+                res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${expandMavenId(i.name)}`);
             } else if ("artifact" in i.downloads) {
-                res.push(`${this.launcher.rootPath}/libraries/${i.downloads.artifact.path}`);
+                res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${i.downloads.artifact.path}`);
             }
         });
-        if (!versionObject.mainClass.startsWith("cpw"))res.push(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.jar`);// Forge
         return res;
     }
 
-    private parseArgument (arg: string | Argument, versionObject: MCVersion, versionName: string, account: Account<never>, argOverrides: Map<string, string>): string {
+    private parseArgument (arg: string | Argument, versionObject: MCVersion, account: Account<never>, argOverrides: Map<string, string>): string {
         let argVal: string;
         if (typeof arg === "object") {
             if (arg.value instanceof Array)argVal = arg.value.join(" ");
             else argVal = arg.value;
         } else argVal = arg;
-        argVal = argVal.replaceAll("${version_name}", `${this.launcher.name}`)
+        argVal = argVal.replaceAll("${version_name}", `${this.name}`)
             .replaceAll("${game_directory}", ".")
-            .replaceAll("${assets_root}", `${this.launcher.rootPath}/assets`)
+            .replaceAll("${assets_root}", `${this.launcher.rootPath}${path.sep}assets`)
             .replaceAll("${assets_index_name}", versionObject.assets)
             .replaceAll("${auth_uuid}", `${account.getUUID()}`)
             .replaceAll("${version_type}", `${this.launcher.name}`)
-            .replaceAll("${natives_directory}", `${this.launcher.rootPath}/versions/${versionName}/natives`)
+            .replaceAll("${natives_directory}", `${this.launcher.rootPath}${path.sep}versions${path.sep}${this.name}${path.sep}natives`)
             .replaceAll("${launcher_name}", `${this.launcher.name}`)
             .replaceAll("${launcher_version}", "0.1")
-            .replaceAll("${library_directory}", `${this.launcher.rootPath}/libraries/`)
+            .replaceAll("${library_directory}", `${this.launcher.rootPath}${path.sep}libraries`)
             .replaceAll("${classpath_separator}", path.delimiter)
-            .replaceAll("${classpath}", this.getClassPath(versionObject, versionName).join(path.delimiter));
+            .replaceAll("${classpath}", this.getClassPath(versionObject).join(path.delimiter));
         argOverrides.forEach((v, k) => {
             argVal = argVal.replaceAll("${" + k + "}", v);
         });
         return argVal;
     }
 
-    private async getArguments (versionObject: MCVersion, versionName: string, account: Account<never>): Promise<string[]> {
+    private async getArguments (versionObject: MCVersion, account: Account<never>): Promise<string[]> {
         const res: string[] = [];
         const args = await account.getLaunchGameArgs();
         if ("arguments" in versionObject) {
             versionObject.arguments.jvm?.map(async i => {
                 if (typeof (i) === "string") {
-                    res.push(this.parseArgument(i, versionObject, versionName, account, args));
+                    res.push(this.parseArgument(i, versionObject, account, args));
                 }
             });
             res.push(versionObject.mainClass);
             versionObject.arguments.game?.map(async i => {
                 if (typeof (i) === "string") {
-                    res.push(this.parseArgument(i, versionObject, versionName, account, args));
+                    res.push(this.parseArgument(i, versionObject, account, args));
                 }
             });
         } else {
-            res.push(`-Djava.library.path=${this.launcher.rootPath}/versions/${versionName}/natives`);
-            res.push("-cp", this.getClassPath(versionObject, versionName).join(path.delimiter));
+            res.push(`-Djava.library.path=${this.launcher.rootPath}${path.sep}versions${path.sep}${this.name}${path.sep}natives`);
+            res.push("-cp", this.getClassPath(versionObject).join(path.delimiter));
             res.push(versionObject.mainClass);
             versionObject.minecraftArguments.split(" ").map(async i => {
                 if (typeof (i) === "string") {
-                    res.push(this.parseArgument(i, versionObject, versionName, account, args));
+                    res.push(this.parseArgument(i, versionObject, account, args));
                 }
             });
         }
