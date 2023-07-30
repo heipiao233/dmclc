@@ -180,6 +180,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     }
     checkMods(mods: ModInfo<StoreData | ForgeMcmodInfoOne>[], mc: string, loader: string): ModLoadingIssue[] {
         const ret: ModLoadingIssue[] = [];
+        loader = loader.split("-").pop()!;
         const modIdVersions: Record<string, string> = {
             minecraft: mc,
             forge: loader,

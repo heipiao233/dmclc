@@ -1,3 +1,4 @@
+import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { Launcher } from '../../launcher.js';
 import { ModLoadingIssue } from '../../loaders/loader.js';
@@ -12,8 +13,7 @@ export class ModManager {
 
     async saveInfo(): Promise<void> {}
 
-    async findMods(): Promise<ModJarInfo[]> {
-        const moddir = `${this.version.versionLaunchWorkDir}/mods`;
+    async findMods(moddir: string): Promise<ModJarInfo[]> {
         const val: ModJarInfo[] = [];
         for (const mod of await fsPromises.readdir(moddir)) {
             const modJar = `${moddir}/${mod}`;
@@ -29,9 +29,11 @@ export class ModManager {
      * @returns All mod loading issues.
      */
     async checkMods(): Promise<ModLoadingIssue[]> {
-        if(this.version.extras.loaders.length===0)return [];
+        if (this.version.extras.loaders.length===0)return [];
+        let moddir = `${this.version.versionLaunchWorkDir}/mods`;
+        if (!fs.existsSync(moddir) && fs.statSync(moddir).isDirectory()) return [];
         const loader = this.launcher.loaders.get(this.version.extras.loaders[0].name);
-        return loader?.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.version.extras.version, this.version.extras.loaders[0].version) ?? [];
+        return loader?.checkMods((await this.findMods(moddir)).map(v=>v.manifests).flat(), this.version.extras.version, this.version.extras.loaders[0].version) ?? [];
     }
 
     async searchMod(name: string, skip: number, limit: number): Promise<Content[]> {
