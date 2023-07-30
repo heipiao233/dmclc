@@ -54,7 +54,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.10.7";
+    version = "3.10.8";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -105,15 +105,16 @@ export class Launcher {
      */
     static async create(rootPath: string, name: string, javaExec: string,
         clientId: string,
+        lang: string = "en_us",
         downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         copy?: (arg: string) => void
     ): Promise<Launcher> {
         const launcher = new Launcher(rootPath, name, javaExec, clientId, downloader, copy);
-        await launcher.init();
+        await launcher.init(lang);
         return launcher;
     }
 
-    private async init(lang = "en_us") {
+    private async init(lang: string) {
         // HMCL, pioneer of cross-architecture launcher.
         if(os.platform() === "linux") {
             if(process.arch !== "x64" && process.arch !== "ia32") {
