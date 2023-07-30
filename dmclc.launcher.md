@@ -45,6 +45,6 @@ export declare class Launcher
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [create(rootPath, name, javaExec, clientId, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
+|  [create(rootPath, name, javaExec, clientId, lang, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
 |  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
 

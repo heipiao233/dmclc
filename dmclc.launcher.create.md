@@ -9,7 +9,7 @@ Create a new Launcher object.
 **Signature:**
 
 ```typescript
-static create(rootPath: string, name: string, javaExec: string, clientId: string, downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>, copy?: (arg: string) => void): Promise<Launcher>;
+static create(rootPath: string, name: string, javaExec: string, clientId: string, lang?: string, downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>, copy?: (arg: string) => void): Promise<Launcher>;
 ```
 
 ## Parameters
@@ -20,6 +20,7 @@ static create(rootPath: string, name: string, javaExec: string, clientId: string
 |  name | string | Launcher name. |
 |  javaExec | string | [Launcher.usingJava](./dmclc.launcher.usingjava.md) |
 |  clientId | string | Microsoft identify platform APP id. |
+|  lang | string | _(Optional)_ |
 |  downloader | (url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt; | _(Optional)_ Custom downloading function. |
 |  copy | (arg: string) =&gt; void | _(Optional)_ Custom clipboard function. |
 
