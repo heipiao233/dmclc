@@ -220,6 +220,7 @@ export class MinecraftVersion {
                 res.push(`${this.launcher.rootPath}${path.sep}libraries${path.sep}${i.downloads.artifact.path.replaceAll("/", path.sep)}`);
             }
         });
+        res.push(this.versionJarPath);
         return res;
     }
 
