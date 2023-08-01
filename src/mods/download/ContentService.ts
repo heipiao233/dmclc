@@ -82,4 +82,5 @@ export interface Content {
     getScreenshots(): Promise<Screenshot[]>;
     getOtherInformation(): Promise<Map<string, string>>;
     isLibrary(): Promise<boolean>;
+    getType(): ContentType;
 }

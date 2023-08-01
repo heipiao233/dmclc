@@ -2,7 +2,6 @@ import fs from "fs";
 import got from "got";
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
-import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -59,7 +58,8 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
      */
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
+            await this.launcher.error("loaders.minecraft_version_unknown");
+            return [];
         }
         const versions: T[] = JSON.parse((await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}`)).body);
         const result: string[] = [];
@@ -70,17 +70,19 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         return result;
     }
 
-    async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
+    async install (MCVersion: MinecraftVersion, version: string): Promise<boolean> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
+            await this.launcher.error("loaders.minecraft_version_unknown");
+            return false;
         }
         const versionInfo: T = this.cachedLoaderVersions.get(`${MCVersion}-${version}`) ??
             await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}`).json();
         const mcVersion: MCVersion = JSON.parse(fs.readFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`).toString());
-        if (mcVersion.mainClass === versionInfo.launcherMeta.mainClass.client) return;
+        if (mcVersion.mainClass === versionInfo.launcherMeta.mainClass.client) return true;
         const newVersion: MCVersion = await got(`${this.metaURL}/versions/loader/${encodeURIComponent(MCVersion.extras.version)}/${encodeURIComponent(version)}/profile/json`).json();
         MCVersion.versionObject = merge(mcVersion, newVersion);
         fs.writeFileSync(`${MCVersion.versionRoot}/${MCVersion.name}.json`, JSON.stringify(MCVersion.versionObject));
+        return true;
     }
 }
 

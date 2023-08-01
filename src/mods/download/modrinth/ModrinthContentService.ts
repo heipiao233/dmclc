@@ -1,4 +1,3 @@
-import assert from "assert";
 import crypto from "crypto";
 import fsPromises from "fs/promises";
 import got, { Got } from "got";
@@ -16,6 +15,14 @@ const contentTypeToModrinth = {
     [ContentType.SHADER]: "shader",
 };
 
+const modrinthToContentType = {
+    "modpack": ContentType.MODPACK,
+    "mod": ContentType.MOD,
+    "resourcepack": ContentType.RESOURCE_PACK,
+    "datapack": ContentType.DATA_PACK,
+    "shader": ContentType.SHADER,
+};
+
 export const ModrinthSortField = {
     NEWEST: "newest",
     UPDATED: "updated",
@@ -27,6 +34,7 @@ export const ModrinthSortField = {
 export class ModrinthContentVersion implements ContentVersionDependContentVersion {
     dependencyType = "version" as const;
     file: ModrinthFile;
+    content?: ModrinthContent;
 
     constructor(private model: ModrinthVersionModel, private got: Got, private launcher: Launcher) {
         for (const i of this.model.files) {
@@ -37,7 +45,8 @@ export class ModrinthContentVersion implements ContentVersionDependContentVersio
         this.file = this.model.files[0];
     }
     async getContent(): Promise<Content> {
-        return new ModrinthContent(this.launcher, this.got, this.model.project_id);
+        if (!this.content) return this.content = await ModrinthContent.fromSlug(this.launcher, this.got, this.model.project_id);
+        return this.content;
     }
     async getVersionFileName(): Promise<string> {
         return this.file.filename;
@@ -68,43 +77,37 @@ export class ModrinthContentVersion implements ContentVersionDependContentVersio
     
 }
 export class ModrinthContent implements Content {
-    private model?: ModrinthProject;
-    constructor(private launcher: Launcher, private got: Got, private slug: string) {
+    constructor(private launcher: Launcher, private got: Got, private model: ModrinthProject) {
 
     }
+
+    static async fromSlug(launcher: Launcher, got: Got, slug: string) {
+        return new ModrinthContent(launcher, got, await got(`project/${slug}`).json());
+    }
+
+    getType(): ContentType {
+        return modrinthToContentType[this.model.project_type];
+    }
+
     async isLibrary(): Promise<boolean> {
-        await this.requestForDetails();
-        assert(this.model);
         return this.model.categories.includes("library");
     }
     async getBody(): Promise<string> {
-        await this.requestForDetails();
-        assert(this.model);
         return marked(this.model.body ?? "");
     }
     async getScreenshots(): Promise<Screenshot[]> {
-        await this.requestForDetails();
-        assert(this.model);
         return this.model.gallery;
     }
     async getTitle(): Promise<string> {
-        await this.requestForDetails();
-        assert(this.model);
         return this.model.title;
     }
     async getDescription(): Promise<string> {
-        await this.requestForDetails();
-        assert(this.model);
         return this.model.description;
     }
     async getIconURL(): Promise<string> {
-        await this.requestForDetails();
-        assert(this.model);
         return this.model.icon_url ?? "";
     }
     async getURLs(): Promise<Map<string, string>> {
-        await this.requestForDetails();
-        assert(this.model);
         const res: Map<string, string> = new Map();
         if (this.model.wiki_url) {
             res.set("wiki", this.model.wiki_url);
@@ -124,8 +127,6 @@ export class ModrinthContent implements Content {
         return res;
     }
     async getOtherInformation(): Promise<Map<string, string>> {
-        await this.requestForDetails();
-        assert(this.model);
         const res: Map<string, string> = new Map();
         if (this.model.downloads) {
             res.set("downloads", this.model.downloads.toString());
@@ -156,17 +157,16 @@ export class ModrinthContent implements Content {
                 game_versions: forVersion.extras.version
             };
         }
-        const versions: ModrinthVersionModel[] = await this.got(`project/${this.slug}/version`, {
+        const versions: ModrinthVersionModel[] = await this.got(`project/${this.model.slug}/version`, {
             searchParams
         }).json();
         return versions.map((v) => {
             return new ModrinthContentVersion(v, this.got, this.launcher);
         });
     }
-    private async requestForDetails(): Promise<void> {
-        if (!(this.model instanceof Object)) {
-            this.model = await this.got(`project/${this.slug}`).json();
-        }
+
+    isVanillaOrCanvasShader(): boolean {
+        return this.model.project_type == "shader" && (this.model.loaders.includes("canvas") || this.model.loaders.includes("vanilla"));
     }
 }
 export default class ModrinthContentService implements ContentService<string> {
@@ -223,9 +223,9 @@ export default class ModrinthContentService implements ContentService<string> {
         }).json();
         const result = [];
         for (const i of res.hits) {
-            result.push(new ModrinthContent(this.launcher, this.got, i.slug));
+            result.push(ModrinthContent.fromSlug(this.launcher, this.got, i.slug));
         }
-        return result;
+        return await Promise.all(result);
     }
 
 }

@@ -1,4 +1,3 @@
-import { FormattedError } from "../index.js";
 import { Launcher } from "../launcher.js";
 import { ContentVersion } from "./download/ContentService.js";
 
@@ -46,7 +45,8 @@ export class ModJarInfo {
     async tryGetModOnline(service: string): Promise<ContentVersion | null> {
         const contentService = this.launcher.contentServices.get(service);
         if (contentService == undefined) {
-            throw new FormattedError(`${this.launcher.i18n("content_service.not_found")}`)
+            await this.launcher.error("content_service.not_found");
+            return null;
         }
         return contentService.getVersionFromFile(this.path);
     }

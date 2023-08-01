@@ -4,10 +4,10 @@ import { Launcher } from "../launcher.js";
 import { Account } from "./account.js";
 import { UserData } from "./user_data.js";
 export class OfflineAccount implements Account<UserData> {
-    constructor (public data: UserData, private launcher: Launcher) {
+    constructor(public data: UserData, private launcher: Launcher) {
     }
 
-    async getLaunchGameArgs (): Promise<Map<string, string>> {
+    async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
         map.set("auth_access_token", "IT_WORKS");
         map.set("auth_session", "IT_WORKS");
@@ -17,38 +17,34 @@ export class OfflineAccount implements Account<UserData> {
         return map;
     }
 
-    async prepareLaunch (): Promise<void> {
+    async prepareLaunch(): Promise<boolean> {
         // We don't need to do anything when use this method.
-    }
-
-    async getLaunchJVMArgs (): Promise<string[]> {
-        return [];
-    }
-
-    getUserExtraContent(): Record<string, string> {
-        return {
-            username: this.launcher.i18n("accounts.offline.username")
-        };
-    }
-
-    async readUserExtraContent (content: Map<string, string>): Promise<void> {
-        this.data.name = content.get("username") ?? "Steve";
-    }
-
-    async check (): Promise<boolean> {
         return true;
     }
 
-    getUUID (): string {
+    async getLaunchJVMArgs(): Promise<string[]> {
+        return [];
+    }
+
+    async login(): Promise<boolean> {
+        this.data.name = await this.launcher.askUserOne("accounts.offline.username");
+        return true;
+    }
+
+    async check(): Promise<boolean> {
+        return true;
+    }
+
+    getUUID(): string {
         return this.data.uuid === undefined ? genUUID("OfflinePlayer:".concat(this.data.name!)) : this.data.uuid;
     }
 
-    toString (): string {
+    toString(): string {
         return `${this.data.name} (${this.launcher.i18n("accounts.offline.name")})`;
     }
 }
 
-function genUUID (name: string): string {
+function genUUID(name: string): string {
     const arr = [];
     for (let i = 0, j = name.length; i < j; ++i) {
         arr.push(name.charCodeAt(i));

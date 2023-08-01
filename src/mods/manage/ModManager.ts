@@ -44,21 +44,25 @@ export class ModManager {
         return result;
     }
 
-    async installMod(mod: Content) {
-        this.installModVersion((await mod.listVersions(this.version))[0]);
+    async installMod(mod: Content): Promise<boolean> {
+        return this.installModVersion((await mod.listVersions(this.version))[0]);
     }
-    async installModVersion(version: ContentVersion) {
+    async installModVersion(version: ContentVersion): Promise<boolean> {
         const url = await version.getVersionFileURL();
         const moddir = `${this.version.versionLaunchWorkDir}/mods`
-        download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher);
+        if (!download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher)) {
+            return false;
+        }
+        let result = true;
         if (version.dependencyType === "version") {
             for (const i of await version.listDependencies()) {
-                await this.installModVersion(i);
+                result &&= await this.installModVersion(i);
             }
         } else {
             for (const i of await version.listDependencies()) {
-                await this.installMod(i);
+                result &&= await this.installMod(i);
             }
         }
+        return result;
     }
 }

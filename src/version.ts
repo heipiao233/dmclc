@@ -1,7 +1,7 @@
 import cp, { ChildProcess } from "child_process";
 import compressing from "compressing";
 import fs, { PathLike } from "fs";
-import { mkdirs } from "fs-extra";
+import { ensureDir, mkdirs } from "fs-extra";
 import { readFile, writeFile } from "fs/promises";
 import got from "got";
 import StreamZip from "node-stream-zip";
@@ -9,7 +9,9 @@ import os from "os";
 import path from "path";
 import { Account } from "./auth/account.js";
 import { FormattedError } from "./errors/FormattedError.js";
+import { ContentType, ContentVersion } from "./index.js";
 import { Launcher } from "./launcher.js";
+import { ModrinthContent } from "./mods/download/modrinth/ModrinthContentService.js";
 import { ModManager } from "./mods/manage/ModManager.js";
 import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas.js";
 import { transformURL } from "./utils/TransformURL.js";
@@ -138,17 +140,17 @@ export class MinecraftVersion {
     /**
      * Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
      */
-    async completeVersionInstall() {
+    async completeVersionInstall(): Promise<boolean> {
         const promises = [];
         if (!fs.existsSync(this.versionJarPath) ||
             !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
             promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath, this.launcher));
         }
-        promises.push(...(await this.completeAssets(this.versionObject.assetIndex)));
-        promises.push(...(await this.completeLibraries(this.versionObject.libraries)));
-        return Promise.all(promises);
+        promises.push(this.completeAssets(this.versionObject.assetIndex));
+        promises.push(this.completeLibraries(this.versionObject.libraries));
+        return !(await Promise.all(promises)).includes(false);
     }
-    private async completeAssets (asset: AssetIndexInfo): Promise<Promise<void>[]> {
+    private async completeAssets (asset: AssetIndexInfo): Promise<boolean> {
         const allDownloads: Map<string, PathLike> = new Map();
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
         let assetJson;
@@ -160,17 +162,15 @@ export class MinecraftVersion {
             assetJson = (await readFile(indexPath)).toString();
         }
         const assetsObjects = `${this.launcher.rootPath}/assets/objects`;
-        mkdirs(assetsObjects);
         const assetobj: AssetsIndex = JSON.parse(assetJson);
         for (const assid in assetobj.objects) {
             const assitem: Asset = assetobj.objects[assid];
             if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
                 !checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
-                mkdirs(`${assetsObjects}/${assitem.hash.slice(0, 2)}`);
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
-        return downloadAll(allDownloads, this.launcher);
+        return await downloadAll(allDownloads, this.launcher);
     }
 
     /**
@@ -179,7 +179,7 @@ export class MinecraftVersion {
      * @param liblist - All the libraries.
      * @internal
      */
-    async completeLibraries (liblist: Library[]): Promise<Promise<void>[]> {
+    async completeLibraries (liblist: Library[]): Promise<boolean> {
         const allDownloads: Map<string, PathLike> = new Map();
         const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
@@ -187,7 +187,6 @@ export class MinecraftVersion {
         for (const i of used) {
             if (!("downloads" in i)) {
                 const filePath = expandMavenId(i.name);
-                await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(filePath)}`);
                 let url: string;
                 if (!("url" in i)) url = "https://libraries.minecraft.net/";
                 else url = i.url;
@@ -202,13 +201,12 @@ export class MinecraftVersion {
                 }
                 for (const artifact of artifacts) {
                     if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
-                        await mkdirs(`${this.launcher.rootPath}/libraries/${path.dirname(artifact.path)}`);
                         allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                     }
                 }
             }
         }
-        return downloadAll(allDownloads, this.launcher);
+        return await downloadAll(allDownloads, this.launcher);
     }
 
     private getClassPath (versionObject: MCVersion): string[] {
@@ -310,7 +308,7 @@ export class MinecraftVersion {
     async installLoader(name: string, loaderVersion: string): Promise<void> {
         const loader = this.launcher.loaders.get(name);
         if (loader == undefined) {
-            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}${name}`);
+            throw new FormattedError(`${this.launcher.i18n("version.loader_not_found")}: ${name}`);
         }
         await loader.install(this, loaderVersion);
         this.extras.loaders.push({
@@ -322,5 +320,52 @@ export class MinecraftVersion {
 
     saveExtras() {
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
+    }
+
+    async installContentVersion(ver: ContentVersion) {
+        switch ((await ver.getContent()).getType()) {
+            case ContentType.MOD:
+                await this.modManager.installModVersion(ver)
+                break;
+            case ContentType.RESOURCE_PACK:
+                const resourcePackPath = `${this.versionLaunchWorkDir}/resourcepacks/${await ver.getVersionFileName()}`
+                await download(await ver.getVersionFileURL(), resourcePackPath, this.launcher);
+                break;
+
+            case ContentType.SHADER:
+                let packType = "shaders";
+                let content = ver.getContent();
+                if (content instanceof ModrinthContent && content.isVanillaOrCanvasShader()) {
+                    packType = "resourcepacks";
+                }
+                const shaderPath = `${this.versionLaunchWorkDir}/${packType}/${await ver.getVersionFileName()}`
+                await download(await ver.getVersionFileURL(), shaderPath, this.launcher);
+                break;
+
+            case ContentType.MODPACK:
+                const packPath = `${os.tmpdir()}/${await ver.getVersionFileName()}`;
+                if (!await download(await ver.getVersionFileURL(), packPath, this.launcher)){
+                    break;
+                }
+                this.launcher.installer.installModpackFromPath(packPath);
+                break;
+
+            case ContentType.WORLD:
+                const worldPath = `${os.tmpdir()}/${await ver.getVersionFileName()}`;
+                if (!download(await ver.getVersionFileURL(), worldPath, this.launcher)) {
+                    break;
+                }
+                const saves = `${this.versionLaunchWorkDir}/saves`
+                await ensureDir(saves);
+                compressing.zip.uncompress(worldPath, saves);
+                break;
+
+            case ContentType.DATA_PACK:
+                this.launcher.error("misc.unsupported", "version.install_datapack");
+                break;
+
+            default:
+                break;
+        }
     }
 }

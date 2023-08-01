@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { mkdirs } from 'fs-extra';
 import fsPromises from 'fs/promises';
 import StreamZip, { StreamZipAsync } from 'node-stream-zip';
 import { Launcher } from '../../../launcher.js';
@@ -14,11 +13,8 @@ export class CurseForgeModpack implements Modpack {
     constructor(private zipFile: StreamZipAsync, private manifest: CurseForgeModpackManifest, private launcher: Launcher) {
         
     }
-    async downloadMods(mcdir: string): Promise<void> {
+    async downloadMods(mcdir: string): Promise<boolean> {
         const map = new Map();
-        if (!fs.existsSync(`${mcdir}/mods`)) {
-            await mkdirs(`${mcdir}/mods`);
-        }
         for (const i of this.manifest.files) {
             if (!i.required) {
                 continue;
@@ -28,7 +24,7 @@ export class CurseForgeModpack implements Modpack {
             if (!(typeof await version.getVersionFileURL() == "string")) continue;
             map.set(await version.getVersionFileURL(), `${mcdir}/mods/${await version.getVersionFileName()}`);
         }
-        await Promise.all(downloadAll(map, this.launcher));
+        return await downloadAll(map, this.launcher);
     }
     async getOverrideDirs(): Promise<string[]> {
         if (this.unzipDir === undefined) {
@@ -78,4 +74,13 @@ export class CurseForgeModpackFormat implements ModpackFormat {
         return new CurseForgeModpack(zip, index, launcher);
     }
     
+    async checkModpack(file: string, launcher: Launcher): Promise<boolean> {
+        const zip = new StreamZip.async({
+            file
+        });
+        for (let key in (await zip.entries())) {
+            if (key === "manifest.json") return true;
+        }
+        return false;
+    }
 }

@@ -4,7 +4,7 @@
     "accounts": {
         "microsoft": {
             "name": "Microsoft Account",
-            "message": "Official. After pressing OK, please operate in the pop-up browser window. The code to be entered is on the clipboard.",
+            "message": "After pressing OK, please operate in the pop-up browser window. The code to be entered is on the clipboard.",
             "no_minecraft_in_account": "This account doesn't have Minecraft.",
             "timeout": "Login timeout!",
             "canceled": "Login canceled!"
@@ -17,17 +17,14 @@
         },
         "minecraft_universal_login": {
             "name": "Minecraft Universal Login Account",
-            "message": "Some servers are required to help the server owner verify the identity of the player.",
             "serverID": "Server ID"
         },
         "authlib_injector": {
             "name": "Authlib Injector",
-            "message": "Some servers are required to be used to help the server owner verify the identity of the player, and can also set skin and friends online for piracy.",
             "apiurl": "Authentication Server URL"
         },
         "offline": {
             "name": "Offline Account",
-            "message": "The choice of pirated players. Skin cannot be set.",
             "username": "Username"
         }
     },
@@ -56,7 +53,13 @@
         "minecraft_version_unknown": "Minecraft version unknown."
     },
 
-    "any": "any",
+    "misc": {
+        "any": "any",
+        "unsupported": "Unsupported!",
+        "info": "Information",
+        "warn": "Warning",
+        "error": "Error"
+    },
 
     "dependencies": {
         "dependency_wrong_missing": "{{source}} mod needs {{target}} mod version {{targetVersion}}, but not installed.",

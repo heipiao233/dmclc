@@ -9,7 +9,7 @@ export interface Modpack {
     getVersion(): string;
     getLoaders(): LoaderInfo[];
     getMinecraftVersion(): string;
-    downloadMods(mcdir: string): Promise<void>;
+    downloadMods(mcdir: string): Promise<boolean>;
     getOverrideDirs(): Promise<string[]>;
 }
 
@@ -19,4 +19,5 @@ export interface ModpackFormat {
      * @param file The modpack file
      */
     readModpack(file: string, launcher: Launcher): Promise<Modpack>;
+    checkModpack(file: string, launcher: Launcher): Promise<boolean>;
 }

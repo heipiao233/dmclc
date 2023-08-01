@@ -31,7 +31,7 @@ export interface Loader<T> {
      * @param MCVersion - Minecraft version.
      * @param version - Loader version.
      */
-    install(MCVersion: MinecraftVersion, version: string): Promise<void>
+    install(MCVersion: MinecraftVersion, version: string): Promise<boolean>
     /**
      * Get the version installed, or null if not installed or can't find.
      * @param MCVersion - Minecraft version manifest.

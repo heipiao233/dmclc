@@ -1,7 +1,6 @@
 import { got } from "got";
 import open from "open";
 import { setTimeout as sleep } from "timers/promises";
-import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import copy from "../../utils/copy.js";
 import { Account } from "../account.js";
@@ -33,7 +32,7 @@ type STEP6 = {
 export class MicrosoftAccount implements Account<MicrosoftUserData> {
     constructor (public data: MicrosoftUserData, private launcher: Launcher) {}
 
-    private async step1_new(): Promise<STEP1> {
+    private async step1_new(): Promise<STEP1| null> {
         const device_response: STEP1_1 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode", {
             form: {
                 client_id: this.launcher.clientId,
@@ -50,7 +49,8 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             await sleep(Math.max(interval, 1) * 1000);
             const estimatedTime = Date.now() / 1000 - startTime;
             if (estimatedTime >= device_response.expires_in) {
-                throw new FormattedError(this.launcher.i18n("accounts.microsoft.timeout"));
+                await this.launcher.error("accounts.microsoft.timeout");
+                return null
             }
             const tokenResponse: STEP1_2 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/token", {
                 form: {
@@ -66,9 +66,11 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
             if ("error" in tokenResponse) {
                 switch (tokenResponse.error) {
                 case "expired_token": 
-                    throw new FormattedError(this.launcher.i18n("accounts.microsoft.timeout"));
+                    await this.launcher.error("accounts.microsoft.timeout");
+                    return null;
                 case "authorization_declined":
-                    throw new FormattedError(this.launcher.i18n("accounts.microsoft.canceled"));
+                    await this.launcher.error("accounts.microsoft.canceled");
+                    return null;
                 case "slow_down":
                     interval += 5;
                     break;
@@ -173,39 +175,39 @@ export class MicrosoftAccount implements Account<MicrosoftUserData> {
     private async refresh(): Promise<boolean> {
         const at=(await this.step1_refresh());
         if (!at) return false;
-        await this.nextSteps(at);
-        return true;
+        return await this.nextSteps(at);
     }
 
     getUUID(): string {
         return this.data.uuid!;
     }
 
-    getUserExtraContent(): Record<string, string> {
-        return {};
-    }
-
-    async readUserExtraContent(): Promise<void> {
+    async login(): Promise<boolean> {
+        await this.launcher.info("accounts.microsoft.message");
         const val = await this.step1_new();
-        await this.nextSteps(val.access_token);
+        if (!val) return false;
         this.data.refresh_token = val.refresh_token;
+        return await this.nextSteps(val.access_token);
     }
 
-    private async nextSteps(access_token: string) {
+    private async nextSteps(access_token: string): Promise<boolean> {
         const tu = await this.step2_xbl(access_token);
         const xsts = await this.step3_xsts(tu.token);
         const MCAccessToken = await this.step4_login(xsts, tu.uhs);
         if (!await this.step5_check(MCAccessToken)) {
-            throw new FormattedError(this.launcher.i18n("accounts.microsoft.no_minecraft_in_account"));
+            await this.launcher.error("accounts.microsoft.no_minecraft_in_account");
+            return false;
         }
         const un = await this.step6_uuid_name(MCAccessToken);
         this.data.accessToken = MCAccessToken;
         this.data.name = un.name;
         this.data.uuid = un.id;
+        return true
     }
 
-    async prepareLaunch (): Promise<void> {
+    async prepareLaunch (): Promise<boolean> {
         // We don't need to do anything using this method.
+        return true;
     }
 
     async getLaunchJVMArgs(): Promise<string[]> {

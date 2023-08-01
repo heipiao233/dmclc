@@ -1,5 +1,5 @@
 import fs from "fs";
-import fsextra, { mkdirs } from 'fs-extra';
+import fsextra, { ensureDir } from 'fs-extra';
 import got from "got";
 import { FormattedError } from "./errors/FormattedError.js";
 import { Launcher } from "./launcher.js";
@@ -40,7 +40,7 @@ export class Installer {
         const obj = await got(transformURL(ver.url, this.launcher.mirror)).json<MCVersion>();
         obj.id = versionName;
         transformNatives(obj.libraries, this.launcher);
-        await mkdirs(`${this.launcher.rootPath}/versions/${versionName}`);
+        await ensureDir(`${this.launcher.rootPath}/versions/${versionName}`);
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/${versionName}.json`, JSON.stringify(obj));
         const extras: DMCLCExtraVersionInfo = {
             version: ver.id,
@@ -82,6 +82,16 @@ export class Installer {
             await fsextra.copy(dir, version.versionLaunchWorkDir);
         }
         return version;
+    }
+
+    async installModpackFromPath(packPath: string): Promise<MinecraftVersion | null> {
+        for (let v of this.launcher.modpackFormats.values()) {
+            if (await v.checkModpack(packPath, this.launcher)) {
+                const modpack = await v.readModpack(packPath, this.launcher);
+                return this.launcher.installer.installModpack(modpack, modpack.getName());
+            }
+        }
+        return null;
     }
 }
 

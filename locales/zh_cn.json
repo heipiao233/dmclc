@@ -4,7 +4,7 @@
     "accounts": {
         "microsoft": {
             "name": "微软账号",
-            "message": "正版。按确认后，请在弹出的浏览器窗口操作，要输入的代码在剪贴板。",
+            "message": "按确认后，请在弹出的浏览器窗口操作，要输入的代码在剪贴板。",
             "no_minecraft_in_account": "该账户尚未购买 Minecraft。",
             "timeout": "登录超时！",
             "canceled": "登录取消！"
@@ -17,17 +17,14 @@
         },
         "minecraft_universal_login": {
             "name": "Minecraft 统一通行证",
-            "message": "部分服务器要求使用，帮助服主验证玩家身份。",
             "serverID": "服务器 ID"
         },
         "authlib_injector": {
             "name": "外置登录",
-            "message": "部分服务器要求使用，帮助服主验证玩家身份，亦可为盗版设置皮肤、好友联机。",
             "apiurl": "认证服务器 URL"
         },
         "offline": {
             "name": "离线登录",
-            "message": "盗版玩家的选择。不能设皮肤。",
             "username": "用户名"
         }
     },
@@ -49,14 +46,21 @@
 
     "version": {
         "loader_not_found": "找不到加载器：",
-        "version_not_found": "找不到版本："
+        "version_not_found": "找不到版本：",
+        "install_datapack": "不支持自动安装数据包！"
     },
 
     "loaders": {
         "minecraft_version_unknown": "Minecraft 版本未知。"
     },
 
-    "any": "任何",
+    "misc": {
+        "any": "任何",
+        "unsupported": "不支持",
+        "info": "提示",
+        "warn": "警告",
+        "error": "错误"
+    },
 
     "dependencies": {
         "dependency_wrong_missing": "{{source}} 模组需要 {{targetVersion}} 版本的 {{target}} 模组，但尚未安装。",

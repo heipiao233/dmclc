@@ -12,12 +12,20 @@ const loaderToCurseForge: Record<string, number> = {
     quilt: 3
 };
 
-const CurseForgeContentType = {
+const contentTypeToCurseForge = {
     [ContentType.MODPACK]: 4471,
     [ContentType.SHADER]: 4546,
     [ContentType.MOD]: 6,
     [ContentType.RESOURCE_PACK]: 12,
-    [ContentType.WORLD]: 17
+    [ContentType.WORLD]: 17,
+};
+
+const curseForgeToContentType: Record<number, ContentType> = {
+    [4471]: ContentType.MODPACK,
+    [4546]: ContentType.SHADER,
+    [6]: ContentType.MOD,
+    [12]: ContentType.RESOURCE_PACK,
+    [17]: ContentType.WORLD,
 };
 
 export const CurseForgeSortField = {
@@ -35,14 +43,18 @@ const white = [0x9, 0xa, 0xd, 0x20]
 
 export class CurseForgeContentVersion implements ContentVersionDependContent {
     dependencyType = "content" as const;
+    content?: CurseForgeContent;
 
     constructor(private model: CurseForgeModFile, private got: Got) {
         //
     }
 
     async getContent(): Promise<Content> {
-        const response: {data: CurseForgeMod} = await this.got("mods/" + this.model.modId).json();
-        return new CurseForgeContent(response.data, this.got);
+        if (!this.content) {
+            const response: {data: CurseForgeMod} = await this.got("mods/" + this.model.modId).json();
+            return this.content = new CurseForgeContent(response.data, this.got);
+        }
+        return this.content;
     }
     async getVersionFileName(): Promise<string> {
         return this.model.fileName;
@@ -78,6 +90,9 @@ export class CurseForgeContentVersion implements ContentVersionDependContent {
 export class CurseForgeContent implements Content {
     constructor(private model: CurseForgeMod, private got: Got) {
         //
+    }
+    getType(): ContentType {
+        return curseForgeToContentType[this.model.classId];
     }
     async isLibrary(): Promise<boolean> {
         return this.model.categories.findIndex(v => v.slug === "library-api") != -1;
@@ -181,7 +196,7 @@ export default class CurseForgeContentService implements ContentService<number> 
         if (type === ContentType.DATA_PACK) return [];
         const searchParams: SearchParameters = {
             gameId: 432,
-            classId: CurseForgeContentType[type],
+            classId: contentTypeToCurseForge[type],
             searchFilter: name,
             index: skip,
             pageSize: limit,

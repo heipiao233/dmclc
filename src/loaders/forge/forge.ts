@@ -9,7 +9,6 @@ import { tmpdir } from "os";
 import nodePath from "path";
 import toml from "toml";
 import { parseStringPromise } from "xml2js";
-import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -40,7 +39,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
 
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
+            await this.launcher.error("loaders.minecraft_version_unknown");
         }
         const [, major, minor] = MCVersion.extras.version.split(".");
         const majorn = parseInt(major);
@@ -54,12 +53,15 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         return versions.filter((v: string) => v.startsWith(`${MCVersion.extras.version}-`));
     }
 
-    async install (MCVersion: MinecraftVersion, version: string): Promise<void> {
+    async install (MCVersion: MinecraftVersion, version: string): Promise<boolean> {
         if(MCVersion.extras.version === "Unknown") {
-            throw new FormattedError(this.launcher.i18n("loaders.minecraft_version_unknown"));
+            await this.launcher.error("loaders.minecraft_version_unknown");
+            return false;
         }
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
-        await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher);
+        if (!await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher)) {
+            return false;
+        }
         const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
@@ -79,12 +81,14 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 ]);
             }
             if (fs.existsSync(`${installer}/maven`)) await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
-            await Promise.all(await MCVersion.completeLibraries(metadata.libraries));
+            if (!await MCVersion.completeLibraries(metadata.libraries)) {
+                return false;
+            }
             const target: MCVersion = MCVersion.versionObject;
             const source: MCVersion = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
             const result = merge(target, source);
             MCVersion.versionObject = result;
-            await Promise.all(await MCVersion.completeLibraries(source.libraries));
+            await MCVersion.completeLibraries(source.libraries);
             
             for (const item of metadata.processors) {
                 if (item.args.includes("DOWNLOAD_MOJMAPS")) {
@@ -122,6 +126,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
             fsextra.copyFile(`${installer}/${metadata.install.filePath}`, `${this.launcher.rootPath}/libraries/${expandMavenId(metadata.install.path)}`);
         }
+        return false;
     }
 
     transformArguments (arg: string, MCVersion: MinecraftVersion, metadata: InstallerProfileNew): string {
@@ -230,7 +235,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                                         {
                                             source: mod.data.modid,
                                             target: dep,
-                                            targetVersion: this.launcher.i18n("any")
+                                            targetVersion: this.launcher.i18n("misc.any")
                                         }));
                                 }
                             }

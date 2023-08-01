@@ -1,9 +1,7 @@
 import fs from 'fs';
-import { mkdirs } from 'fs-extra';
 import fsPromises from 'fs/promises';
 import StreamZip, { StreamZipAsync } from 'node-stream-zip';
 import path from 'path';
-import { FormattedError } from '../../../errors/FormattedError.js';
 import { Launcher } from '../../../launcher.js';
 import { downloadAll } from '../../../utils/downloads.js';
 import { LoaderInfo } from "../../../version.js";
@@ -15,21 +13,18 @@ export class ModrinthModpack implements Modpack {
     constructor(private zipFile: StreamZipAsync, private manifest: ModrinthModpackIndexV1, private launcher: Launcher) {
         
     }
-    async downloadMods(mcdir: string): Promise<void> {
+    async downloadMods(mcdir: string): Promise<boolean> {
         const map = new Map();
         for (const i of this.manifest.files) {
             if (i.env) {
                 if (i.env.client === "unsupported") continue;
             }
             const outPath = `${mcdir}/${i.path}`;
-            if (!path.resolve(outPath).startsWith(path.resolve(mcdir))) throw new FormattedError(this.launcher.i18n("mod.modpack.invalid"));
+            if (!path.resolve(outPath).startsWith(path.resolve(mcdir))) await this.launcher.error("mod.modpack.invalid");
             const dir = path.dirname(outPath);
-            if (!fs.existsSync(dir)) {
-                await mkdirs(dir);
-            }
             map.set(i.downloads[0], outPath)
         }
-        await Promise.all(downloadAll(map, this.launcher));
+        return await downloadAll(map, this.launcher);
     }
     async getOverrideDirs(): Promise<string[]> {
         if (this.unzipDir === undefined) {
@@ -79,4 +74,13 @@ export class ModrinthModpackFormat implements ModpackFormat {
         return new ModrinthModpack(zip, index, launcher);
     }
     
+    async checkModpack(file: string, launcher: Launcher): Promise<boolean> {
+        const zip = new StreamZip.async({
+            file
+        });
+        for (let key in (await zip.entries())) {
+            if (key === "modrinth.index.json") return true;
+        }
+        return false;
+    }
 }

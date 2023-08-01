@@ -1,15 +1,17 @@
 import fs from "fs";
+import { ensureDir } from "fs-extra";
 import got, { HTTPError } from "got";
+import path from "path";
 import * as streamPromises from "stream/promises";
 import { FormattedError } from "../errors/FormattedError.js";
 import { Launcher } from "../launcher.js";
 import { transformURL } from "./TransformURL.js";
-export function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher): Promise<void>[] {
-    const promises: Array<Promise<void>> = new Array<Promise<void>>();
+export async function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher): Promise<boolean> {
+    const promises: Promise<boolean>[] = [];
     files.forEach((v, k) => {
         promises.push(download(k, v, launcher));
     });
-    return promises;
+    return !(await Promise.all(promises)).includes(false);
 }
 /**
  * @throws {@link FormattedError}
@@ -17,12 +19,22 @@ export function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher)
  * @param filename - File name.
  * @param mirror - BMCLAPI mirror.
  */
-export async function download(url: string, filename: fs.PathLike, launcher: Launcher): Promise<void> {
-    if(url.length===0)return;
+export async function download(url: string, filename: fs.PathLike, launcher: Launcher): Promise<boolean> {
+    if(url.length===0)return true;
+    const dir = path.dirname(filename.toString());
+    await ensureDir(dir);
     let realURL = transformURL(url, launcher.mirror);
     realURL = realURL.replaceAll("http://", "https://");
-    if (launcher.downloader) await launcher.downloader(realURL, filename, url);
-    else await downloader(realURL, filename, url);
+    try {
+        if (launcher.downloader) await launcher.downloader(realURL, filename, url);
+        else await downloader(realURL, filename, url);
+    } catch(e) {
+        if (e instanceof FormattedError) {
+            launcher.error(e.message);
+            return false;
+        }
+    }
+    return true;
 }
 
 async function downloader(url: string, filename: fs.PathLike, oldURL: string) {
@@ -42,6 +54,6 @@ async function downloader(url: string, filename: fs.PathLike, oldURL: string) {
         }
     }
     if (failed) {
-        throw new FormattedError("Download failed!");
+        throw new FormattedError(`Download failed: ${url}`);
     }
 }

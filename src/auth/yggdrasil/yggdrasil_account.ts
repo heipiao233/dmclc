@@ -1,5 +1,4 @@
 import got, { Response } from "got";
-import { FormattedError } from "../../errors/FormattedError.js";
 import { Launcher } from "../../launcher.js";
 import { MinecraftVersion } from "../../version.js";
 import { Account } from "../account.js";
@@ -15,8 +14,8 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         this.root = launcher.rootPath;
     }
 
-    abstract prepareLaunch(): Promise<void>
-    abstract getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>
+    abstract prepareLaunch(): Promise<boolean>;
+    abstract getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
     async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();
         const at = await this.getAccessToken();
@@ -28,19 +27,13 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         return map;
     }
 
-    getUserExtraContent(): Record<string, string> {
-        return {
+    async login(): Promise<boolean> {
+        const content = await this.launcher.askUser({
             username: this.launcher.i18n("accounts.yggdrasil.username"),
             password: this.launcher.i18n("accounts.yggdrasil.password"),
             profileID: this.launcher.i18n("accounts.yggdrasil.profileID")
-        };
-    }
-
-    async readUserExtraContent(content: Map<string, string>): Promise<void> {
-        if (!(content.has("profileID") && content.has("username") && content.has("password"))) {
-            throw new Error();
-        }
-        const profileID: number = Number.parseInt(content.get("profileID") ?? "0");
+        });
+        const profileID: number = Number.parseInt(content.profileID);
         const res: Response<ATCT & {
             availableProfiles: {
                 id: string,
@@ -48,8 +41,8 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
             }[]
         }> = await got.post(this.data.apiurl + "/authserver/authenticate", {
             json: {
-                username: content.get("username"),
-                password: content.get("password"),
+                username: content.username,
+                password: content.password,
                 requestUser: true,
                 agent: {
                     name: "Minecraft",
@@ -60,7 +53,8 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
             responseType: "json"
         });
         if (res.statusCode === 403) {
-            throw new FormattedError(this.launcher.i18n("accounts.yggdrasil.wrong_email_or_password"));
+            await this.launcher.error("accounts.yggdrasil.wrong_email_or_password");
+            return false;
         }
         const obj = res.body;
         this.data.accessToken = obj.accessToken;
@@ -73,6 +67,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
             }
         } = await got(this.data.apiurl ?? "").json();
         this.data.serverName = meta.meta.serverName;
+        return true;
     }
 
     async check(): Promise<boolean> {

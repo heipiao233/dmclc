@@ -26,6 +26,15 @@ import { ModrinthModpackFormat } from "./mods/modpack/modrinth/ModrinthModpack.j
 import { Library } from "./schemas.js";
 import { download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
+
+export interface LauncherInterface {
+    askUser<T extends string>(questions: Record<T, string>, message?: string): Promise<Record<T, string>>;
+    askUserOne(localized: string, message?: string): Promise<string>;
+    info(message: string, title: string): Promise<void>;
+    warn(message: string, title: string): Promise<void>;
+    error(message: string, title: string): Promise<void>;
+}
+
 /**
  * The core of DMCLC.
  * @public
@@ -54,7 +63,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "3.10.9";
+    version = "4.0.0-alpha.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -64,6 +73,7 @@ export class Launcher {
      */
     protected constructor (rootPath: string, public name: string, javaExec: string,
         public clientId: string,
+        private launcherInterface: LauncherInterface,
         public downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         public copy?: (arg: string) => void) {
         this.rootPath = fs.realpathSync(rootPath);
@@ -105,11 +115,12 @@ export class Launcher {
      */
     static async create(rootPath: string, name: string, javaExec: string,
         clientId: string,
+        launcherInterface: LauncherInterface,
         lang: string = "en_us",
         downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         copy?: (arg: string) => void
     ): Promise<Launcher> {
-        const launcher = new Launcher(rootPath, name, javaExec, clientId, downloader, copy);
+        const launcher = new Launcher(rootPath, name, javaExec, clientId, launcherInterface, downloader, copy);
         await launcher.init(lang);
         return launcher;
     }
@@ -145,6 +156,8 @@ export class Launcher {
         this.installedVersions.clear();
         if (!fs.existsSync(`${this.rootPath}/versions`)) {
             mkdirsSync(`${this.rootPath}/versions`);
+            this.installedVersions.clear();
+            return;
         }
         fs.readdirSync(`${this.rootPath}/versions`)
             .filter(value => fs.existsSync(`${this.rootPath}/versions/${value}/${value}.json`))
@@ -189,5 +202,25 @@ export class Launcher {
             break;
         }
         return `${this.natives}-${arch}`;
+    }
+    
+    async askUser<T extends string>(questions: Record<T, string>, message?: string): Promise<Record<T, string>> {
+        return await this.launcherInterface.askUser(questions, message);
+    }
+
+    async askUserOne(localizeKey: string, message?: string): Promise<string> {
+        return await this.launcherInterface.askUserOne(localizeKey, message);
+    }
+
+    async info(message: string, title: string = "misc.info") {
+        await this.launcherInterface.info(this.i18n(message), this.i18n(title));
+    }
+
+    async warn(message: string, title: string = "misc.warn") {
+        await this.launcherInterface.warn(this.i18n(message), this.i18n(title));
+    }
+
+    async error(message: string, title: string = "misc.error") {
+        await this.launcherInterface.error(this.i18n(message), this.i18n(title));
     }
 }
