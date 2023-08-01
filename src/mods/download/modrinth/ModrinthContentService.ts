@@ -62,7 +62,7 @@ export class ModrinthContentVersion implements ContentVersionDependContentVersio
         const dependencies = [];
         for (const i of this.model.dependencies) {
             if (i.dependency_type === "optional" || i.dependency_type === "required") {
-                dependencies.push(new ModrinthContentVersion(await got("version/" + i.version_id).json(), this.got, this.launcher));
+                dependencies.push(new ModrinthContentVersion(await this.got("version/" + i.version_id).json(), this.got, this.launcher));
             }
         }
         return dependencies;
@@ -81,8 +81,8 @@ export class ModrinthContent implements Content {
 
     }
 
-    static async fromSlug(launcher: Launcher, got: Got, slug: string) {
-        return new ModrinthContent(launcher, got, await got(`project/${slug}`).json());
+    static async fromSlug(launcher: Launcher, got_: Got, slug: string) {
+        return new ModrinthContent(launcher, got_, await got_(`project/${slug}`).json());
     }
 
     getType(): ContentType {
