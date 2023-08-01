@@ -9,7 +9,7 @@ Install.
 **Signature:**
 
 ```typescript
-install(MCVersion: MinecraftVersion, version: string): Promise<void>;
+install(MCVersion: MinecraftVersion, version: string): Promise<boolean>;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ install(MCVersion: MinecraftVersion, version: string): Promise<void>;
 
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;boolean&gt;
 
 ## Exceptions
 

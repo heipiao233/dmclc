@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-downloadMods(mcdir: string): Promise<void>;
+downloadMods(mcdir: string): Promise<boolean>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ downloadMods(mcdir: string): Promise<void>;
 
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;boolean&gt;
 

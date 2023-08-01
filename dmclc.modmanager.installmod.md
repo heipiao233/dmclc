@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-installMod(mod: Content): Promise<void>;
+installMod(mod: Content): Promise<boolean>;
 ```
 
 ## Parameters
@@ -18,5 +18,5 @@ installMod(mod: Content): Promise<void>;
 
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;boolean&gt;
 

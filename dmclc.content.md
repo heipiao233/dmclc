@@ -20,6 +20,7 @@ export interface Content
 |  [getOtherInformation()](./dmclc.content.getotherinformation.md) |  |
 |  [getScreenshots()](./dmclc.content.getscreenshots.md) |  |
 |  [getTitle()](./dmclc.content.gettitle.md) |  |
+|  [getType()](./dmclc.content.gettype.md) |  |
 |  [getURLs()](./dmclc.content.geturls.md) |  |
 |  [isLibrary()](./dmclc.content.islibrary.md) |  |
 |  [listVersions(forVersion)](./dmclc.content.listversions.md) | List versions. |

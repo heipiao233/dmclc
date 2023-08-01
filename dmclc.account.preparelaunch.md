@@ -9,9 +9,9 @@ Prepare for launch. For example, download your Java Agent.
 **Signature:**
 
 ```typescript
-prepareLaunch(): Promise<void>;
+prepareLaunch(): Promise<boolean>;
 ```
 **Returns:**
 
-Promise&lt;void&gt;
+Promise&lt;boolean&gt;
 

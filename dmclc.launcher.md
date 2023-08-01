@@ -16,7 +16,7 @@ export declare class Launcher
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(rootPath, name, javaExec, clientId, downloader, copy)](./dmclc.launcher._constructor_.md) | <code>protected</code> | Create a new Launcher object. |
+|  [(constructor)(rootPath, name, javaExec, clientId, launcherInterface, downloader, copy)](./dmclc.launcher._constructor_.md) | <code>protected</code> | Create a new Launcher object. |
 
 ## Properties
 
@@ -45,6 +45,11 @@ export declare class Launcher
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [create(rootPath, name, javaExec, clientId, lang, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
+|  [askUser(questions, message)](./dmclc.launcher.askuser.md) |  |  |
+|  [askUserOne(localizeKey, message)](./dmclc.launcher.askuserone.md) |  |  |
+|  [create(rootPath, name, javaExec, clientId, launcherInterface, lang, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
+|  [error(message, title)](./dmclc.launcher.error.md) |  |  |
+|  [info(message, title)](./dmclc.launcher.info.md) |  |  |
 |  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
+|  [warn(message, title)](./dmclc.launcher.warn.md) |  |  |
 

@@ -31,5 +31,6 @@ export declare class Installer
 |  [getVersionList()](./dmclc.installer.getversionlist.md) |  | Get all the versions from Mojang. |
 |  [install(ver, versionName, enableIndependentGameDir)](./dmclc.installer.install.md) |  | Install. |
 |  [installModpack(modpack, name)](./dmclc.installer.installmodpack.md) |  | Install modpack. |
+|  [installModpackFromPath(packPath)](./dmclc.installer.installmodpackfrompath.md) |  |  |
 |  [installVersion(versionId, name, enableIndependentGameDir)](./dmclc.installer.installversion.md) |  | Install. |
 

@@ -25,9 +25,8 @@ export interface Account<T extends UserData>
 |  [check()](./dmclc.account.check.md) | Check if this account can use without input any other information again, and refresh access token. |
 |  [getLaunchGameArgs()](./dmclc.account.getlaunchgameargs.md) | Get extra JVM arguments. For example: { 'auth\_access\_token' =<!-- -->&gt; '\*\*\*', 'user\_type' =<!-- -->&gt; 'mojang', 'user\_properties' =<!-- -->&gt; '<!-- -->{<!-- -->}<!-- -->', 'auth\_player\_name' =<!-- -->&gt; 'Steve' } |
 |  [getLaunchJVMArgs(mc)](./dmclc.account.getlaunchjvmargs.md) | Get extra JVM arguments. For example, Java Agent. |
-|  [getUserExtraContent()](./dmclc.account.getuserextracontent.md) | If a key is <code>password</code>, please mask! |
 |  [getUUID()](./dmclc.account.getuuid.md) | Get UUID of this account. |
+|  [login()](./dmclc.account.login.md) |  |
 |  [prepareLaunch()](./dmclc.account.preparelaunch.md) | Prepare for launch. For example, download your Java Agent. |
-|  [readUserExtraContent(content)](./dmclc.account.readuserextracontent.md) |  |
 |  [toString()](./dmclc.account.tostring.md) | Get localized human-readable string. For example: Steve (Offline), Alex (微软账号). |
 

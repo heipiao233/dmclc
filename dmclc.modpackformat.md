@@ -14,5 +14,6 @@ export interface ModpackFormat
 
 |  Method | Description |
 |  --- | --- |
+|  [checkModpack(file, launcher)](./dmclc.modpackformat.checkmodpack.md) |  |
 |  [readModpack(file, launcher)](./dmclc.modpackformat.readmodpack.md) | Reads a modpack. |
 
