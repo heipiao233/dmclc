@@ -10,6 +10,12 @@
 export interface Content 
 ```
 
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [isVersion](./dmclc.content.isversion.md) |  | false |  |
+
 ## Methods
 
 |  Method | Description |

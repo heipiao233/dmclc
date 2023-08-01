@@ -2,14 +2,31 @@
 
 [Home](./index.md) &gt; [dmclc](./dmclc.md) &gt; [ContentVersion](./dmclc.contentversion.md)
 
-## ContentVersion type
+## ContentVersion interface
 
 A content version.
 
 **Signature:**
 
 ```typescript
-export type ContentVersion = ContentVersionDependContentVersion | ContentVersionDependContent;
+export interface ContentVersion 
 ```
-**References:** [ContentVersionDependContentVersion](./dmclc.contentversiondependcontentversion.md)<!-- -->, [ContentVersionDependContent](./dmclc.contentversiondependcontent.md)
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [isVersion](./dmclc.contentversion.isversion.md) |  | true |  |
+
+## Methods
+
+|  Method | Description |
+|  --- | --- |
+|  [getContent()](./dmclc.contentversion.getcontent.md) |  |
+|  [getVersionChangelog()](./dmclc.contentversion.getversionchangelog.md) |  |
+|  [getVersionFileName()](./dmclc.contentversion.getversionfilename.md) |  |
+|  [getVersionFileSHA1()](./dmclc.contentversion.getversionfilesha1.md) |  |
+|  [getVersionFileURL()](./dmclc.contentversion.getversionfileurl.md) |  |
+|  [getVersionNumber()](./dmclc.contentversion.getversionnumber.md) |  |
+|  [listDependencies()](./dmclc.contentversion.listdependencies.md) |  |
 
