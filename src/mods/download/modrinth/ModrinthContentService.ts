@@ -4,7 +4,7 @@ import got, { Got } from "got";
 import { marked } from "marked";
 import { Launcher } from "../../../launcher.js";
 import { MinecraftVersion } from "../../../version.js";
-import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContentVersion, Screenshot } from "../ContentService.js";
+import { Content, ContentService, ContentType, ContentVersion, Screenshot } from "../ContentService.js";
 import { ModrinthFile, ModrinthProject, ModrinthVersionModel, SearchResult } from "./ModrinthModels.js";
 
 const contentTypeToModrinth = {
@@ -31,10 +31,11 @@ export const ModrinthSortField = {
     FOLLOWS: "follows"
 };
 
-export class ModrinthContentVersion implements ContentVersionDependContentVersion {
+export class ModrinthContentVersion implements ContentVersion {
     dependencyType = "version" as const;
     file: ModrinthFile;
     content?: ModrinthContent;
+    isVersion = true as const;
 
     constructor(private model: ModrinthVersionModel, private got: Got, private launcher: Launcher) {
         for (const i of this.model.files) {
@@ -45,7 +46,7 @@ export class ModrinthContentVersion implements ContentVersionDependContentVersio
         this.file = this.model.files[0];
     }
     async getContent(): Promise<Content> {
-        if (!this.content) return this.content = await ModrinthContent.fromSlug(this.launcher, this.got, this.model.project_id);
+        if (!this.content) return this.content = await ModrinthContent.fromSlugOrID(this.launcher, this.got, this.model.project_id);
         return this.content;
     }
     async getVersionFileName(): Promise<string> {
@@ -58,11 +59,15 @@ export class ModrinthContentVersion implements ContentVersionDependContentVersio
         return marked(this.model.changelog ?? "");
     }
 
-    async listDependencies(): Promise<ContentVersion[]> {
+    async listDependencies(): Promise<(ContentVersion | Content)[]> {
         const dependencies = [];
         for (const i of this.model.dependencies) {
             if (i.dependency_type === "optional" || i.dependency_type === "required") {
-                dependencies.push(new ModrinthContentVersion(await this.got("version/" + i.version_id).json(), this.got, this.launcher));
+                if (i.version_id) {
+                    dependencies.push(new ModrinthContentVersion(await this.got("version/" + i.version_id).json(), this.got, this.launcher));
+                } else if(i.project_id) {
+                    dependencies.push(await ModrinthContent.fromSlugOrID(this.launcher, this.got, i.project_id));
+                }
             }
         }
         return dependencies;
@@ -81,7 +86,9 @@ export class ModrinthContent implements Content {
 
     }
 
-    static async fromSlug(launcher: Launcher, got_: Got, slug: string) {
+    isVersion = false as const;
+
+    static async fromSlugOrID(launcher: Launcher, got_: Got, slug: string) {
         return new ModrinthContent(launcher, got_, await got_(`project/${slug}`).json());
     }
 
@@ -223,7 +230,7 @@ export default class ModrinthContentService implements ContentService<string> {
         }).json();
         const result = [];
         for (const i of res.hits) {
-            result.push(ModrinthContent.fromSlug(this.launcher, this.got, i.slug));
+            result.push(ModrinthContent.fromSlugOrID(this.launcher, this.got, i.slug));
         }
         return await Promise.all(result);
     }

@@ -3,7 +3,7 @@ import got, { Got, SearchParameters } from "got";
 import { murmur2 } from 'murmurhash2';
 import { Launcher } from "../../../launcher.js";
 import { MinecraftVersion } from "../../../version.js";
-import { Content, ContentService, ContentType, ContentVersion, ContentVersionDependContent, Screenshot } from "../ContentService.js";
+import { Content, ContentService, ContentType, ContentVersion, Screenshot } from "../ContentService.js";
 import { Algorithm, CurseForgeMod, CurseForgeModFile, RelationType } from "./CurseForgeModels.js";
 
 const loaderToCurseForge: Record<string, number> = {
@@ -41,8 +41,8 @@ export const CurseForgeSortField = {
 
 const white = [0x9, 0xa, 0xd, 0x20]
 
-export class CurseForgeContentVersion implements ContentVersionDependContent {
-    dependencyType = "content" as const;
+export class CurseForgeContentVersion implements ContentVersion {
+    isVersion = true as const;
     content?: CurseForgeContent;
 
     constructor(private model: CurseForgeModFile, private got: Got) {
@@ -88,6 +88,7 @@ export class CurseForgeContentVersion implements ContentVersionDependContent {
     }
 }
 export class CurseForgeContent implements Content {
+    isVersion = false as const;
     constructor(private model: CurseForgeMod, private got: Got) {
         //
     }

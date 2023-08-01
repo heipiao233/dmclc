@@ -1,40 +1,25 @@
 import { MinecraftVersion } from "../../version.js";
 
-interface ContentVersionBase {
+
+
+/**
+ * A content version.
+ */
+export interface ContentVersion {
     getVersionFileURL(): Promise<string>;
     getVersionFileSHA1(): Promise<string>;
     getVersionFileName(): Promise<string>;
     getVersionChangelog(): Promise<string>;
     getVersionNumber(): Promise<string>;
     getContent(): Promise<Content>;
+    listDependencies(): Promise<(Content | ContentVersion)[]>;
+    isVersion: true;
 }
 
 export type Screenshot = {
     url: string,
     title?: string,
     description?: string
-}
-
-/**
- * A content version, dependencies are contents.
- */
-export interface ContentVersionDependContent extends ContentVersionBase {
-    dependencyType: "content";
-    /**
-     * List all dependencies.
-     */
-    listDependencies(): Promise<Content[]>;
-}
-
-/**
- * A content version, dependencies are content versions.
- */
-export interface ContentVersionDependContentVersion extends ContentVersionBase {
-    dependencyType: "version";
-    /**
-     * List all dependencies.
-     */
-    listDependencies(): Promise<ContentVersion[]>;
 }
 
 export enum ContentType {
@@ -45,11 +30,6 @@ export enum ContentType {
     DATA_PACK,
     WORLD
 }
-
-/**
- * A content version.
- */
-export type ContentVersion = ContentVersionDependContentVersion | ContentVersionDependContent;
 
 /**
  * A Content posting service. For example: Modrinth, CurseForge.
@@ -83,4 +63,5 @@ export interface Content {
     getOtherInformation(): Promise<Map<string, string>>;
     isLibrary(): Promise<boolean>;
     getType(): ContentType;
+    isVersion: false;
 }

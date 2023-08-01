@@ -50,16 +50,14 @@ export class ModManager {
     async installModVersion(version: ContentVersion): Promise<boolean> {
         const url = await version.getVersionFileURL();
         const moddir = `${this.version.versionLaunchWorkDir}/mods`
-        if (!download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher)) {
+        if (!await download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher)) {
             return false;
         }
         let result = true;
-        if (version.dependencyType === "version") {
-            for (const i of await version.listDependencies()) {
+        for (const i of await version.listDependencies()) {
+            if (i.isVersion) {
                 result &&= await this.installModVersion(i);
-            }
-        } else {
-            for (const i of await version.listDependencies()) {
+            } else {
                 result &&= await this.installMod(i);
             }
         }
