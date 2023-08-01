@@ -63,7 +63,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    version = "4.0.0-alpha.1";
+    version = "4.0.0-alpha.2";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -209,7 +209,7 @@ export class Launcher {
     }
 
     async askUserOne(localizeKey: string, message?: string): Promise<string> {
-        return await this.launcherInterface.askUserOne(localizeKey, message);
+        return await this.launcherInterface.askUserOne(this.i18n(localizeKey), message);
     }
 
     async info(message: string, title: string = "misc.info") {
