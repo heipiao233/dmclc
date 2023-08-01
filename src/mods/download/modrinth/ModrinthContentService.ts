@@ -161,7 +161,7 @@ export class ModrinthContent implements Content {
             });
             searchParams = {
                 loaders: JSON.stringify(loaders),
-                game_versions: forVersion.extras.version
+                game_versions: JSON.stringify([forVersion.extras.version])
             };
         }
         const versions: ModrinthVersionModel[] = await this.got(`project/${this.model.slug}/version`, {
