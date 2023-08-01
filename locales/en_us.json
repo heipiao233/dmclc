@@ -46,7 +46,8 @@
 
     "version": {
         "loader_not_found": "Loader not found: ",
-        "version_not_found": "Version not found: "
+        "version_not_found": "Version not found: ",
+        "install_datapack": "Automatic installation of datapacks is not supported!"
     },
 
     "loaders": {
