@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "description": "Dolphin Minecraft Launcher Core",
   "typings": "./lib/index.d.ts",
   "module": "./lib/index.js",

@@ -48,7 +48,7 @@ export class Installer {
             enableIndependentGameDir
         };
         fs.writeFileSync(`${this.launcher.rootPath}/versions/${versionName}/dmclc_extras.json`, JSON.stringify(extras));
-        const version = MinecraftVersion.fromVersionName(this.launcher, versionName);
+        const version = MinecraftVersion.fromVersionName(this.launcher, versionName, enableIndependentGameDir);
         this.launcher.installedVersions.set(versionName, version);
         await version.completeVersionInstall();
         return version;
