@@ -182,7 +182,7 @@ export default class ModrinthContentService implements ContentService<string> {
         this.got = got.extend({
             prefixUrl: "https://api.modrinth.com/v2/",
             headers: {
-                "user-agent": `${this.launcher.name}, using heipiao233/dmclc/${this.launcher.version} (heipiao233@outlook.com)`
+                "user-agent": `${this.launcher.name}, using heipiao233/dmclc/${Launcher.version} (heipiao233@outlook.com)`
             }
         });
     }

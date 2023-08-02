@@ -137,7 +137,7 @@ export class Launcher {
                 };
             }
         }
-        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== this.version) {
+        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== Launcher.version) {
             await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);
             await compressing.tgz.uncompress("./locales.tar.gz", ".");
         }
