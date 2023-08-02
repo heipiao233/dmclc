@@ -36,7 +36,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                 result.push(...await this.findModInfos(filename));
             }
         }
-        const info = new ModInfo("quilt", json);
+        const info = new ModInfo("quilt", json, this.launcher);
         info.data = json;
         result.push(info);
         return result;

@@ -19,10 +19,10 @@ export function modDisplayInfoToString(launcher: Launcher, mod: ModDisplayInfo) 
 }
 
 export class ModInfo<T> {
-    constructor(public loader: string, public data: T) {}
+    constructor(public loader: string, public data: T, private launcher: Launcher) {}
 
-    getInfo(launcher: Launcher): ModDisplayInfo {
-        return launcher.loaders.get(this.loader)!.getModInfo(this.data);
+    getInfo(): ModDisplayInfo {
+        return this.launcher.loaders.get(this.loader)!.getModInfo(this.data);
     }
 }
 
@@ -30,9 +30,10 @@ export class ModJarInfo {
     // Some mod jars may have two or more manifests for many loaders.
     // For example, there are both META-INF/mods.toml and fabric.mod.json in a jar.
     manifests: ModInfo<unknown>[] = [];
-    private constructor(public path: string, private launcher: Launcher) {
+    private constructor(public readonly path: string, private readonly launcher: Launcher) {
         // do nothing
     }
+
     static async of(path: string, launcher: Launcher, loaders: string[]): Promise<ModJarInfo> {
         const obj = new ModJarInfo(path, launcher);
         for (const name of loaders) {

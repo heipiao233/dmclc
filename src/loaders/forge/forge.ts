@@ -165,19 +165,19 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                         info: i,
                         deps: data.dependencies[i.modId],
                         jar: data
-                    }));
+                    }, this.launcher));
                 else
                     ret.push(new ModInfo("forge", {
                         info: i,
                         jar: data
-                    }));
+                    }, this.launcher));
             }
         }
         const oldEntry = await zip.entry("mcmod.info");
         if(oldEntry) {
             const data: ForgeMcmodInfo = JSON.parse((await zip.entryData(oldEntry)).toString());
             for (const i of data) {
-                ret.push(new ModInfo("forge", i));
+                ret.push(new ModInfo("forge", i, this.launcher));
             }
         }
         await zip.close();

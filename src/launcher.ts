@@ -63,7 +63,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-alpha.7";
+    static readonly version = "4.0.0-alpha.8";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}

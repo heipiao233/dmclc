@@ -18,7 +18,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
     abstract loaderMaven: string;
     abstract metaURL: string;
     intermediaryMaven = "https://maven.fabricmc.net/";
-    private readonly launcher: Launcher;
+    protected readonly launcher: Launcher;
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
@@ -43,7 +43,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
             }
         }
         await zip.close();
-        const info = new ModInfo("fabric", json);
+        const info = new ModInfo("fabric", json, this.launcher);
         info.data = json;
         result.push(info);
         return result;
