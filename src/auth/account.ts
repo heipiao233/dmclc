@@ -21,7 +21,7 @@ export interface Account<T extends UserData> {
   /**
    * Prepare for launch. For example, download your Java Agent.
    */
-  prepareLaunch(): Promise<boolean>
+  prepareLaunch(versionDir: string): Promise<boolean>
   /**
    * Get extra JVM arguments. For example, Java Agent.
    */

@@ -20,10 +20,10 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
         return await super.login();
     }
 
-    async prepareLaunch(): Promise<boolean> {
+    async prepareLaunch(versionDir: string): Promise<boolean> {
         const obj = await got("https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json").json<AuthlibInjectorArtifact>();
         const sha256 = obj.checksums.sha256;
-        const path = `${this.root.toString()}/authlib-injector-latest.jar`;
+        const path = `${versionDir}/authlib-injector-latest.jar`;
         if (!fs.existsSync(path) || !checkFile(path, sha256, "sha256")) {
             return await download(obj.download_url, path, this.launcher);
         }

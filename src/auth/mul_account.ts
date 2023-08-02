@@ -18,15 +18,15 @@ export class MinecraftUniversalLoginAccount extends YggdrasilAccount<MinecraftUn
         return await super.login();
     }
 
-    async prepareLaunch (): Promise<boolean> {
-        const path = `${this.root}/nide8auth.jar`;
+    async prepareLaunch(versionDir: string): Promise<boolean> {
+        const path = `${versionDir}/nide8auth.jar`;
         if (!fs.existsSync(path)) {
             return await download("https://login.mc-user.com:233/index/jar", path, this.launcher);
         }
         return true;
     }
 
-    async getLaunchJVMArgs (): Promise<string[]> {
+    async getLaunchJVMArgs(): Promise<string[]> {
         return [`-javaagent:./nide8auth.jar=${this.data.serverID}`, "-Dnide8auth.client=true"];
     }
     toString (): string {

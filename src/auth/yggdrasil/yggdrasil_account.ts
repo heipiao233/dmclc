@@ -14,7 +14,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         this.root = launcher.rootPath;
     }
 
-    abstract prepareLaunch(): Promise<boolean>;
+    abstract prepareLaunch(versionDir: string): Promise<boolean>;
     abstract getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
     async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();

@@ -13,7 +13,8 @@ export class ModManager {
 
     async saveInfo(): Promise<void> {}
 
-    async findMods(moddir: string): Promise<ModJarInfo[]> {
+    async findMods(): Promise<ModJarInfo[]> {
+        const moddir = `${this.version.versionLaunchWorkDir}/mods`;
         const val: ModJarInfo[] = [];
         for (const mod of await fsPromises.readdir(moddir)) {
             const modJar = `${moddir}/${mod}`;
@@ -33,7 +34,7 @@ export class ModManager {
         let moddir = `${this.version.versionLaunchWorkDir}/mods`;
         if (!fs.existsSync(moddir) && fs.statSync(moddir).isDirectory()) return [];
         const loader = this.launcher.loaders.get(this.version.extras.loaders[0].name);
-        return loader?.checkMods((await this.findMods(moddir)).map(v=>v.manifests).flat(), this.version.extras.version, this.version.extras.loaders[0].version) ?? [];
+        return loader?.checkMods((await this.findMods()).map(v=>v.manifests).flat(), this.version.extras.version, this.version.extras.loaders[0].version) ?? [];
     }
 
     async searchMod(name: string, skip: number, limit: number): Promise<Content[]> {

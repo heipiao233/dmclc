@@ -127,7 +127,7 @@ export class MinecraftVersion {
      * @returns The Minecraft process. Both stdout and stderr uses UTF-8.
      */
     async run(account: Account<never>): Promise<ChildProcess> {
-        await account.prepareLaunch();
+        await account.prepareLaunch(this.versionLaunchWorkDir);
         await this.completeVersionInstall();
         await this.extractNative(this.versionObject, this.name);
         const args = await this.getArguments(this.versionObject, account);
