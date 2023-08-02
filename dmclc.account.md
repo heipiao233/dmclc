@@ -27,6 +27,6 @@ export interface Account<T extends UserData>
 |  [getLaunchJVMArgs(mc)](./dmclc.account.getlaunchjvmargs.md) | Get extra JVM arguments. For example, Java Agent. |
 |  [getUUID()](./dmclc.account.getuuid.md) | Get UUID of this account. |
 |  [login()](./dmclc.account.login.md) |  |
-|  [prepareLaunch()](./dmclc.account.preparelaunch.md) | Prepare for launch. For example, download your Java Agent. |
+|  [prepareLaunch(versionDir)](./dmclc.account.preparelaunch.md) | Prepare for launch. For example, download your Java Agent. |
 |  [toString()](./dmclc.account.tostring.md) | Get localized human-readable string. For example: Steve (Offline), Alex (微软账号). |
 

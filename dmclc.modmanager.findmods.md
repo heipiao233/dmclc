@@ -7,15 +7,8 @@
 **Signature:**
 
 ```typescript
-findMods(moddir: string): Promise<ModJarInfo[]>;
+findMods(): Promise<ModJarInfo[]>;
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  moddir | string |  |
-
 **Returns:**
 
 Promise&lt;ModJarInfo\[\]&gt;

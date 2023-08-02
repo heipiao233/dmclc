@@ -39,7 +39,7 @@ export declare class Launcher
 |  [rootPath](./dmclc.launcher.rootpath.md) |  | string | The path to the ".minecraft" directory. |
 |  [systemType](./dmclc.launcher.systemtype.md) |  | NodeJS.Platform |  |
 |  [usingJava](./dmclc.launcher.usingjava.md) |  | string | Using Java executable |
-|  [version](./dmclc.launcher.version.md) |  | string |  |
+|  [version](./dmclc.launcher.version.md) | <p><code>static</code></p><p><code>readonly</code></p> | (not declared) |  |
 
 ## Methods
 
