@@ -63,7 +63,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-alpha.8";
+    static readonly version = "4.0.0-alpha.9";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -76,7 +76,7 @@ export class Launcher {
         private launcherInterface: LauncherInterface,
         public downloader?: (url: string, filename: fs.PathLike, oldURL: string) => Promise<void>,
         public copy?: (arg: string) => void) {
-        this.rootPath = fs.realpathSync(rootPath);
+        this.realRootPath = fs.realpathSync(rootPath);
         this.usingJava = javaExec;
         if (this.systemType === "win32") {
             this.natives = "windows";
@@ -100,6 +100,7 @@ export class Launcher {
         this.contentServices.set("curseforge", new CurseForgeContentService(this));
         this.modpackFormats.set("modrinth", new ModrinthModpackFormat());
         this.modpackFormats.set("curseforge", new CurseForgeModpackFormat());
+        this.refreshInstalledVersion();
     }
 
     /**

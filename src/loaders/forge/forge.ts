@@ -31,7 +31,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     
     findInVersion(MCVersion: MCVersion): string | undefined {
         for (const i of MCVersion.libraries) {
-            if(i.name.includes(":forge:")){
+            if(i.name.includes(":forge:")||i.name.includes(":fmlloader:")){
                 return i.name.split(":")[2].split("-")[1];
             }
         }

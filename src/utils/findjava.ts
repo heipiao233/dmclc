@@ -91,6 +91,9 @@ async function findForLinux(): Promise<Pair<string, string>[]> {
     const dirs = ["/usr/java", "/usr/lib/jvm", "/usr/lib32/jvm"];
     const ret: Pair<string, string>[] = [];
     for (const i of dirs) {
+        if (!fs.statSync(i).isDirectory()) {
+            continue;
+        }
         for (const j of fs.readdirSync(i)) {
             const exec = `${i}/${j}/bin/java`;
             if(fs.existsSync(exec)){

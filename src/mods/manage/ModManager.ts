@@ -15,6 +15,7 @@ export class ModManager {
 
     async findMods(): Promise<ModJarInfo[]> {
         const moddir = `${this.version.versionLaunchWorkDir}/mods`;
+        if (!fs.existsSync(moddir) && fs.statSync(moddir).isDirectory()) return [];
         const val: ModJarInfo[] = [];
         for (const mod of await fsPromises.readdir(moddir)) {
             const modJar = `${moddir}/${mod}`;
