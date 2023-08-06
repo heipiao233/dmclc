@@ -1,0 +1,80 @@
+{
+    "dmclc": "\"海豚\"《我的世界》啟動器（核心）",
+
+    "accounts": {
+        "microsoft": {
+            "name": "微軟賬號",
+            "message": "按確認後，請在彈出的瀏覽器窗口操作，要輸入的代碼在剪貼板。",
+            "no_minecraft_in_account": "該賬戶尚未購買 Minecraft。",
+            "timeout": "登錄超時！",
+            "canceled": "登錄取消！"
+        },
+        "yggdrasil": {
+            "username": "郵箱",
+            "password": "密碼",
+            "profileID": "角色 ID",
+            "wrong_email_or_password": "錯誤的郵箱或密碼。"
+        },
+        "minecraft_universal_login": {
+            "name": "Minecraft 統一通行證",
+            "serverID": "服務器 ID"
+        },
+        "authlib_injector": {
+            "name": "外置登錄",
+            "apiurl": "認證服務器 URL"
+        },
+        "offline": {
+            "name": "離線登錄",
+            "username": "用戶名"
+        }
+    },
+
+    "mod": {
+        "id": "ID",
+        "version": "版本",
+        "name": "名稱",
+        "description": "描述",
+        "license": "許可證",
+        "modpack": {
+            "invalid": "無效整合包！"
+        }
+    },
+
+    "content_service": {
+        "not_found": "無此內容服務！"
+    },
+
+    "version": {
+        "loader_not_found": "找不到加載器：",
+        "version_not_found": "找不到版本：",
+        "install_datapack": "不支持自動安裝數據包！"
+    },
+
+    "loaders": {
+        "minecraft_version_unknown": "Minecraft 版本未知。"
+    },
+
+    "misc": {
+        "any": "任何",
+        "unsupported": "不支持",
+        "info": "提示",
+        "warn": "警告",
+        "error": "錯誤"
+    },
+
+    "dependencies": {
+        "dependency_wrong_missing": "{{source}} 模組需要 {{targetVersion}} 版本的 {{target}} 模組，但尚未安裝。",
+        "dependency_wrong_missing_reason_unless": "因為 {{reason}}，除非安裝：{{unless}}，{{source}} 模組需要 {{targetVersion}} 版本的 {{target}} 模組，但尚未安裝。",
+        "dependency_wrong_missing_unless": "除非安裝：{{unless}}，{{source}} 模組需要 {{targetVersion}} 版本的 {{target}} 模組，但尚未安裝。",
+        "dependency_wrong_missing_reason": "因為 {{reason}}，{{source}} 模組需要 {{targetVersion}} 版本的 {{target}} 模組，但尚未安裝。",
+        "recommends_wrong_missing": "{{source}} 模組推薦使用 {{targetVersion}} 版本的 {{target}} 模組，但尚未安裝。",
+        "conflicts_exists": "{{source}} 模組與 {{targetVersion}} 版本的 {{target}} 模組可能沖突。",
+        "breaks_exists": "{{source}} 模組與 {{targetVersion}} 版本的 {{target}} 模組沖突。",
+        "breaks_exists_reason_unless": "除非安裝：{{unless}}，因為 {{reason}}，{{source}} 模組與 {{targetVersion}} 版本的 {{target}} 模組沖突。",
+        "breaks_exists_unless": "除非安裝：{{unless}}，{{source}} 模組與 {{targetVersion}} 版本的 {{target}} 模組沖突。",
+        "breaks_exists_reason": "因為 {{reason}}，{{source}} 模組與 {{targetVersion}} 版本的 {{target}} 模組沖突。",
+        "minecraft_wrong": "{{source}} 模組需要 {{need}} 版本的 Minecraft，但已安裝 {{current}}。",
+        "error": "錯誤",
+        "warning": "警告"
+    }
+}

@@ -3,7 +3,7 @@ import fs from "fs";
 import { mkdirsSync } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
-import os from "os";
+import os, { homedir } from "os";
 import path from "path";
 import { Account } from "./auth/account.js";
 import { AuthlibInjectorAccount } from "./auth/ali_account.js";
@@ -63,7 +63,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-alpha.11";
+    static readonly version = "4.0.0-beta.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -128,24 +128,27 @@ export class Launcher {
 
     private async init(lang: string) {
         // HMCL, pioneer of cross-architecture launcher.
+        const dir = `${homedir()}/.dmclc`;
         if(os.platform() === "linux") {
             if(process.arch !== "x64" && process.arch !== "ia32") {
-                await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", "./natives.json", this);
-                const specialNatives = JSON.parse((await fs.promises.readFile("./natives.json")).toString())[this.getArchString()];
+                await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", `${dir}/natives.json`, this);
+                const specialNatives = JSON.parse((await fs.promises.readFile(`${dir}/natives.json`)).toString())[this.getArchString()];
                 this.archInfo = {
                     specialArch: process.arch,
                     specialNatives
                 };
             }
         }
-        if (!fs.existsSync("./locales") || (await fs.promises.readFile("./locales/version")).toString().trim() !== Launcher.version) {
-            await download("https://heipiao233.github.io/dmclc/locales.tar.gz", "./locales.tar.gz", this);
-            await compressing.tgz.uncompress("./locales.tar.gz", ".");
+        if (!fs.existsSync(`${dir}/locales`)
+            || VersionParser.parseSemantic((await fs.promises.readFile(`${dir}/locales/version`)).toString().trim())
+                .compareTo(VersionParser.parseSemantic(Launcher.version)) < 0) {
+            await download("https://heipiao233.github.io/dmclc/locales.tar.gz", `${dir}/locales.tar.gz`, this);
+            await compressing.tgz.uncompress(`${dir}/locales.tar.gz`, dir);
         }
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
-                loadPath: path.join(process.cwd(), "./locales/{{lng}}.json")
+                loadPath: path.join(process.cwd(), `${dir}/locales/{{lng}}.json`)
             }
         });
     }
