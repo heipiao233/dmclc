@@ -7,9 +7,9 @@
 **Signature:**
 
 ```typescript
-getVersionFromJar(): void;
+getVersionFromJar(): any;
 ```
 **Returns:**
 
-void
+any
 
