@@ -230,7 +230,7 @@ export class MinecraftVersion {
             else argVal = arg.value;
         } else argVal = arg;
         argVal = argVal.replaceAll("${version_name}", `${this.name}`)
-            .replaceAll("${game_directory}", ".")
+            .replaceAll("${game_directory}", this.versionLaunchWorkDir)
             .replaceAll("${assets_root}", `${this.launcher.rootPath}${path.sep}assets`)
             .replaceAll("${assets_index_name}", versionObject.assets)
             .replaceAll("${auth_uuid}", `${account.getUUID()}`)
