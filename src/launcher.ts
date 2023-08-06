@@ -4,7 +4,6 @@ import { mkdirsSync } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
 import os, { homedir } from "os";
-import path from "path";
 import { Account } from "./auth/account.js";
 import { AuthlibInjectorAccount } from "./auth/ali_account.js";
 import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
@@ -63,7 +62,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-beta.1";
+    static readonly version = "4.0.0-beta.2";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -148,7 +147,7 @@ export class Launcher {
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
-                loadPath: path.join(process.cwd(), `${dir}/locales/{{lng}}.json`)
+                loadPath: `${dir}/locales/{{lng}}.json`
             }
         });
     }
