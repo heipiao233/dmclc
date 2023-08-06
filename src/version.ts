@@ -102,7 +102,7 @@ export class MinecraftVersion {
             }
         }
         if(version === "Unknown") {
-            this.getVersionFromJar();
+            version = this.getVersionFromJar();
         }
         return {
             version,
@@ -113,12 +113,13 @@ export class MinecraftVersion {
     getVersionFromJar() {
         const zip = new StreamZip({file: this.versionJarPath});
         const entry = zip.entry("version.json");
+        let version;
         if(entry) {
             const obj = JSON.parse((zip.entryDataSync(entry)).toString());
-            this.extras.version = obj.id;
+            version = obj.id;
         }
         zip.close();
-        this.saveExtras();
+        return version;
     }
 
     /**
