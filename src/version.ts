@@ -96,7 +96,7 @@ export class MinecraftVersion {
             }
         });
         for (const v of this.versionObject.libraries) {
-            if(v.name.includes(":forge:")||v.name.includes(":fmlloader:")||v.name.includes(":liteloader:")){
+            if(v.name.includes(":forge:")||v.name.includes(":fmlloader:")||v.name.includes(":liteloader:")||v.name.includes(":intermediary:")){
                 version = v.name.split(":")[2].split("-")[0];
                 break;
             }
