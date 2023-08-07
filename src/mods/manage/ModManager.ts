@@ -46,10 +46,21 @@ export class ModManager {
         return result;
     }
 
-    async installMod(mod: Content): Promise<boolean> {
-        return this.installModVersion((await mod.listVersions(this.version))[0]);
+    /**
+     * @throws RequestError
+     * @param content content
+     * @returns true if success
+     */
+    async installContent(content: Content): Promise<boolean> {
+        return this.installContentVersion((await content.listVersions(this.version))[0]);
     }
-    async installModVersion(version: ContentVersion): Promise<boolean> {
+
+    /**
+     * @throws RequestError
+     * @param version content version
+     * @returns true if success
+     */
+    async installContentVersion(version: ContentVersion): Promise<boolean> {
         const url = await version.getVersionFileURL();
         const moddir = `${this.version.versionLaunchWorkDir}/mods`
         if (!await download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher)) {
@@ -58,9 +69,9 @@ export class ModManager {
         let result = true;
         for (const i of await version.listDependencies()) {
             if (i.isVersion) {
-                result &&= await this.installModVersion(i);
+                result &&= await this.installContentVersion(i);
             } else {
-                result &&= await this.installMod(i);
+                result &&= await this.installContent(i);
             }
         }
         return result;

@@ -9,6 +9,10 @@ export interface Modpack {
     getVersion(): string;
     getLoaders(): LoaderInfo[];
     getMinecraftVersion(): string;
+    /**
+     * @throws RequestError
+     * @param mcdir Minecraft directory
+     */
     downloadMods(mcdir: string): Promise<boolean>;
     getOverrideDirs(): Promise<string[]>;
 }

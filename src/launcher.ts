@@ -1,6 +1,6 @@
 import compressing from "compressing";
 import fs from "fs";
-import { mkdirsSync } from "fs-extra";
+import { mkdirsSync, remove } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
 import os, { homedir } from "os";
@@ -62,7 +62,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-beta.3";
+    static readonly version = "4.0.0-beta.4";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -105,6 +105,7 @@ export class Launcher {
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
+     * @throws RequestError
      * @param rootPath - path to .minecraft
      * @param name - Launcher name.
      * @param javaExec - {@link Launcher.usingJava}
@@ -205,6 +206,11 @@ export class Launcher {
             break;
         }
         return `${this.natives}-${arch}`;
+    }
+
+    async removeVersion(version: MinecraftVersion) {
+        await remove(version.versionRoot);
+        this.refreshInstalledVersion();
     }
     
     async askUser<T extends string>(questions: Record<T, string>, message?: string): Promise<Record<T, string>> {

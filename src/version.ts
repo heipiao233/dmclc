@@ -110,7 +110,8 @@ export class MinecraftVersion {
             enableIndependentGameDir
         };
     }
-    getVersionFromJar() {
+
+    private getVersionFromJar() {
         const zip = new StreamZip({file: this.versionJarPath});
         const entry = zip.entry("version.json");
         let version;
@@ -124,6 +125,7 @@ export class MinecraftVersion {
 
     /**
      * Run this version!
+     * @throws RequestError
      * @param account - The using account.
      * @returns The Minecraft process. Both stdout and stderr uses UTF-8.
      */
@@ -290,6 +292,7 @@ export class MinecraftVersion {
     /**
      * Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts.
      * @throws {@link FormattedError}
+     * @throws RequestError
      * @param name - The name of loader.
      * @returns The versions of loader.
      */
@@ -303,6 +306,7 @@ export class MinecraftVersion {
     /**
      * Install a mod loader.
      * @throws {@link FormattedError}
+     * @throws RequestError
      * @param name - Loader name.
      * @param loaderVersion - Loader version.
      */
@@ -323,37 +327,41 @@ export class MinecraftVersion {
         fs.writeFileSync(`${this.versionRoot}/dmclc_extras.json`, JSON.stringify(this.extras));
     }
 
-    async installContentVersion(ver: ContentVersion) {
-        switch ((await ver.getContent()).getType()) {
+    /**
+     * @throws RequestError
+     * @param contentVersion content version
+     */
+    async installContentVersion(contentVersion: ContentVersion) {
+        switch ((await contentVersion.getContent()).getType()) {
             case ContentType.MOD:
-                await this.modManager.installModVersion(ver)
+                await this.modManager.installContentVersion(contentVersion)
                 break;
             case ContentType.RESOURCE_PACK:
-                const resourcePackPath = `${this.versionLaunchWorkDir}/resourcepacks/${await ver.getVersionFileName()}`
-                await download(await ver.getVersionFileURL(), resourcePackPath, this.launcher);
+                const resourcePackPath = `${this.versionLaunchWorkDir}/resourcepacks/${await contentVersion.getVersionFileName()}`
+                await download(await contentVersion.getVersionFileURL(), resourcePackPath, this.launcher);
                 break;
 
             case ContentType.SHADER:
                 let packType = "shaders";
-                let content = ver.getContent();
+                let content = contentVersion.getContent();
                 if (content instanceof ModrinthContent && content.isVanillaOrCanvasShader()) {
                     packType = "resourcepacks";
                 }
-                const shaderPath = `${this.versionLaunchWorkDir}/${packType}/${await ver.getVersionFileName()}`
-                await download(await ver.getVersionFileURL(), shaderPath, this.launcher);
+                const shaderPath = `${this.versionLaunchWorkDir}/${packType}/${await contentVersion.getVersionFileName()}`
+                await download(await contentVersion.getVersionFileURL(), shaderPath, this.launcher);
                 break;
 
             case ContentType.MODPACK:
-                const packPath = `${os.tmpdir()}/${await ver.getVersionFileName()}`;
-                if (!await download(await ver.getVersionFileURL(), packPath, this.launcher)){
+                const packPath = `${os.tmpdir()}/${await contentVersion.getVersionFileName()}`;
+                if (!await download(await contentVersion.getVersionFileURL(), packPath, this.launcher)){
                     break;
                 }
                 this.launcher.installer.installModpackFromPath(packPath);
                 break;
 
             case ContentType.WORLD:
-                const worldPath = `${os.tmpdir()}/${await ver.getVersionFileName()}`;
-                if (!download(await ver.getVersionFileURL(), worldPath, this.launcher)) {
+                const worldPath = `${os.tmpdir()}/${await contentVersion.getVersionFileName()}`;
+                if (!download(await contentVersion.getVersionFileURL(), worldPath, this.launcher)) {
                     break;
                 }
                 const saves = `${this.versionLaunchWorkDir}/saves`

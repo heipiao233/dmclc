@@ -31,6 +31,7 @@ export class OfflineAccount implements Account<UserData> {
 
     async login(): Promise<boolean> {
         this.data.name = await this.launcher.askUserOne("accounts.offline.username");
+        this.data.uuid = genUUID("OfflinePlayer:".concat(this.data.name!));
         return true;
     }
 
@@ -39,7 +40,7 @@ export class OfflineAccount implements Account<UserData> {
     }
 
     getUUID(): string {
-        return this.data.uuid === undefined ? genUUID("OfflinePlayer:".concat(this.data.name!)) : this.data.uuid;
+        return this.data.uuid!;
     }
 
     toString(): string {

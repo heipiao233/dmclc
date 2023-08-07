@@ -6,6 +6,13 @@ import * as streamPromises from "stream/promises";
 import { FormattedError } from "../errors/FormattedError.js";
 import { Launcher } from "../launcher.js";
 import { transformURL } from "./TransformURL.js";
+/**
+ * Download multi files.
+ * @throws RequestError
+ * @param files A map from URL to path
+ * @param launcher Launcher
+ * @returns true if success
+ */
 export async function downloadAll(files: Map<string, fs.PathLike>, launcher: Launcher): Promise<boolean> {
     const promises: Promise<boolean>[] = [];
     files.forEach((v, k) => {

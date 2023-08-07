@@ -88,7 +88,11 @@ export class ModrinthContent implements Content {
 
     isVersion = false as const;
 
-    static async fromSlugOrID(launcher: Launcher, got_: Got, slug: string) {
+    /**
+     * @internal
+     * @throws RequestError
+     */
+    static async fromSlugOrID(launcher: Launcher, got_: Got, slug: string): Promise<ModrinthContent> {
         return new ModrinthContent(launcher, got_, await got_(`project/${slug}`).json());
     }
 

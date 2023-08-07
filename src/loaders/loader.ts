@@ -22,12 +22,14 @@ export interface Loader<T> {
     /**
      * Get all loader versions that work on the Minecraft version
      * @throws {@link FormattedError}
+     * @throws RequestError
      * @param MCVersion - Minecraft version.
      */
     getSuitableLoaderVersions(MCVersion: MinecraftVersion): Promise<string[]>
     /**
      * Install.
      * @throws {@link FormattedError}
+     * @throws RequestError
      * @param MCVersion - Minecraft version.
      * @param version - Loader version.
      */

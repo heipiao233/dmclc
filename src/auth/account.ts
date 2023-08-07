@@ -8,9 +8,13 @@ export interface Account<T extends UserData> {
   data: T;
   /**
    * Check if this account can use without input any other information again, and refresh access token.
+   * @throws RequestError
    */
   check(): Promise<boolean>;
 
+  /**
+   * @throws RequestError
+   */
   login(): Promise<boolean>;
 
   /**
@@ -20,10 +24,12 @@ export interface Account<T extends UserData> {
   getUUID(): string
   /**
    * Prepare for launch. For example, download your Java Agent.
+   * @throws RequestError
    */
   prepareLaunch(versionDir: string): Promise<boolean>
   /**
    * Get extra JVM arguments. For example, Java Agent.
+   * @throws RequestError
    */
   getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>
   /**

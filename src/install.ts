@@ -24,6 +24,7 @@ export class Installer {
     /**
      * Get all the versions from Mojang.
      * @returns All the versions.
+     * @throws RequestError
      */
     async getVersionList(): Promise<VersionInfos> {
         const versions: VersionInfos = await got(transformURL("https://launchermeta.mojang.com/mc/game/version_manifest.json", this.launcher.mirror)).json();
@@ -35,6 +36,7 @@ export class Installer {
      * @param ver - The version to install.
      * @param versionName - The {@link MinecraftVersion.name} of the new version.
      * @returns The new version.
+     * @throws RequestError
      */
     async install(ver: VersionInfo, versionName: string, enableIndependentGameDir: boolean = false): Promise<MinecraftVersion> {
         const obj = await got(transformURL(ver.url, this.launcher.mirror)).json<MCVersion>();
@@ -56,6 +58,7 @@ export class Installer {
 
     /**
      * Install.
+     * @throws RequestError
      * @param versionId - The version ID.
      * @param name The name of the new version.
      * @returns The new version.
@@ -68,6 +71,7 @@ export class Installer {
 
     /**
      * Install modpack.
+     * @throws RequestError
      * @param modpack - The modpack.
      * @param name The name of the new version.
      * @returns The new version.
@@ -84,6 +88,12 @@ export class Installer {
         return version;
     }
 
+    /**
+     * Install local modpack.
+     * @throws RequestError
+     * @param packPath Modpack path.
+     * @returns Minecraft version.
+     */
     async installModpackFromPath(packPath: string): Promise<MinecraftVersion | null> {
         for (let v of this.launcher.modpackFormats.values()) {
             if (await v.checkModpack(packPath, this.launcher)) {

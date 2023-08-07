@@ -71,7 +71,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
             meta: {
                 serverName: string
             }
-        } = await got(this.data.apiurl ?? "").json();
+        } = await got(this.data.apiurl!).json();
         this.data.serverName = meta.meta.serverName;
         return true;
     }
@@ -106,10 +106,10 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     }
 
     getUUID(): string {
-        return this.data.uuid ?? "ffffffff-ffff-ffff-ffff-ffffffffffff";
+        return this.data.uuid!;
     }
 
     async getAccessToken(): Promise<string> {
-        return this.data.accessToken ?? "LOGIN_FAILS";
+        return this.data.accessToken!;
     }
 }
