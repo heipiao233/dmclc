@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "description": "Dolphin Minecraft Launcher Core",
   "typings": "./lib/index.d.ts",
   "module": "./lib/index.js",
@@ -11,10 +11,10 @@
     "@types/follow-redirects": "^1.14.1",
     "@types/fs-extra": "^9.0.13",
     "@types/got": "^9.6.12",
-    "@types/iconv": "^3.0.1",
     "@types/node": "^18.11.3",
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.11",
+    "@types/marked": "^4.0.8",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.0-beta"
   },
@@ -31,13 +31,11 @@
   "author": "HeiPiao",
   "license": "MIT",
   "dependencies": {
-    "@types/marked": "^4.0.8",
     "compressing": "^1.6.2",
     "fs-extra": "^10.1.0",
     "got": "^12.5.2",
     "i18next": "^22.4.8",
     "i18next-fs-backend": "^2.1.1",
-    "iconv-lite": "^0.6.3",
     "marked": "^4.2.12",
     "maven-artifact-version": "^0.0.1",
     "murmurhash2": "^0.1.0",

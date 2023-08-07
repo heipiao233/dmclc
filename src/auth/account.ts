@@ -41,4 +41,8 @@ export interface Account<T extends UserData> {
    * Get localized human-readable string. For example: Steve (Offline), Alex (微软账号).
    */
   toString(): string;
+  /**
+   * Get masks for log.
+   */
+  getTokens(): string[];
 }

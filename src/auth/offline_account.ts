@@ -6,6 +6,9 @@ import { UserData } from "./user_data.js";
 export class OfflineAccount implements Account<UserData> {
     constructor(public data: UserData, private launcher: Launcher) {
     }
+    getTokens(): string[] {
+        return [];
+    }
 
     async getLaunchGameArgs(): Promise<Map<string, string>> {
         const map: Map<string, string> = new Map();

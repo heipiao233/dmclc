@@ -13,6 +13,12 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
     constructor(public data: T, protected launcher: Launcher) {
         this.root = launcher.rootPath;
     }
+    getTokens(): string[] {
+        const ret = [];
+        if (this.data.accessToken) ret.push(this.data.accessToken);
+        if (this.data.clientToken) ret.push(this.data.clientToken);
+        return ret;
+    }
 
     abstract prepareLaunch(versionDir: string): Promise<boolean>;
     abstract getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
@@ -21,7 +27,7 @@ export abstract class YggdrasilAccount<T extends YggdrasilUserData> implements A
         const at = await this.getAccessToken();
         map.set("auth_access_token", at);
         map.set("auth_session", at);
-        map.set("auth_player_name", this.data.name ?? "Steve");
+        map.set("auth_player_name", this.data.name!);
         map.set("user_type", "mojang");
         map.set("user_properties", "{}");
         return map;

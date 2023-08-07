@@ -31,6 +31,11 @@ type STEP6 = {
 }
 export class MicrosoftAccount implements Account<MicrosoftUserData> {
     constructor (public data: MicrosoftUserData, private launcher: Launcher) {}
+    getTokens(): string[] {
+        const ret = [];
+        if (this.data.accessToken) ret.push(this.data.accessToken);
+        return ret;
+    }
 
     private async step1_new(): Promise<STEP1| null> {
         const device_response: STEP1_1 = await got.post("https://login.microsoftonline.com/consumers/oauth2/v2.0/devicecode", {
