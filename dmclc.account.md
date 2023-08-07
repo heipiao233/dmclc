@@ -25,6 +25,7 @@ export interface Account<T extends UserData>
 |  [check()](./dmclc.account.check.md) | Check if this account can use without input any other information again, and refresh access token. |
 |  [getLaunchGameArgs()](./dmclc.account.getlaunchgameargs.md) | Get extra JVM arguments. For example: { 'auth\_access\_token' =<!-- -->&gt; '\*\*\*', 'user\_type' =<!-- -->&gt; 'mojang', 'user\_properties' =<!-- -->&gt; '<!-- -->{<!-- -->}<!-- -->', 'auth\_player\_name' =<!-- -->&gt; 'Steve' } |
 |  [getLaunchJVMArgs(mc)](./dmclc.account.getlaunchjvmargs.md) | Get extra JVM arguments. For example, Java Agent. |
+|  [getTokens()](./dmclc.account.gettokens.md) | Get masks for log. |
 |  [getUUID()](./dmclc.account.getuuid.md) | Get UUID of this account. |
 |  [login()](./dmclc.account.login.md) |  |
 |  [prepareLaunch(versionDir)](./dmclc.account.preparelaunch.md) | Prepare for launch. For example, download your Java Agent. |
