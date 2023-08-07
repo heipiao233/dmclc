@@ -31,8 +31,7 @@ export declare class MinecraftVersion
 |  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
 |  [fromVersionName(launcher, name, enableIndependentGameDir)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
-|  [getVersionFromJar()](./dmclc.version.getversionfromjar.md) |  |  |
-|  [installContentVersion(ver)](./dmclc.version.installcontentversion.md) |  |  |
+|  [installContentVersion(contentVersion)](./dmclc.version.installcontentversion.md) |  |  |
 |  [installLoader(name, loaderVersion)](./dmclc.version.installloader.md) |  | Install a mod loader. |
 |  [run(account)](./dmclc.version.run.md) |  | Run this version! |
 |  [saveExtras()](./dmclc.version.saveextras.md) |  |  |

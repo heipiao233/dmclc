@@ -14,9 +14,13 @@ getVersionFromFile(path: string): Promise<ContentVersion | null>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  path | string |  |
+|  path | string | The mod file path |
 
 **Returns:**
 
 Promise&lt;[ContentVersion](./dmclc.contentversion.md) \| null&gt;
+
+## Exceptions
+
+RequestError
 

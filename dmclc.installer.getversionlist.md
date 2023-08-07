@@ -17,3 +17,7 @@ Promise&lt;[VersionInfos](./dmclc.versioninfos.md)<!-- -->&gt;
 
 All the versions.
 
+## Exceptions
+
+RequestError
+

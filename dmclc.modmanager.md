@@ -28,8 +28,8 @@ export declare class ModManager
 |  --- | --- | --- |
 |  [checkMods()](./dmclc.modmanager.checkmods.md) |  | Check mod dependencies. You should warn your users that the result is not always correct. |
 |  [findMods()](./dmclc.modmanager.findmods.md) |  |  |
-|  [installMod(mod)](./dmclc.modmanager.installmod.md) |  |  |
-|  [installModVersion(version)](./dmclc.modmanager.installmodversion.md) |  |  |
+|  [installContent(content)](./dmclc.modmanager.installcontent.md) |  |  |
+|  [installContentVersion(version)](./dmclc.modmanager.installcontentversion.md) |  |  |
 |  [saveInfo()](./dmclc.modmanager.saveinfo.md) |  |  |
 |  [searchMod(name, skip, limit)](./dmclc.modmanager.searchmod.md) |  |  |
 

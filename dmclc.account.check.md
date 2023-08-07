@@ -15,3 +15,7 @@ check(): Promise<boolean>;
 
 Promise&lt;boolean&gt;
 
+## Exceptions
+
+RequestError
+

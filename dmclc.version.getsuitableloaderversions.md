@@ -28,3 +28,5 @@ The versions of loader.
 
 [FormattedError](./dmclc.formattederror.md)
 
+RequestError
+

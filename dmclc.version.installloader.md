@@ -27,3 +27,5 @@ Promise&lt;void&gt;
 
 [FormattedError](./dmclc.formattederror.md)
 
+RequestError
+

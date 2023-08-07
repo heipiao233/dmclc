@@ -4,6 +4,8 @@
 
 ## Installer.installModpackFromPath() method
 
+Install local modpack.
+
 **Signature:**
 
 ```typescript
@@ -14,9 +16,15 @@ installModpackFromPath(packPath: string): Promise<MinecraftVersion | null>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  packPath | string |  |
+|  packPath | string | Modpack path. |
 
 **Returns:**
 
 Promise&lt;[MinecraftVersion](./dmclc.version.md) \| null&gt;
+
+Minecraft version.
+
+## Exceptions
+
+RequestError
 

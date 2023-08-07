@@ -22,3 +22,7 @@ listVersions(forVersion?: MinecraftVersion): Promise<ContentVersion[]>;
 
 Promise&lt;[ContentVersion](./dmclc.contentversion.md)<!-- -->\[\]&gt;
 
+## Exceptions
+
+RequestError
+

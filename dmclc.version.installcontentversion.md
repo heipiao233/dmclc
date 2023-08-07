@@ -7,16 +7,20 @@
 **Signature:**
 
 ```typescript
-installContentVersion(ver: ContentVersion): Promise<void>;
+installContentVersion(contentVersion: ContentVersion): Promise<void>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  ver | [ContentVersion](./dmclc.contentversion.md) |  |
+|  contentVersion | [ContentVersion](./dmclc.contentversion.md) | content version |
 
 **Returns:**
 
 Promise&lt;void&gt;
+
+## Exceptions
+
+RequestError
 

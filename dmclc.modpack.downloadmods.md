@@ -14,9 +14,13 @@ downloadMods(mcdir: string): Promise<boolean>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mcdir | string |  |
+|  mcdir | string | Minecraft directory |
 
 **Returns:**
 
 Promise&lt;boolean&gt;
+
+## Exceptions
+
+RequestError
 

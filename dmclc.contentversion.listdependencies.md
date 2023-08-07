@@ -13,3 +13,7 @@ listDependencies(): Promise<(Content | ContentVersion)[]>;
 
 Promise&lt;([Content](./dmclc.content.md) \| [ContentVersion](./dmclc.contentversion.md)<!-- -->)\[\]&gt;
 
+## Exceptions
+
+RequestError
+

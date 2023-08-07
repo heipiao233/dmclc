@@ -25,3 +25,7 @@ searchContent(name: string, skip: number, limit: number, type: ContentType, sort
 
 Promise&lt;[Content](./dmclc.content.md)<!-- -->\[\]&gt;
 
+## Exceptions
+
+RequestError
+

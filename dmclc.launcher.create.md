@@ -35,3 +35,5 @@ Launcher.
 
 [FormattedError](./dmclc.formattederror.md)
 
+RequestError
+

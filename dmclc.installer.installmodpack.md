@@ -25,3 +25,7 @@ Promise&lt;[MinecraftVersion](./dmclc.version.md)<!-- -->&gt;
 
 The new version.
 
+## Exceptions
+
+RequestError
+

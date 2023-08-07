@@ -22,3 +22,7 @@ getLaunchJVMArgs(mc: MinecraftVersion): Promise<string[]>;
 
 Promise&lt;string\[\]&gt;
 
+## Exceptions
+
+RequestError
+

@@ -9,12 +9,12 @@ Constructs a new instance of the `FormattedError` class
 **Signature:**
 
 ```typescript
-constructor(message: string | undefined | null);
+constructor(message?: string);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  message | string \| undefined \| null |  |
+|  message | string | _(Optional)_ |
 

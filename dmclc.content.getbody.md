@@ -13,3 +13,7 @@ getBody(): Promise<string>;
 
 Promise&lt;string&gt;
 
+## Exceptions
+
+RequestError
+

@@ -26,3 +26,5 @@ Promise&lt;string\[\]&gt;
 
 [FormattedError](./dmclc.formattederror.md)
 
+RequestError
+

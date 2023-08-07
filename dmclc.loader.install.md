@@ -27,3 +27,5 @@ Promise&lt;boolean&gt;
 
 [FormattedError](./dmclc.formattederror.md)
 
+RequestError
+

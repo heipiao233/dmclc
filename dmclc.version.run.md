@@ -24,3 +24,7 @@ Promise&lt;ChildProcess&gt;
 
 The Minecraft process. Both stdout and stderr uses UTF-8.
 
+## Exceptions
+
+RequestError
+

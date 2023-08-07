@@ -22,3 +22,7 @@ prepareLaunch(versionDir: string): Promise<boolean>;
 
 Promise&lt;boolean&gt;
 
+## Exceptions
+
+RequestError
+

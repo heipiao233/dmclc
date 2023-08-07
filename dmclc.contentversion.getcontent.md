@@ -13,3 +13,7 @@ getContent(): Promise<Content>;
 
 Promise&lt;[Content](./dmclc.content.md)<!-- -->&gt;
 
+## Exceptions
+
+RequestError
+
