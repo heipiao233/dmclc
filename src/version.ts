@@ -85,7 +85,7 @@ export class MinecraftVersion {
 
     private detectExtras(enableIndependentGameDir: boolean): DMCLCExtraVersionInfo {
         const loaders: LoaderInfo[] = [];
-        let version = "Unknown";
+        let version: string | undefined = this.versionObject.clientVersion;
         this.launcher.loaders.forEach((v, k)=>{
             const version = v.findInVersion(this.versionObject);
             if(version){
@@ -101,7 +101,7 @@ export class MinecraftVersion {
                 break;
             }
         }
-        if(version === "Unknown") {
+        if(version == undefined) {
             version = this.getVersionFromJar();
         }
         return {
@@ -111,10 +111,10 @@ export class MinecraftVersion {
         };
     }
 
-    private getVersionFromJar() {
+    private getVersionFromJar(): string {
         const zip = new StreamZip({file: this.versionJarPath});
         const entry = zip.entry("version.json");
-        let version;
+        let version = "Unknown";
         if(entry) {
             const obj = JSON.parse((zip.entryDataSync(entry)).toString());
             version = obj.id;

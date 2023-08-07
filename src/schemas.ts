@@ -188,6 +188,7 @@ type MCVersionBase = {
     releaseTime: string;
     time: string;
     type: "snapshot" | "release" | "old_beta" | "old_alpha";
+    clientVersion?: string;
 }
 type MCVersionOldArgs = MCVersionBase & {
     minecraftArguments: string;
