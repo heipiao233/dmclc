@@ -142,7 +142,8 @@ export class MinecraftVersion {
             const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
             progress.update("version.progress.done");
             return cp.execFile(this.launcher.usingJava, allArguments, {
-                cwd: this.versionLaunchWorkDir
+                cwd: this.versionLaunchWorkDir,
+                encoding: "utf-8"
             });
         } finally {
             progress.close();
