@@ -3,7 +3,6 @@ import compressing from "compressing";
 import fs from "fs";
 import fsextra from "fs-extra";
 import got from "got";
-import JSON5 from "json5";
 import { ArtifactVersion, VersionRange } from "maven-artifact-version";
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
@@ -176,7 +175,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         }
         const oldEntry = await zip.entry("mcmod.info");
         if(oldEntry) {
-            const data: ForgeMcmodInfo = JSON5.parse((await zip.entryData(oldEntry)).toString());
+            const data: ForgeMcmodInfo = JSON.parse((await zip.entryData(oldEntry)).toString());
             for (const i of data) {
                 ret.push(new ModInfo("forge", i, this.launcher));
             }
