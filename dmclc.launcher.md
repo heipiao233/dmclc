@@ -48,6 +48,7 @@ export declare class Launcher
 |  [askUser(questions, message)](./dmclc.launcher.askuser.md) |  |  |
 |  [askUserOne(localizeKey, message)](./dmclc.launcher.askuserone.md) |  |  |
 |  [create(rootPath, name, javaExec, clientId, launcherInterface, lang, downloader, copy)](./dmclc.launcher.create.md) | <code>static</code> | Create a new Launcher object. |
+|  [createProgress(steps, title, msg)](./dmclc.launcher.createprogress.md) |  |  |
 |  [error(message, title)](./dmclc.launcher.error.md) |  |  |
 |  [info(message, title)](./dmclc.launcher.info.md) |  |  |
 |  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
