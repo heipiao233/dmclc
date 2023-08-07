@@ -26,12 +26,32 @@ import { Library } from "./schemas.js";
 import { download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
 
+export interface Progress {
+    update(msg: string): void;
+    close(): void;
+}
+
+class LocalizedProgress implements Progress {
+    constructor(private dest: Progress, private t: i18next.TFunction) {
+        
+    }
+
+    update(msg: string): void {
+        this.dest.update(this.t(msg));
+    }
+
+    close(): void {
+        this.dest.close();
+    }
+}
+
 export interface LauncherInterface {
     askUser<T extends string>(questions: Record<T, string>, message?: string): Promise<Record<T, string>>;
     askUserOne(localized: string, message?: string): Promise<string>;
     info(message: string, title: string): Promise<void>;
     warn(message: string, title: string): Promise<void>;
     error(message: string, title: string): Promise<void>;
+    createProgress(steps: number, title: string, msg: string): Progress;
 }
 
 /**
@@ -62,7 +82,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.0.0-beta.8";
+    static readonly version = "4.1.0-alpha.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -231,5 +251,9 @@ export class Launcher {
 
     async error(message: string, title: string = "misc.error") {
         await this.launcherInterface.error(this.i18n(message), this.i18n(title));
+    }
+
+    createProgress(steps: number, title: string, msg: string): Progress {
+        return new LocalizedProgress(this.launcherInterface.createProgress(steps, this.i18n(title), this.i18n(msg)), this.i18n);
     }
 }

@@ -130,14 +130,23 @@ export class MinecraftVersion {
      * @returns The Minecraft process. Both stdout and stderr uses UTF-8.
      */
     async run(account: Account<never>): Promise<ChildProcess> {
-        await account.prepareLaunch(this.versionLaunchWorkDir);
-        await this.completeVersionInstall();
-        await this.extractNative(this.versionObject, this.name);
-        const args = await this.getArguments(this.versionObject, account);
-        const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
-        return cp.execFile(this.launcher.usingJava, allArguments, {
-            cwd: this.versionLaunchWorkDir
-        });
+        const progress = this.launcher.createProgress(4, "version.progress.run", "version.progress.account_prepare");
+        try {
+            await account.prepareLaunch(this.versionLaunchWorkDir);
+            progress.update("version.progress.complete");
+            await this.completeVersionInstall();
+            progress.update("version.progress.extract_native");
+            await this.extractNative(this.versionObject, this.name);
+            progress.update("version.progress.argument");
+            const args = await this.getArguments(this.versionObject, account);
+            const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
+            progress.update("version.progress.done");
+            return cp.execFile(this.launcher.usingJava, allArguments, {
+                cwd: this.versionLaunchWorkDir
+            });
+        } finally {
+            progress.close();
+        }
     }
 
     /**
