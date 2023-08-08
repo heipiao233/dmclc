@@ -282,7 +282,7 @@ export function checkMatch(current: string, required: string | string[]): boolea
     if(required instanceof Array) {
         p = VersionPredicateParser.parse(required);
     } else p = new Set([VersionPredicateParser.parseOne(required)]);
-    let res = true;
+    let res = false;
     for (const i of p) {
         res ||= i.test(currentV);
     }
