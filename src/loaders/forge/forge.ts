@@ -16,6 +16,7 @@ import { merge } from "../../utils/MergeVersionJSONs.js";
 import { checkFile } from "../../utils/check_file.js";
 import { download } from "../../utils/downloads.js";
 import { expandMavenId } from "../../utils/maven.js";
+import { transformJSON } from "../../utils/transformJSON.js";
 import { MinecraftVersion } from "../../version.js";
 import { Loader, ModLoadingIssue } from "../loader.js";
 import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";
@@ -144,7 +145,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         const ret: ModInfo<StoreData | ForgeMcmodInfoOne>[] = [];
         const jarJarEntry = await zip.entry("META-INF/jarjar/metadata.json");
         if(jarJarEntry) {
-            const data: ForgeJarJarJson = JSON.parse((await zip.entryData(jarJarEntry)).toString());
+            const data: ForgeJarJarJson = JSON.parse(transformJSON((await zip.entryData(jarJarEntry)).toString()));
             for (const jarObj of data.jars) {
                 const jar = jarObj.path;
                 const paths = jar.split("/");

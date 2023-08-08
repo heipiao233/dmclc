@@ -6,6 +6,7 @@ import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { merge } from "../../utils/MergeVersionJSONs.js";
+import { transformJSON } from "../../utils/transformJSON.js";
 import { MinecraftVersion } from "../../version.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { Loader, ModLoadingIssue } from "../loader.js";
@@ -33,7 +34,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const entry = await zip.entry("fabric.mod.json");
         if(entry === undefined)return [];
         const result: ModInfo<FabricModJson | M>[] = [];
-        const json: FabricModJson = JSON.parse((await zip.entryData(entry)).toString());
+        const json: FabricModJson = JSON.parse(transformJSON((await zip.entryData(entry)).toString()));
         if(json.jars !== undefined){
             for (const jar of json.jars) {
                 const paths = jar.file.split("/");

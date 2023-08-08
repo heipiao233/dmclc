@@ -2,6 +2,7 @@ import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
+import { transformJSON } from "../../utils/transformJSON.js";
 import { checkFabricDeps } from "../fabric.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike.js";
@@ -27,7 +28,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         const entry = await zip.entry("quilt.mod.json");
         if(entry === undefined)return super.findModInfos(path);
         const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfos(path);
-        const json: QuiltModJson = JSON.parse((await zip.entryData(entry)).toString());
+        const json: QuiltModJson = JSON.parse(transformJSON((await zip.entryData(entry)).toString()));
         if(json.quilt_loader.jars !== undefined){
             for (const jar of json.quilt_loader.jars) {
                 const paths = jar.split("/");

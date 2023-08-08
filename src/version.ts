@@ -1,4 +1,4 @@
-import cp, { ChildProcess } from "child_process";
+import cp, { ChildProcess, exec } from "child_process";
 import compressing from "compressing";
 import fs, { PathLike } from "fs";
 import { ensureDir, mkdirs } from "fs-extra";
@@ -7,6 +7,7 @@ import got from "got";
 import StreamZip from "node-stream-zip";
 import os from "os";
 import path from "path";
+import { promisify } from "util";
 import { Account } from "./auth/account.js";
 import { FormattedError } from "./errors/FormattedError.js";
 import { ContentType, ContentVersion } from "./index.js";
@@ -136,8 +137,8 @@ export class MinecraftVersion {
     async run(account: Account<never>): Promise<ChildProcess> {
         const progress = this.launcher.createProgress(5, "version.progress.run", "version.progress.account_login");
         try {
-            if (!account.check()) {
-                account.login();
+            if (!await account.check()) {
+                await account.login();
             }
             progress.update("version.progress.account_prepare");
             await account.prepareLaunch(this.versionLaunchWorkDir);
@@ -153,6 +154,7 @@ export class MinecraftVersion {
                 .concat(args)
                 .concat(this.extras.moreGameArguments ?? []);
             progress.update("version.progress.done");
+            if (this.extras.beforeCommand) await promisify(exec)(this.extras.beforeCommand);
             return cp.execFile(this.extras.usingJava ?? this.launcher.usingJava, allArguments, {
                 cwd: this.versionLaunchWorkDir
             });
