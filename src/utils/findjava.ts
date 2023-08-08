@@ -42,7 +42,7 @@ async function findForWindows(): Promise<Pair<string, string>[]> {
             if(!fs.existsSync(pth))continue;
             for (const version of fs.readdirSync(pth)) {
                 const exec = `${pth}\\${version}\\bin\\java.exe`;
-                if(fs.existsSync(exec))ret.push(new Pair(version, exec));
+                if(fs.existsSync(exec))ret.push(new Pair(await getJavaVersion(exec), exec));
             }
         }
     }
