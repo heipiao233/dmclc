@@ -47,7 +47,16 @@
     "version": {
         "loader_not_found": "找不到加載器：",
         "version_not_found": "找不到版本：",
-        "install_datapack": "不支持自動安裝數據包！"
+        "install_datapack": "不支持自動安裝數據包！",
+        "progress": {
+            "run": "啓動遊戲中...",
+            "account_login": "登錄賬戶中...",
+            "account_prepare": "準備賬戶中...",
+            "complete": "補齊文件中...",
+            "extract_native": "解壓動態鏈接庫中...",
+            "argument": "生成運行參數中...",
+            "done": "完成！"
+        }
     },
 
     "loaders": {

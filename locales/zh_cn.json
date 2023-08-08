@@ -50,6 +50,7 @@
         "install_datapack": "不支持自动安装数据包！",
         "progress": {
             "run": "启动游戏中...",
+            "account_login": "登录账户中...",
             "account_prepare": "准备账户中...",
             "complete": "补齐文件中...",
             "extract_native": "解压动态链接库中...",

@@ -27,6 +27,10 @@ export interface DMCLCExtraVersionInfo {
     version: string;
     loaders: LoaderInfo[];
     enableIndependentGameDir: boolean;
+    beforeCommand?: string;
+    usingJava?: string;
+    moreGameArguments?: string[];
+    moreJavaArguments?: string[];
 }
 
 /**
@@ -130,8 +134,12 @@ export class MinecraftVersion {
      * @returns The Minecraft process. Both stdout and stderr uses UTF-8.
      */
     async run(account: Account<never>): Promise<ChildProcess> {
-        const progress = this.launcher.createProgress(4, "version.progress.run", "version.progress.account_prepare");
+        const progress = this.launcher.createProgress(5, "version.progress.run", "version.progress.account_login");
         try {
+            if (!account.check()) {
+                account.login();
+            }
+            progress.update("version.progress.account_prepare");
             await account.prepareLaunch(this.versionLaunchWorkDir);
             progress.update("version.progress.complete");
             await this.completeVersionInstall();
@@ -139,11 +147,14 @@ export class MinecraftVersion {
             await this.extractNative(this.versionObject, this.name);
             progress.update("version.progress.argument");
             const args = await this.getArguments(this.versionObject, account);
-            const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"].concat(await account.getLaunchJVMArgs(this)).concat(args).concat();
+            const allArguments = ["-Dsun.stdout.encoding=utf-8", "-Dsun.stderr.encoding=utf-8"]
+                .concat(await account.getLaunchJVMArgs(this))
+                .concat(this.extras.moreJavaArguments ?? [])
+                .concat(args)
+                .concat(this.extras.moreGameArguments ?? []);
             progress.update("version.progress.done");
-            return cp.execFile(this.launcher.usingJava, allArguments, {
-                cwd: this.versionLaunchWorkDir,
-                encoding: "utf-8"
+            return cp.execFile(this.extras.usingJava ?? this.launcher.usingJava, allArguments, {
+                cwd: this.versionLaunchWorkDir
             });
         } finally {
             progress.close();

@@ -47,7 +47,16 @@
     "version": {
         "loader_not_found": "Loader not found: ",
         "version_not_found": "Version not found: ",
-        "install_datapack": "Automatic installation of datapacks is not supported!"
+        "install_datapack": "Automatic installation of datapacks is not supported!",
+        "progress": {
+            "run": "Launching game...",
+            "account_login": "Logging in...",
+            "account_prepare": "Preparing account...",
+            "complete": "Completing files...",
+            "extract_native": "Extracting native files...",
+            "argument": "Generating launching arguments...",
+            "done": "Done!"
+        }
     },
 
     "loaders": {
