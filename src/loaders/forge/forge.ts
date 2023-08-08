@@ -3,7 +3,7 @@ import compressing from "compressing";
 import fs from "fs";
 import fsextra from "fs-extra";
 import got from "got";
-import { ArtifactVersion, VersionRange } from "maven-artifact-version";
+import { ArtifactVersion, ComparableVersion, VersionRange } from "maven-artifact-version";
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
 import nodePath from "path";
@@ -194,9 +194,11 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         };
         for (const mod of mods) {
             if("info" in mod.data){
-                modIdVersions[mod.data.info.modId] = mod.data.info.version;
+                if (modIdVersions[mod.data.info.modId] || new ComparableVersion(modIdVersions[mod.data.info.modId]).compareTo(new ComparableVersion(mod.data.info.version)) < 0)
+                    modIdVersions[mod.data.info.modId] = mod.data.info.version;
             } else {
-                modIdVersions[mod.data.modid] = mod.data.version ?? "";
+                if (modIdVersions[mod.data.modid] || new ComparableVersion(modIdVersions[mod.data.modid]).compareTo(new ComparableVersion(mod.data.version ?? "999.999.999")) < 0)
+                    modIdVersions[mod.data.modid] = mod.data.version ?? "";
             }
         }
         for (const mod of mods) {

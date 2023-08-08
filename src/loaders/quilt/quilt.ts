@@ -7,6 +7,7 @@ import { transformJSON } from "../../utils/transformJSON.js";
 import { checkFabricDeps } from "../fabric.js";
 import { FabricModJson } from "../fabric_schemas.js";
 import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from "../fabriclike/fabriclike.js";
+import { VersionParser } from "../fabriclike/version/VersionParser.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
@@ -53,14 +54,18 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         const issues: ModLoadingIssue[] = [];
         for (const mod of mods) {
             if("quilt_loader" in mod.data){
-                modIdVersions[mod.data.quilt_loader.id] = mod.data.quilt_loader.version;
+                if (!modIdVersions[mod.data.quilt_loader.id] || VersionParser.parse(modIdVersions[mod.data.quilt_loader.id], false).compareTo(VersionParser.parse(mod.data.quilt_loader.version, false)) <= 0) {
+                    modIdVersions[mod.data.quilt_loader.id] = mod.data.quilt_loader.version;
+                }
                 if(mod.data.quilt_loader.provides){
                     for (const provide of mod.data.quilt_loader.provides) {
                         modIdVersions[provide.id] = provide.version;
                     }
                 }
             } else {
-                modIdVersions[mod.data.id] = mod.data.version;
+                if (!modIdVersions[mod.data.id] || VersionParser.parse(modIdVersions[mod.data.id], false).compareTo(VersionParser.parse(mod.data.version, false)) <= 0) {
+                    modIdVersions[mod.data.id] = mod.data.version;
+                }
                 if(mod.data.provides){
                     for (const provide of mod.data.provides) {
                         modIdVersions[provide] = "Provided";
