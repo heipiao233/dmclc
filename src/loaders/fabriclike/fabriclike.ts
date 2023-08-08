@@ -284,14 +284,14 @@ export function checkMatch(current: string, required: string | string[]): boolea
     } else p = new Set([VersionPredicateParser.parseOne(required)]);
     let res = true;
     for (const i of p) {
-        res &&= i.test(currentV);
+        res ||= i.test(currentV);
     }
     return res;
 }
 
-export function formatDepVersion(version: string | string[]): string {
+export function formatDepVersion(version: string | string[], launcher: Launcher): string {
     if(version instanceof Array) {
-        return version.map(formatDepVersion).join("\nor\n");
+        return version.map(v => formatDepVersion(v, launcher)).join(` ${launcher.i18n("misc.or")} `);
     }
     const v = VersionPredicateParser.parseOne(version);
     return v.toString();

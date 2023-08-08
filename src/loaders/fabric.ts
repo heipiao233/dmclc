@@ -1,3 +1,4 @@
+import { Launcher } from "../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../mods/mod.js";
 import { MCVersion } from "../schemas.js";
 import { FabricModJson } from "./fabric_schemas.js";
@@ -34,7 +35,7 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         }
         for (const mod of mods) {
             if(mod.loader !== "fabric")break;
-            issues.push(...checkFabricDeps(mod.data, modIdVersions));
+            issues.push(...checkFabricDeps(mod.data, modIdVersions, this.launcher));
         }
         return issues;
     }
@@ -54,14 +55,14 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         return res;
     }
 }
-export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string, string>): ModLoadingIssue[] {
+export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string, string>, launcher: Launcher): ModLoadingIssue[] {
     const issues: ModLoadingIssue[] = [];
     for (const id in mod.depends) {
         if(!(id in modIdVersions&&checkMatch(modIdVersions[id], mod.depends[id]))){
             issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing", {
                 source: mod.id,
                 target: id,
-                targetVersion: formatDepVersion(mod.depends[id])
+                targetVersion: formatDepVersion(mod.depends[id], launcher)
             }));
         }
     }
@@ -70,7 +71,7 @@ export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string
             issues.push(new ModLoadingIssue("warning", "dependencies.recommends_wrong_missing", {
                 source: mod.id,
                 target: id,
-                targetVersion: formatDepVersion(mod.recommends[id])
+                targetVersion: formatDepVersion(mod.recommends[id], launcher)
             }));
         }
     }
@@ -79,7 +80,7 @@ export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string
             issues.push(new ModLoadingIssue("warning", "dependencies.conflicts_exists", {
                 source: mod.id,
                 target: id,
-                targetVersion: formatDepVersion(mod.conflicts[id])
+                targetVersion: formatDepVersion(mod.conflicts[id], launcher)
             }));
         }
     }
@@ -88,7 +89,7 @@ export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string
             issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists", {
                 source: mod.id,
                 target: id,
-                targetVersion: formatDepVersion(mod.breaks[id])
+                targetVersion: formatDepVersion(mod.breaks[id], launcher)
             }));
         }
     }

@@ -68,7 +68,9 @@
         "unsupported": "Unsupported!",
         "info": "Information",
         "warn": "Warning",
-        "error": "Error"
+        "error": "Error",
+        "or": "or",
+        "version": "version"
     },
 
     "dependencies": {

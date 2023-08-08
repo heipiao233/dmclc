@@ -1,5 +1,6 @@
 import StreamZip from "node-stream-zip";
 import { tmpdir } from "os";
+import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { transformJSON } from "../../utils/transformJSON.js";
@@ -84,16 +85,16 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                                 {
                                     source: data.id,
                                     target: dep.id,
-                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
+                                    targetVersion: formatDepVersion(dep.versions ?? "*", this.launcher),
                                     reason: dep.reason,
-                                    unless: formatUnless(unlesses)
+                                    unless: formatUnless(unlesses, this.launcher)
                                 }));
                             else issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing_unless",
                                 {
                                     source: data.id,
                                     target: dep.id,
-                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
-                                    unless: formatUnless(unlesses)
+                                    targetVersion: formatDepVersion(dep.versions ?? "*", this.launcher),
+                                    unless: formatUnless(unlesses, this.launcher)
                                 }));
                         }
                     } else {
@@ -102,14 +103,14 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                                 {
                                     source: data.id,
                                     target: dep.id,
-                                    targetVersion: formatDepVersion(dep.versions ?? "*"),
+                                    targetVersion: formatDepVersion(dep.versions ?? "*", this.launcher),
                                     reason: dep.reason
                                 }));
                             else issues.push(new ModLoadingIssue("error", "dependencies.dependency_wrong_missing",
                                 {
                                     source: data.id,
                                     target: dep.id,
-                                    targetVersion: formatDepVersion(dep.versions ?? "*")
+                                    targetVersion: formatDepVersion(dep.versions ?? "*", this.launcher)
                                 }));
                         }
                     }
@@ -128,16 +129,16 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                                 {
                                     source: data.id,
                                     target: brk.id,
-                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
+                                    targetVersion: formatDepVersion(brk.versions ?? "*", this.launcher),
                                     reason: brk.reason,
-                                    unless: formatUnless(unlesses)
+                                    unless: formatUnless(unlesses, this.launcher)
                                 }));
                             else issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists_unless",
                                 {
                                     source: data.id,
                                     target: brk.id,
-                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
-                                    unless: formatUnless(unlesses)
+                                    targetVersion: formatDepVersion(brk.versions ?? "*", this.launcher),
+                                    unless: formatUnless(unlesses, this.launcher)
                                 }));
                         }
                     } else {
@@ -146,20 +147,20 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
                                 {
                                     source: data.id,
                                     target: brk.id,
-                                    targetVersion: formatDepVersion(brk.versions ?? "*"),
+                                    targetVersion: formatDepVersion(brk.versions ?? "*", this.launcher),
                                     reason: brk.reason
                                 }));
                             else issues.push(new ModLoadingIssue("error", "dependencies.breaks_exists",
                                 {
                                     source: data.id,
                                     target: brk.id,
-                                    targetVersion: formatDepVersion(brk.versions ?? "*")
+                                    targetVersion: formatDepVersion(brk.versions ?? "*", this.launcher)
                                 }));
                         }
                     }
                 }
             } else {
-                issues.push(...checkFabricDeps(mod.data, modIdVersions));
+                issues.push(...checkFabricDeps(mod.data, modIdVersions, this.launcher));
             }
         }
         return issues;
@@ -202,9 +203,9 @@ function processDeps(deps?: DependencyObject[] | DependencyObject | string): Dep
     }
     return ret;
 }
-function formatUnless(unlesses: DependencyObject[]): string {
+function formatUnless(unlesses: DependencyObject[], launcher: Launcher): string {
     return unlesses.map(
-        (v) => `${v.id} version ${formatDepVersion(v.versions ?? "*")}`
-    ).join("\nor ");
+        (v) => `${v.id} ${launcher.i18n("misc.version")} ${formatDepVersion(v.versions ?? "*", launcher)}`
+    ).join(`\n${launcher.i18n("misc.or")} `);
 }
 

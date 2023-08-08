@@ -68,7 +68,9 @@
         "unsupported": "不支持",
         "info": "提示",
         "warn": "警告",
-        "error": "錯誤"
+        "error": "錯誤",
+        "or": "或者",
+        "version": "版本"
     },
 
     "dependencies": {
