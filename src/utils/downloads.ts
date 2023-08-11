@@ -32,15 +32,8 @@ export async function download(url: string, filename: fs.PathLike, launcher: Lau
     await ensureDir(dir);
     let realURL = transformURL(url, launcher.mirror);
     realURL = realURL.replaceAll("http://", "https://");
-    try {
-        if (launcher.downloader) await launcher.downloader(realURL, filename, url);
-        else await downloader(realURL, filename, url);
-    } catch(e) {
-        if (e instanceof FormattedError) {
-            launcher.error(e.message);
-            return false;
-        }
-    }
+    if (launcher.downloader) await launcher.downloader(realURL, filename, url);
+    else await downloader(realURL, filename, url);
     return true;
 }
 
