@@ -169,7 +169,7 @@ export class MinecraftVersion {
     async completeVersionInstall(): Promise<boolean> {
         const promises = [];
         if (!fs.existsSync(this.versionJarPath) ||
-            !checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
+            !await checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
             promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath, this.launcher));
         }
         promises.push(this.completeAssets(this.versionObject.assetIndex));
@@ -192,7 +192,7 @@ export class MinecraftVersion {
         for (const assid in assetobj.objects) {
             const assitem: Asset = assetobj.objects[assid];
             if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
-                !checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
+                !await checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
                 allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
             }
         }
@@ -226,7 +226,7 @@ export class MinecraftVersion {
                     artifacts.push(i.downloads.classifiers[i.natives[this.launcher.natives].replaceAll("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
                 for (const artifact of artifacts) {
-                    if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`)&&checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
+                    if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`) && await checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
                         allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
                     }
                 }

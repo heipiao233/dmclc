@@ -1,7 +1,9 @@
-import fs from "fs";
 import * as crypto from "crypto";
+import fs from "fs";
+import fsPromises from 'fs/promises';
 
-export function checkFile (filename: number | fs.PathLike, hash: string, algorithm = "sha1"): boolean {
-    const val = fs.readFileSync(filename);
+export async function checkFile (filename: fs.PathLike, hash: string, algorithm = "sha1"): Promise<boolean> {
+    if (!fs.existsSync(filename)) return false;
+    const val = await fsPromises.readFile(filename);
     return crypto.createHash(algorithm).update(val).digest("hex") === hash;
 }

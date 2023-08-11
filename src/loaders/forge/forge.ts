@@ -103,7 +103,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                         for (const k in outputs) {
                             if (Object.prototype.hasOwnProperty.call(outputs, k)) {
                                 const v = outputs[k];
-                                res &&= checkFile(this.transformArguments(k, MCVersion, metadata), this.transformArguments(v, MCVersion, metadata));
+                                res &&= await checkFile(this.transformArguments(k, MCVersion, metadata), this.transformArguments(v, MCVersion, metadata));
                             }
                         }
                     }

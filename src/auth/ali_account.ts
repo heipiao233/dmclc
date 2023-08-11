@@ -24,7 +24,7 @@ export class AuthlibInjectorAccount extends YggdrasilAccount<YggdrasilUserData> 
         const obj = await got("https://bmclapi2.bangbang93.com/mirrors/authlib-injector/artifact/latest.json").json<AuthlibInjectorArtifact>();
         const sha256 = obj.checksums.sha256;
         const path = `${versionDir}/authlib-injector-latest.jar`;
-        if (!fs.existsSync(path) || !checkFile(path, sha256, "sha256")) {
+        if (!fs.existsSync(path) || !await checkFile(path, sha256, "sha256")) {
             return await download(obj.download_url, path, this.launcher);
         }
         return true;
