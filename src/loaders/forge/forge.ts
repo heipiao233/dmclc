@@ -194,10 +194,10 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         };
         for (const mod of mods) {
             if("info" in mod.data){
-                if (modIdVersions[mod.data.info.modId] || new ComparableVersion(modIdVersions[mod.data.info.modId]).compareTo(new ComparableVersion(mod.data.info.version)) < 0)
+                if (!modIdVersions[mod.data.info.modId] || new ComparableVersion(modIdVersions[mod.data.info.modId]).compareTo(new ComparableVersion(mod.data.info.version)) < 0)
                     modIdVersions[mod.data.info.modId] = mod.data.info.version;
             } else {
-                if (modIdVersions[mod.data.modid] || new ComparableVersion(modIdVersions[mod.data.modid]).compareTo(new ComparableVersion(mod.data.version ?? "999.999.999")) < 0)
+                if (!modIdVersions[mod.data.modid] || new ComparableVersion(modIdVersions[mod.data.modid]).compareTo(new ComparableVersion(mod.data.version ?? "999.999.999")) < 0)
                     modIdVersions[mod.data.modid] = mod.data.version ?? "";
             }
         }
