@@ -91,7 +91,7 @@ async function findForLinux(): Promise<Pair<string, string>[]> {
     const dirs = ["/usr/java", "/usr/lib/jvm", "/usr/lib32/jvm"];
     const ret: Pair<string, string>[] = [];
     for (const i of dirs) {
-        if (!fs.statSync(i).isDirectory()) {
+        if (!(fs.existsSync(i) && fs.statSync(i).isDirectory())) {
             continue;
         }
         for (const j of fs.readdirSync(i)) {
@@ -107,7 +107,7 @@ async function findForLinux(): Promise<Pair<string, string>[]> {
 async function findForMac(): Promise<Pair<string, string>[]> {
     const ret: Pair<string, string>[] = [];
     let i = "/Library/Java/JavaVirtualMachines";
-    if (!fs.statSync(i).isDirectory()) {
+    if (!(fs.existsSync(i) && fs.statSync(i).isDirectory())) {
         return [];
     }
     for (const j of fs.readdirSync(i)) {
@@ -121,7 +121,7 @@ async function findForMac(): Promise<Pair<string, string>[]> {
         }
     }
     i = "/System/Library/Java/JavaVirtualMachines";
-    if (!fs.statSync(i).isDirectory()) {
+    if (!(fs.existsSync(i) && fs.statSync(i).isDirectory())) {
         return [];
     }
     for (const j of fs.readdirSync(i)) {
