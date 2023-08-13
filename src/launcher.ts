@@ -1,9 +1,12 @@
 import compressing from "compressing";
+import { randomUUID } from "crypto";
 import fs from "fs";
 import { mkdirsSync, remove } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
+import { marked } from "marked";
 import os, { homedir } from "os";
+import { pathToFileURL } from "url";
 import { Account } from "./auth/account.js";
 import { AuthlibInjectorAccount } from "./auth/ali_account.js";
 import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
@@ -92,7 +95,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.1.11";
+    static readonly version = "4.2.0-alpha.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -265,5 +268,29 @@ export class Launcher {
 
     createProgress(steps: number, title: string, msg: string): Progress {
         return new LocalizedProgress(this.launcherInterface.createProgress(steps, this.i18n(title), this.i18n(msg)), this.i18n);
+    }
+
+    setDownloadImages() {
+        let self = this;
+        marked.setOptions({
+            async walkTokens(token) {
+                if (token.type == "image"){
+                    let file = os.tmpdir() + "/dmclqt-image-" + randomUUID() + ".png";
+                    addExitDelete(file);
+                    download(token.href, file, self);
+                    token.href = pathToFileURL(file).toString();
+                } else if (token.type == "html") {
+                    if (!token.raw.includes("<img"))
+                        return;
+                    let m = token.raw.match(/src=\"(.+?)\"/);
+                    if (!m || m.length < 2) return;
+                    let url = m[1];
+                    let file = os.tmpdir() + "/dmclqt-image-" + randomUUID() + ".png";
+                    addExitDelete(file);
+                    download(url, file, self);
+                    token.raw = token.raw.replaceAll(url, pathToFileURL(file).toString());
+                }
+            },
+        })
     }
 }
