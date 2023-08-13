@@ -60,7 +60,7 @@ export class CurseForgeContentVersion implements ContentVersion {
         return this.model.fileName;
     }
     async getVersionNumber(): Promise<string> {
-        return this.model.fileDate;
+        return this.model.displayName;
     }
     async getVersionChangelog(): Promise<string> {
         const res: {
