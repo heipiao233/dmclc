@@ -56,7 +56,7 @@ export class ModrinthContentVersion implements ContentVersion {
         return this.model.version_number;
     }
     async getVersionChangelog(): Promise<string> {
-        return marked(this.model.changelog ?? "");
+        return await marked(this.model.changelog ?? "");
     }
 
     async listDependencies(): Promise<(ContentVersion | Content)[]> {
@@ -104,7 +104,7 @@ export class ModrinthContent implements Content {
         return this.model.categories.includes("library");
     }
     async getBody(): Promise<string> {
-        return marked(this.model.body ?? "");
+        return await marked(this.model.body ?? "");
     }
     async getScreenshots(): Promise<Screenshot[]> {
         return this.model.gallery;

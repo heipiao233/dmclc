@@ -3,7 +3,9 @@ import fs from "fs";
 import { mkdirsSync, remove } from "fs-extra";
 import * as i18next from "i18next";
 import FsBackend, { FsBackendOptions } from "i18next-fs-backend";
+import { marked } from "marked";
 import os, { homedir } from "os";
+import { pathToFileURL } from "url";
 import { Account } from "./auth/account.js";
 import { AuthlibInjectorAccount } from "./auth/ali_account.js";
 import { MicrosoftAccount } from "./auth/microsoft/microsoft_account.js";
@@ -29,6 +31,16 @@ import { MinecraftVersion } from "./version.js";
 export interface Progress {
     update(msg: string): void;
     close(): void;
+}
+
+export function addExitDelete(file: string) {
+    process.addListener("beforeExit", () => {
+        try {
+            fs.rmSync(file);
+        } catch {
+            
+        }
+    });
 }
 
 class LocalizedProgress implements Progress {
@@ -82,7 +94,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.1.9";
+    static readonly version = "4.1.10";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -171,6 +183,10 @@ export class Launcher {
                 loadPath: `${dir}/locales/{{lng}}.json`
             }
         });
+        marked.use({
+            walkTokens: this.walkForDownloadImages,
+            async: true
+        })
     }
 
     /**
@@ -255,5 +271,14 @@ export class Launcher {
 
     createProgress(steps: number, title: string, msg: string): Progress {
         return new LocalizedProgress(this.launcherInterface.createProgress(steps, this.i18n(title), this.i18n(msg)), this.i18n);
+    }
+    
+    async walkForDownloadImages(token: marked.Token) {
+        if (token.type === "image") {
+            let file = "dmclc-image-" + token.href.match(/\/.+/)![1].split("?")[0];
+            addExitDelete(file);
+            await download(token.href, file, this);
+            token.href = pathToFileURL(file).href;
+        }
     }
 }
