@@ -95,7 +95,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.2.0-alpha.1";
+    static readonly version = "4.2.0-beta.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -275,9 +275,9 @@ export class Launcher {
         marked.setOptions({
             async walkTokens(token) {
                 if (token.type == "image"){
-                    let file = os.tmpdir() + "/dmclqt-image-" + randomUUID() + ".png";
+                    let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
                     addExitDelete(file);
-                    download(token.href, file, self);
+                    await download(token.href, file, self);
                     token.href = pathToFileURL(file).toString();
                 } else if (token.type == "html") {
                     if (!token.raw.includes("<img"))
@@ -285,10 +285,11 @@ export class Launcher {
                     let m = token.raw.match(/src=\"(.+?)\"/);
                     if (!m || m.length < 2) return;
                     let url = m[1];
-                    let file = os.tmpdir() + "/dmclqt-image-" + randomUUID() + ".png";
+                    let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
                     addExitDelete(file);
-                    download(url, file, self);
+                    await download(url, file, self);
                     token.raw = token.raw.replaceAll(url, pathToFileURL(file).toString());
+                    token.text = token.text.replaceAll(url, pathToFileURL(file).toString());
                 }
             },
         })
