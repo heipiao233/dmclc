@@ -53,5 +53,6 @@ export declare class Launcher
 |  [info(message, title)](./dmclc.launcher.info.md) |  |  |
 |  [refreshInstalledVersion()](./dmclc.launcher.refreshinstalledversion.md) |  | Refresh installed versions. |
 |  [removeVersion(version)](./dmclc.launcher.removeversion.md) |  |  |
+|  [setDownloadImages()](./dmclc.launcher.setdownloadimages.md) |  |  |
 |  [warn(message, title)](./dmclc.launcher.warn.md) |  |  |
 
