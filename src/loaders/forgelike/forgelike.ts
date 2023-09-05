@@ -23,20 +23,15 @@ import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, Stor
 import { InstallerProfileNew } from "./install_profile_new.js";
 import { InstallerProfileOld } from "./install_profile_old.js";
 
-export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
+export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     private readonly launcher: Launcher;
-    private readonly metadata = "https://maven.minecraftforge.net/net/minecraftforge/forge/maven-metadata.xml";
+    protected abstract readonly mavenArtifactURL: string;
+    protected abstract readonly supportsOld: boolean;
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
     
-    findInVersion(MCVersion: MCVersion): string | undefined {
-        for (const i of MCVersion.libraries) {
-            if(i.name.includes(":forge:")||i.name.includes(":fmlloader:")){
-                return i.name.split(":")[2].split("-")[1];
-            }
-        }
-    }
+    abstract findInVersion(MCVersion: MCVersion): string | undefined;
 
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
@@ -48,7 +43,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
         if (majorn < 5 || (majorn === 5 && minorn != 2) ) {
             return [];
         }
-        const res = await got(this.metadata);
+        const res = await got(this.mavenArtifactURL + "/maven-metadata.xml");
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
         return versions.filter((v: string) => v.startsWith(`${MCVersion.extras.version}-`));
@@ -60,10 +55,10 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
             return false;
         }
         const path = `${tmpdir()}/forge-${version}-installer.jar`;
-        if (!await download(`https://maven.minecraftforge.net/net/minecraftforge/forge/${version}/forge-${version}-installer.jar`, path, this.launcher)) {
+        if (!await download(`${this.mavenArtifactURL}/${version}/forge-${version}-installer.jar`, path, this.launcher)) {
             return false;
         }
-        const installer = `${tmpdir()}/${this.launcher.name}_forge_installer`;
+        const installer = `${tmpdir()}/${this.launcher.name}_forgelike_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
         
@@ -119,7 +114,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                 }
             }
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
-        } else { // 1.12-
+        } else if (this.supportsOld) { // 1.12-
             const target: MCVersion = MCVersion.versionObject;
             const source: MCVersion = metadata.versionInfo;
             const result = merge(target, source);
@@ -174,9 +169,10 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                     }, this.launcher));
             }
         }
+        if (!this.supportsOld) return ret;
         const oldEntry = await zip.entry("mcmod.info");
         if(oldEntry) {
-            const data: ForgeMcmodInfo = JSON.parse((await zip.entryData(oldEntry)).toString());
+            const data: ForgeMcmodInfo = JSON.parse(transformJSON((await zip.entryData(oldEntry)).toString()));
             for (const i of data) {
                 ret.push(new ModInfo("forge", i, this.launcher));
             }
@@ -217,7 +213,7 @@ export class ForgeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
                             }
                         }
                     }
-            } else if(parseInt(mc.split(".")[1])<=12) {
+            } else if(parseInt(mc.split(".")[1])<=12 && this.supportsOld) {
                 if(mod.data.useDependencyInformation) {
                     if(mod.data.requiredMods)
                         for (const dep of mod.data.requiredMods) {

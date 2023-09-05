@@ -16,8 +16,9 @@ import { FormattedError } from "./errors/FormattedError.js";
 import { Installer } from "./install.js";
 import { FabricLoader } from "./loaders/fabric.js";
 import { VersionParser } from "./loaders/fabriclike/version/VersionParser.js";
-import { ForgeLoader } from "./loaders/forge/forge.js";
+import { ForgeLoader } from './loaders/forge.js';
 import { Loader } from "./loaders/loader.js";
+import { NeoForgeLoader } from "./loaders/neoforge.js";
 import { QuiltLoader } from "./loaders/quilt/quilt.js";
 import { ContentService } from "./mods/download/ContentService.js";
 import CurseForgeContentService from "./mods/download/curseforge/CurseForgeContentService.js";
@@ -124,6 +125,7 @@ export class Launcher {
         this.loaders.set("fabric", new FabricLoader(this));
         this.loaders.set("quilt", new QuiltLoader(this));
         this.loaders.set("forge", new ForgeLoader(this));
+        this.loaders.set("forge", new NeoForgeLoader(this));
         this.accountTypes.set("microsoft", (data)=>new MicrosoftAccount(data, this));
         this.accountTypes.set("offline", (data)=>new OfflineAccount(data, this));
         this.accountTypes.set("authlib_injector", (data)=>new AuthlibInjectorAccount(data, this));
