@@ -29,8 +29,11 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         });
         const entry = await zip.entry("quilt.mod.json");
         if(entry === undefined) {
-            zip.close();
-            return super.findModInfos(path);
+            try {
+                return super.findModInfosInZip(zip);
+            } finally {
+                await zip.close();
+            }
         }
         const json: QuiltModJson = JSON.parse(transformJSON((await zip.entryData(entry)).toString()));
         const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfosInZip(zip);
