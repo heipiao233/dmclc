@@ -48,6 +48,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         const info = new ModInfo("quilt", json, this.launcher);
         info.data = json;
         result.push(info);
+        await zip.close();
         return result;
     }
     checkMods(mods: ModInfo<QuiltModJson | FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
