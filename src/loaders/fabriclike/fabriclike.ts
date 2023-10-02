@@ -31,6 +31,14 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const zip = new StreamZip.async({
             file: path
         });
+        try {
+            return this.findModInfosInZip(zip);
+        } finally {
+            await zip.close();
+        }
+    }
+
+    async findModInfosInZip(zip: StreamZip.StreamZipAsync): Promise<ModInfo<FabricModJson | M>[]> {
         const entry = await zip.entry("fabric.mod.json");
         if(entry === undefined)return [];
         const result: ModInfo<FabricModJson | M>[] = [];
@@ -43,7 +51,6 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
                 result.push(...await this.findModInfos(filename));
             }
         }
-        await zip.close();
         const info = new ModInfo("fabric", json, this.launcher);
         info.data = json;
         result.push(info);

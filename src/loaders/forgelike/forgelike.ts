@@ -261,13 +261,15 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                 name: mod.info.displayName,
                 description: mod.info.description,
                 license: mod.jar.license,
+                isJIJLib: false
             };
         }
         return {
             id: mod.modid,
             version: mod.version ?? "",
             name: mod.name,
-            description: mod.description
+            description: mod.description,
+            isJIJLib: false
         };
     }
 }

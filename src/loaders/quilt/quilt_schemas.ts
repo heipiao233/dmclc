@@ -1,3 +1,4 @@
+import { CustomData } from "../fabriclike/FabricLikeSchemas.js";
 import { FabricLikeVersionInfo, Version } from "../fabriclike/fabriclike_version_info.js";
 
 export type QuiltVersionInfo = {
@@ -44,4 +45,4 @@ export type QuiltModJson = {
             }
         }
     }
-}
+} & CustomData

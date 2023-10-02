@@ -1,3 +1,5 @@
+import { CustomData } from "./fabriclike/FabricLikeSchemas.js";
+
 export type Env = "*" | "client" | "server";
 
 export type NestedJarEntry = {
@@ -40,4 +42,5 @@ export type FabricModJson = {
     icon?: string | {
         [size: string]: string;
     };
+    custom: CustomData
 }

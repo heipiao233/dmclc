@@ -28,9 +28,12 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
             file: path
         });
         const entry = await zip.entry("quilt.mod.json");
-        if(entry === undefined)return super.findModInfos(path);
-        const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfos(path);
+        if(entry === undefined) {
+            zip.close();
+            return super.findModInfos(path);
+        }
         const json: QuiltModJson = JSON.parse(transformJSON((await zip.entryData(entry)).toString()));
+        const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfosInZip(zip);
         if(json.quilt_loader.jars !== undefined){
             for (const jar of json.quilt_loader.jars) {
                 const paths = jar.split("/");
@@ -176,7 +179,8 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         const meta = modJson.quilt_loader.metadata;
         const res: ModDisplayInfo = {
             id: modJson.quilt_loader.id,
-            version: modJson.quilt_loader.version
+            version: modJson.quilt_loader.version,
+            isJIJLib: false
         };
         if(meta) {
             if(meta.description) res.description = meta.description;

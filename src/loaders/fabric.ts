@@ -46,7 +46,8 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
     getModInfo(mod: FabricModJson): ModDisplayInfo {
         const res: ModDisplayInfo = {
             id: mod.id,
-            version: mod.version
+            version: mod.version,
+            isJIJLib: mod.custom["fabric-loom:generated"] ?? false
         };
         if(mod.description) res.description = mod.description;
         if(mod.name) res.name = mod.name;

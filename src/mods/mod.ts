@@ -6,7 +6,8 @@ export type ModDisplayInfo = {
     version: string,
     name?: string,
     description?: string,
-    license?: string
+    license?: string,
+    isJIJLib: boolean;
 }
 
 export function modDisplayInfoToString(launcher: Launcher, mod: ModDisplayInfo) {

@@ -66,14 +66,6 @@ export class ModManager {
         if (!await download(url, `${moddir}/${await version.getVersionFileName()}`, this.launcher)) {
             return false;
         }
-        let result = true;
-        for (const i of await version.listDependencies()) {
-            if (i.isVersion) {
-                result &&= await this.installContentVersion(i);
-            } else {
-                result &&= await this.installContent(i);
-            }
-        }
-        return result;
+        return true;
     }
 }
