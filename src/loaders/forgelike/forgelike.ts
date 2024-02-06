@@ -113,7 +113,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                     const args = ["-cp",
                         `${item.classpath.map((i) => {
                             return `${this.launcher.rootPath}/libraries/${expandMavenId(i)}`;
-                        }).join(nodePath.delimiter)};${jar}`,
+                        }).join(nodePath.delimiter)}${nodePath.delimiter}${jar}`,
                         await getMainClass(jar),
                         ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata))];
                     execFileSync(this.launcher.usingJava, args);
