@@ -6,8 +6,15 @@ export class NeoForgeLoader extends ForgeLikeLoader {
     protected supportsOld = false;
     name = "neoforge";
 
+    matchVersion(loader: string, mc: string): boolean {
+        if (mc === "1.20.1") {
+            return loader.startsWith("1.20.1-");
+        } else if (mc.includes("-") || mc.includes("w")) return false;
+        return loader.startsWith(mc.slice(2));
+    }
+
     getArchiveBaseName(MCVersion: string): string {
-        if (MCVersion.startsWith("1.20.1")) {
+        if (MCVersion === "1.20.1") {
             return "forge";
         }
         return "neoforge";

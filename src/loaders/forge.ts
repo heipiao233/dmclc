@@ -6,6 +6,10 @@ export class ForgeLoader extends ForgeLikeLoader {
     protected supportsOld = false;
     name = "forge";
 
+    matchVersion(loader: string, mc: string): boolean {
+        return loader.startsWith(`${mc}-`);
+    }
+
     getArchiveBaseName(MCVersion: string): string {
         return "forge";
     }

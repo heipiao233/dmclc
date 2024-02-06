@@ -34,6 +34,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
     
     abstract findInVersion(MCVersion: MCVersion): string | undefined;
     abstract getArchiveBaseName(MCVersion: string): string;
+    abstract matchVersion(loader: string, mc: string): boolean;
 
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
@@ -48,7 +49,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
         const res = await got(`${this.mavenArtifactURL}/${this.getArchiveBaseName(MCVersion.extras.version)}/maven-metadata.xml`);
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
-        return versions.filter((v: string) => v.startsWith(`${MCVersion.extras.version}-`));
+        return versions.filter((v: string) => this.matchVersion(v, MCVersion.extras.version));
     }
 
     async install (MCVersion: MinecraftVersion, version: string): Promise<boolean> {
