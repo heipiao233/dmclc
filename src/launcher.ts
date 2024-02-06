@@ -106,7 +106,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.3.0-beta.6";
+    static readonly version = "4.3.0-beta.7";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -310,6 +310,8 @@ export class Launcher {
                     self.launcherInterface.error(`图片 ${url} 加载失败`, "图片加载失败")
                 }
             },
-        })
+            gfm: true,
+            async: true
+        });
     }
 }
