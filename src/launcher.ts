@@ -125,7 +125,7 @@ export class Launcher {
         this.loaders.set("fabric", new FabricLoader(this));
         this.loaders.set("quilt", new QuiltLoader(this));
         this.loaders.set("forge", new ForgeLoader(this));
-        this.loaders.set("forge", new NeoForgeLoader(this));
+        this.loaders.set("neoforge", new NeoForgeLoader(this));
         this.accountTypes.set("microsoft", (data)=>new MicrosoftAccount(data, this));
         this.accountTypes.set("offline", (data)=>new OfflineAccount(data, this));
         this.accountTypes.set("authlib_injector", (data)=>new AuthlibInjectorAccount(data, this));

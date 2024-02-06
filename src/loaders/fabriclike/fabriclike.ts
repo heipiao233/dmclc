@@ -18,6 +18,7 @@ import { VersionPredicateParser } from "./version/VersionPredicateParser.js";
 export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M | FabricModJson> {
     abstract loaderMaven: string;
     abstract metaURL: string;
+    abstract name: string;
     intermediaryMaven = "https://maven.fabricmc.net/";
     protected readonly launcher: Launcher;
     constructor (launcher: Launcher) {
@@ -51,7 +52,7 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
                 result.push(...await this.findModInfos(filename));
             }
         }
-        const info = new ModInfo("fabric", json, this.launcher);
+        const info = new ModInfo(this.name, json, this.launcher);
         info.data = json;
         result.push(info);
         return result;

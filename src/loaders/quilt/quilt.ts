@@ -14,6 +14,8 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
     hashedMaven = "https://maven.quiltmc.org/repository/release/";
+    name = "quilt"
+
     findInVersion(MCVersion: MCVersion): string | undefined {
         let ret: string | undefined;
         MCVersion.libraries.forEach(i=>{
@@ -23,6 +25,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         });
         return ret;
     }
+
     async findModInfos(path: string): Promise<ModInfo<QuiltModJson | FabricModJson>[]> {
         const zip = new StreamZip.async({
             file: path
@@ -51,6 +54,7 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         await zip.close();
         return result;
     }
+
     checkMods(mods: ModInfo<QuiltModJson | FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
             minecraft: normalizeVersion(mc),
@@ -216,6 +220,7 @@ function processDeps(deps?: DependencyObject[] | DependencyObject | string): Dep
     }
     return ret;
 }
+
 function formatUnless(unlesses: DependencyObject[], launcher: Launcher): string {
     return unlesses.map(
         (v) => `${v.id} ${launcher.i18n("misc.version")} ${formatDepVersion(v.versions ?? "*", launcher)}`

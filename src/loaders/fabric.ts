@@ -9,6 +9,8 @@ import { ModLoadingIssue } from "./loader.js";
 export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, FabricModJson> {
     metaURL = "https://meta.fabricmc.net/v2";
     loaderMaven = "https://maven.fabricmc.net/";
+    name = "fabric";
+
     findInVersion(MCVersion: MCVersion): string | undefined {
         let ret: string | undefined;
         MCVersion.libraries.forEach(i=>{
@@ -18,6 +20,7 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         });
         return ret;
     }
+
     checkMods(mods: ModInfo<FabricModJson>[], mc: string, loader: string): ModLoadingIssue[] {
         const modIdVersions: Record<string, string> = {
             minecraft: normalizeVersion(mc),
@@ -59,6 +62,7 @@ export class FabricLoader extends FabricLikeLoader<FabricLikeVersionInfo, Fabric
         return res;
     }
 }
+
 export function checkFabricDeps(mod: FabricModJson, modIdVersions: Record<string, string>, launcher: Launcher): ModLoadingIssue[] {
     const issues: ModLoadingIssue[] = [];
     for (const id in mod.depends) {

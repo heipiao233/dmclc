@@ -27,11 +27,13 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
     private readonly launcher: Launcher;
     protected abstract readonly mavenArtifactURL: string;
     protected abstract readonly supportsOld: boolean;
+    abstract name: string;
     constructor (launcher: Launcher) {
         this.launcher = launcher;
     }
     
     abstract findInVersion(MCVersion: MCVersion): string | undefined;
+    abstract getArchiveBaseName(MCVersion: string): string;
 
     async getSuitableLoaderVersions (MCVersion: MinecraftVersion): Promise<string[]> {
         if(MCVersion.extras.version === "Unknown") {
@@ -43,7 +45,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
         if (majorn < 5 || (majorn === 5 && minorn != 2) ) {
             return [];
         }
-        const res = await got(this.mavenArtifactURL + "/maven-metadata.xml");
+        const res = await got(`${this.mavenArtifactURL}/${this.getArchiveBaseName(MCVersion.extras.version)}/maven-metadata.xml`);
         const obj = await parseStringPromise(res.body);
         const versions: string[] = obj.metadata.versioning[0].versions[0].version;
         return versions.filter((v: string) => v.startsWith(`${MCVersion.extras.version}-`));
@@ -54,8 +56,9 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
             await this.launcher.error("loaders.minecraft_version_unknown");
             return false;
         }
-        const path = `${tmpdir()}/forge-${version}-installer.jar`;
-        if (!await download(`${this.mavenArtifactURL}/${version}/forge-${version}-installer.jar`, path, this.launcher)) {
+        let abn = this.getArchiveBaseName(MCVersion.extras.version);
+        const path = `${tmpdir()}/${abn}-${version}-installer.jar`;
+        if (!await download(`${this.mavenArtifactURL}/${abn}/${version}/${abn}-${version}-installer.jar`, path, this.launcher)) {
             return false;
         }
         const installer = `${tmpdir()}/${this.launcher.name}_forgelike_installer`;
@@ -129,7 +132,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
         return arg.replaceAll(/\{(.+?)\}/g, (v, a) => {
             if (a === "SIDE") return "client";
             if (a === "MINECRAFT_JAR") return `${MCVersion.versionRoot}/${MCVersion.name}.jar`;
-            if (a === "BINPATCH") return `${tmpdir()}/${this.launcher.name}_forge_installer/data/client.lzma`;
+            if (a === "BINPATCH") return `${tmpdir()}/${this.launcher.name}_forgelike_installer/data/client.lzma`;
             return metadata.data[a].client;
         }).replaceAll(/\[(.+?)\]/g, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
     }
@@ -157,13 +160,13 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                     i.version = await getVersion(zip);
                 }
                 if(data.dependencies)
-                    ret.push(new ModInfo("forge", {
+                    ret.push(new ModInfo(this.name, {
                         info: i,
                         deps: data.dependencies[i.modId],
                         jar: data
                     }, this.launcher));
                 else
-                    ret.push(new ModInfo("forge", {
+                    ret.push(new ModInfo(this.name, {
                         info: i,
                         jar: data
                     }, this.launcher));
