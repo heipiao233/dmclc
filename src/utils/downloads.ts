@@ -6,6 +6,27 @@ import * as streamPromises from "stream/promises";
 import { FormattedError } from "../errors/FormattedError.js";
 import { Launcher } from "../launcher.js";
 import { transformURL } from "./TransformURL.js";
+import { Pair } from "./pair.js";
+import { checkFile } from "./check_file.js";
+/**
+ * Download multi files after checking hash.
+ * @throws RequestError
+ * @param files A map from URL to path
+ * @param launcher Launcher
+ * @returns true if success
+ */
+export async function checkAndDownloadAll(files: Map<string, Pair<string, fs.PathLike>>, launcher: Launcher, algorithm = "sha1"): Promise<boolean> {
+    const promises: Promise<boolean>[] = [];
+    files.forEach((v, k) => {
+        if (v.a === "no") {
+            promises.push(download(k, v.b, launcher));
+        } else {
+            promises.push(checkAndDownload(k, v.b, v.a, launcher, algorithm));
+        }
+    });
+    return !(await Promise.all(promises)).includes(false);
+}
+
 /**
  * Download multi files.
  * @throws RequestError
@@ -20,7 +41,23 @@ export async function downloadAll(files: Map<string, fs.PathLike>, launcher: Lau
     });
     return !(await Promise.all(promises)).includes(false);
 }
+
 /**
+ * Download a file after checking hash.
+ * @throws {@link FormattedError}
+ * @param url - URL.
+ * @param filename - File name.
+ * @param mirror - BMCLAPI mirror.
+ */
+export async function checkAndDownload(url: string, filename: fs.PathLike, hash: string, launcher: Launcher, algorithm = "sha1"): Promise<boolean> {
+    if (!await checkFile(filename, hash, algorithm)) {
+        return await download(url, filename, launcher);
+    }
+    return true;
+}
+
+/**
+ * Download a file.
  * @throws {@link FormattedError}
  * @param url - URL.
  * @param filename - File name.

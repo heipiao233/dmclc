@@ -9,7 +9,7 @@ import { tmpdir } from "os";
 import nodePath from "path";
 import toml from "toml";
 import { parseStringPromise } from "xml2js";
-import { Launcher } from "../../launcher.js";
+import { Launcher, addExitDelete, addExitDeleteDir } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { merge } from "../../utils/MergeVersionJSONs.js";
@@ -61,8 +61,10 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
         if (!await download(`${this.mavenArtifactURL}/${abn}/${version}/${abn}-${version}-installer.jar`, path, this.launcher)) {
             return false;
         }
+        addExitDelete(path);
         const installer = `${tmpdir()}/${this.launcher.name}_forgelike_installer`;
         await compressing.zip.uncompress(fs.createReadStream(path), installer);
+        addExitDeleteDir(installer);
         const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
         
         if("processors" in metadata){ // 1.13+

@@ -10,14 +10,14 @@ import path from "path";
 import { promisify } from "util";
 import { Account } from "./auth/account.js";
 import { FormattedError } from "./errors/FormattedError.js";
-import { ContentType, ContentVersion } from "./index.js";
+import { ContentType, ContentVersion, Pair } from "./index.js";
 import { Launcher } from "./launcher.js";
 import { ModrinthContent } from "./mods/download/modrinth/ModrinthContentService.js";
 import { ModManager } from "./mods/manage/ModManager.js";
 import { Argument, Asset, AssetIndexInfo, AssetsIndex, Library, LibraryArtifact, MCVersion, checkRules } from "./schemas.js";
 import { transformURL } from "./utils/TransformURL.js";
 import { checkFile } from "./utils/check_file.js";
-import { download, downloadAll } from "./utils/downloads.js";
+import { checkAndDownload, checkAndDownloadAll, download, downloadAll } from "./utils/downloads.js";
 import { expandInheritsFrom } from "./utils/expand_inherits_from.js";
 import { expandMavenId } from "./utils/maven.js";
 
@@ -168,16 +168,13 @@ export class MinecraftVersion {
      */
     async completeVersionInstall(): Promise<boolean> {
         const promises = [];
-        if (!fs.existsSync(this.versionJarPath) ||
-            !await checkFile(this.versionJarPath, this.versionObject.downloads.client.sha1)) {
-            promises.push(download(this.versionObject.downloads.client.url, this.versionJarPath, this.launcher));
-        }
+        promises.push(checkAndDownload(this.versionObject.downloads.client.url, this.versionJarPath, this.versionObject.downloads.client.sha1, this.launcher));
         promises.push(this.completeAssets(this.versionObject.assetIndex));
         promises.push(this.completeLibraries(this.versionObject.libraries));
         return !(await Promise.all(promises)).includes(false);
     }
     private async completeAssets (asset: AssetIndexInfo): Promise<boolean> {
-        const allDownloads: Map<string, PathLike> = new Map();
+        const allDownloads: Map<string, Pair<string, PathLike>> = new Map();
         const indexPath = `${this.launcher.rootPath}/assets/indexes/${asset.id}.json`;
         let assetJson;
         if (!fs.existsSync(indexPath)) {
@@ -191,12 +188,9 @@ export class MinecraftVersion {
         const assetobj: AssetsIndex = JSON.parse(assetJson);
         for (const assid in assetobj.objects) {
             const assitem: Asset = assetobj.objects[assid];
-            if (!fs.existsSync(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`) ||
-                !await checkFile(`${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`, assitem.hash)) {
-                allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`);
-            }
+            allDownloads.set(`https://resources.download.minecraft.net/${assitem.hash.slice(0, 2)}/${assitem.hash}`, new Pair(assitem.hash, `${assetsObjects}/${assitem.hash.slice(0, 2)}/${assitem.hash}`));
         }
-        return await downloadAll(allDownloads, this.launcher);
+        return await checkAndDownloadAll(allDownloads, this.launcher);
     }
 
     /**
@@ -206,7 +200,7 @@ export class MinecraftVersion {
      * @internal
      */
     async completeLibraries (liblist: Library[]): Promise<boolean> {
-        const allDownloads: Map<string, PathLike> = new Map();
+        const allDownloads: Map<string, Pair<string, PathLike>> = new Map();
         const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
         });
@@ -216,7 +210,7 @@ export class MinecraftVersion {
                 let url: string;
                 if (!("url" in i)) url = "https://libraries.minecraft.net/";
                 else url = i.url;
-                allDownloads.set(`${url}${filePath}`, `${this.launcher.rootPath}/libraries/${filePath}`);
+                allDownloads.set(`${url}${filePath}`, new Pair("no", `${this.launcher.rootPath}/libraries/${filePath}`));
             } else {
                 const artifacts: LibraryArtifact[]=[];
                 if ("artifact" in i.downloads) {
@@ -226,13 +220,11 @@ export class MinecraftVersion {
                     artifacts.push(i.downloads.classifiers[i.natives[this.launcher.natives].replaceAll("${arch}", os.arch().includes("64")?"64":"32")]);
                 }
                 for (const artifact of artifacts) {
-                    if(!(fs.existsSync(`${this.launcher.rootPath}/libraries/${artifact.path}`) && await checkFile(`${this.launcher.rootPath}/libraries/${artifact.path}`, artifact.sha1))){
-                        allDownloads.set(artifact.url, `${this.launcher.rootPath}/libraries/${artifact.path}`);
-                    }
+                    allDownloads.set(artifact.url, new Pair(artifact.sha1, `${this.launcher.rootPath}/libraries/${artifact.path}`));
                 }
             }
         }
-        return await downloadAll(allDownloads, this.launcher);
+        return await checkAndDownloadAll(allDownloads, this.launcher);
     }
 
     private getClassPath (versionObject: MCVersion): string[] {

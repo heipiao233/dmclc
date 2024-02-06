@@ -45,6 +45,16 @@ export function addExitDelete(file: string) {
     });
 }
 
+export function addExitDeleteDir(dir: string) {
+    process.addListener("beforeExit", () => {
+        try {
+            fs.rmdirSync(dir);
+        } catch {
+            
+        }
+    });
+}
+
 class LocalizedProgress implements Progress {
     constructor(private dest: Progress, private t: i18next.TFunction) {
         
@@ -96,7 +106,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.3.0-beta.2";
+    static readonly version = "4.3.0-beta.3";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
