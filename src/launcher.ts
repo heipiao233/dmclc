@@ -106,7 +106,7 @@ export class Launcher {
         specialNatives: Record<string, Library>;
     };
     private realRootPath = "";
-    static readonly version = "4.3.0-beta.5";
+    static readonly version = "4.3.0-beta.6";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -286,22 +286,28 @@ export class Launcher {
         let self = this;
         marked.setOptions({
             async walkTokens(token) {
-                if (token.type == "image"){
-                    let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
-                    addExitDelete(file);
-                    await download(token.href, file, self);
-                    token.href = pathToFileURL(file).toString();
-                } else if (token.type == "html") {
-                    if (!token.raw.includes("<img"))
-                        return;
-                    let m = token.raw.match(/src=\"(.+?)\"/);
-                    if (!m || m.length < 2) return;
-                    let url = m[1];
-                    let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
-                    addExitDelete(file);
-                    await download(url, file, self);
-                    token.raw = token.raw.replaceAll(url, pathToFileURL(file).toString());
-                    token.text = token.text.replaceAll(url, pathToFileURL(file).toString());
+                let url = "";
+                try {
+                    if (token.type == "image"){
+                        url = token.href;
+                        let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
+                        addExitDelete(file);
+                        await download(token.href, file, self);
+                        token.href = pathToFileURL(file).toString();
+                    } else if (token.type == "html") {
+                        if (!token.raw.includes("<img"))
+                            return;
+                        let m = token.raw.match(/src=\"(.+?)\"/);
+                        if (!m || m.length < 2) return;
+                        url = m[1];
+                        let file = os.tmpdir() + "/dmclc-image-" + randomUUID() + ".png";
+                        addExitDelete(file);
+                        await download(url, file, self);
+                        token.raw = token.raw.replaceAll(url, pathToFileURL(file).toString());
+                        token.text = token.text.replaceAll(url, pathToFileURL(file).toString());
+                    }
+                } catch {
+                    self.launcherInterface.error(`图片 ${url} 加载失败`, "图片加载失败")
                 }
             },
         })

@@ -41,7 +41,9 @@
     },
 
     "content_service": {
-        "not_found": "No such content service!"
+        "not_found": "No such content service!",
+        "image_load_fail_detail": "Failed to load image {{url}}.",
+        "image_load_fail_title": "Failed to load image!"
     },
 
     "version": {

@@ -41,7 +41,9 @@
     },
 
     "content_service": {
-        "not_found": "无此内容服务！"
+        "not_found": "无此内容服务！",
+        "image_load_fail_detail": "图片 {{url}} 加载失败。",
+        "image_load_fail_title": "图片加载失败！"
     },
 
     "version": {
