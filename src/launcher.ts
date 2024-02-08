@@ -89,7 +89,7 @@ export class Launcher {
     };
     envPaths = envPaths("DMCLC");
     private realRootPath = "";
-    static readonly version = "4.4.0-alpha.2";
+    static readonly version = "4.4.0-alpha.3";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -290,7 +290,7 @@ export class Launcher {
                         token.text = token.text.replaceAll(url, pathToFileURL(file.path as string).toString());
                     }
                 } catch {
-                    self.launcherInterface.error(self.i18n("image_load_fail_detail", { url }), "image_load_fail_title")
+                    self.launcherInterface.error(self.i18n("content_service.image_load_fail_detail", { url }), "content_service.image_load_fail_title")
                 }
             },
             gfm: true,
