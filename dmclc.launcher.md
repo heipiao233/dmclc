@@ -28,6 +28,7 @@ export declare class Launcher
 |  [contentServices](./dmclc.launcher.contentservices.md) |  | Map&lt;string, [ContentService](./dmclc.contentservice.md)<!-- -->&lt;unknown&gt;&gt; |  |
 |  [copy?](./dmclc.launcher.copy.md) |  | ((arg: string) =&gt; void) \| undefined | _(Optional)_ |
 |  [downloader?](./dmclc.launcher.downloader.md) |  | ((url: string, filename: fs.PathLike, oldURL: string) =&gt; Promise&lt;void&gt;) \| undefined | _(Optional)_ |
+|  [envPaths](./dmclc.launcher.envpaths.md) |  | import("env-paths").Paths |  |
 |  [i18n](./dmclc.launcher.i18n.md) |  | i18next.TFunction |  |
 |  [installedVersions](./dmclc.launcher.installedversions.md) |  | Map&lt;string, [MinecraftVersion](./dmclc.version.md)<!-- -->&gt; | All installed versions. |
 |  [installer](./dmclc.launcher.installer.md) |  | [Installer](./dmclc.installer.md) |  |
