@@ -367,16 +367,16 @@ export class MinecraftVersion {
                 break;
 
             case ContentType.MODPACK:
-                const packPath = `${os.tmpdir()}/${await contentVersion.getVersionFileName()}`;
-                if (!await download(await contentVersion.getVersionFileURL(), packPath, this.launcher)){
+                const packPath = `${this.launcher.envPaths.cache}/downloaded/content/${await contentVersion.getVersionFileName()}`;
+                if (!await checkAndDownload(await contentVersion.getVersionFileURL(), packPath, await contentVersion.getVersionFileSHA1(), this.launcher)){
                     break;
                 }
                 this.launcher.installer.installModpackFromPath(packPath);
                 break;
 
             case ContentType.WORLD:
-                const worldPath = `${os.tmpdir()}/${await contentVersion.getVersionFileName()}`;
-                if (!download(await contentVersion.getVersionFileURL(), worldPath, this.launcher)) {
+                const worldPath = `${this.launcher.envPaths.cache}/downloaded/content/${await contentVersion.getVersionFileName()}`;
+                if (!checkAndDownload(await contentVersion.getVersionFileURL(), worldPath, await contentVersion.getVersionFileSHA1(), this.launcher)) {
                     break;
                 }
                 const saves = `${this.versionLaunchWorkDir}/saves`

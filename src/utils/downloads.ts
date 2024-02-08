@@ -74,6 +74,31 @@ export async function download(url: string, filename: fs.PathLike, launcher: Lau
     return true;
 }
 
+export async function downloadIntoStream(url: string, out: NodeJS.WritableStream, launcher: Launcher): Promise<boolean> {
+    if(url.length===0)return true;
+    let realURL = transformURL(url, launcher.mirror);
+    realURL = realURL.replaceAll("http://", "https://");
+    let failed = true;
+    for (let i=0;i<10;i++) {
+        try {
+            await streamPromises.pipeline(got.stream(realURL), out);
+            failed = false;
+            break;
+        } catch (e) {
+            if(e instanceof HTTPError) {
+                if(e.response.statusCode === 404) {
+                    realURL = url.replaceAll("http://", "https://");
+                    i--;
+                }
+            }
+        }
+    }
+    if (failed) {
+        throw new FormattedError(`Download failed: ${url}`);
+    }
+    return true;
+}
+
 async function downloader(url: string, filename: fs.PathLike, oldURL: string) {
     let failed = true;
     for (let i=0;i<10;i++) {

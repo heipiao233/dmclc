@@ -1,6 +1,6 @@
 {
   "name": "dmclc",
-  "version": "4.3.0-beta.7",
+  "version": "4.4.0-alpha.1",
   "description": "Dolphin Minecraft Launcher Core",
   "typings": "./lib/index.d.ts",
   "module": "./lib/index.js",
@@ -13,6 +13,7 @@
     "@types/got": "^9.6.12",
     "@types/marked": "^4.0.8",
     "@types/node": "^18.11.3",
+    "@types/temp": "^0.9.4",
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.11",
     "ts-node": "^10.9.1",
@@ -42,6 +43,7 @@
     "murmurhash2": "^0.1.0",
     "node-stream-zip": "^1.15.0",
     "open": "^8.4.0",
+    "temp": "^0.9.4",
     "toml": "^3.0.0",
     "uuid": "^9.0.0",
     "xml2js": "^0.6.2"

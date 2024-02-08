@@ -5,16 +5,15 @@ import fsextra from "fs-extra";
 import got from "got";
 import { ArtifactVersion, ComparableVersion, VersionRange } from "maven-artifact-version";
 import StreamZip from "node-stream-zip";
-import { tmpdir } from "os";
 import nodePath from "path";
 import toml from "toml";
 import { parseStringPromise } from "xml2js";
-import { Launcher, addExitDelete, addExitDeleteDir } from "../../launcher.js";
+import { Launcher, } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
 import { merge } from "../../utils/MergeVersionJSONs.js";
 import { checkFile } from "../../utils/check_file.js";
-import { download } from "../../utils/downloads.js";
+import { downloadIntoStream } from "../../utils/downloads.js";
 import { expandMavenId } from "../../utils/maven.js";
 import { transformJSON } from "../../utils/transformJSON.js";
 import { MinecraftVersion } from "../../version.js";
@@ -22,6 +21,9 @@ import { Loader, ModLoadingIssue } from "../loader.js";
 import { ForgeJarJarJson, ForgeMcmodInfo, ForgeMcmodInfoOne, ForgeModsToml, StoreData } from "./forge_schemas.js";
 import { InstallerProfileNew } from "./install_profile_new.js";
 import { InstallerProfileOld } from "./install_profile_old.js";
+import * as fsPromises from "fs/promises";
+import * as streamPromises from "stream/promises";
+let temp = (await import("temp")).track();
 
 export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodInfoOne> {
     private readonly launcher: Launcher;
@@ -58,15 +60,14 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
             return false;
         }
         let abn = this.getArchiveBaseName(MCVersion.extras.version);
-        const path = `${tmpdir()}/${abn}-${version}-installer.jar`;
-        if (!await download(`${this.mavenArtifactURL}/${abn}/${version}/${abn}-${version}-installer.jar`, path, this.launcher)) {
+        const path = temp.createWriteStream({prefix: `${abn}-${version}_installer`, suffix: ".jar"});
+        if (!await downloadIntoStream(`${this.mavenArtifactURL}/${abn}/${version}/${abn}-${version}-installer.jar`, path, this.launcher)) {
             return false;
         }
-        addExitDelete(path);
-        const installer = `${tmpdir()}/${this.launcher.name}_forgelike_installer`;
-        await compressing.zip.uncompress(fs.createReadStream(path), installer);
-        addExitDeleteDir(installer);
-        const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installer}/install_profile.json`).toString());
+        path.end();
+        const installerPath = await temp.mkdir(`${abn}_installer`);
+        await compressing.zip.uncompress(path.path, installerPath);
+        const metadata: InstallerProfileNew | InstallerProfileOld = JSON.parse(fs.readFileSync(`${installerPath}/install_profile.json`).toString());
         
         if("processors" in metadata){ // 1.13+
             if ("MOJMAPS" in metadata.data) {
@@ -82,12 +83,12 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                     },
                 ]);
             }
-            if (fs.existsSync(`${installer}/maven`)) await fsextra.copy(`${installer}/maven`, `${this.launcher.rootPath}/libraries`);
+            if (fs.existsSync(`${installerPath}/maven`)) await fsextra.copy(`${installerPath}/maven`, `${this.launcher.rootPath}/libraries`);
             if (!await MCVersion.completeLibraries(metadata.libraries)) {
                 return false;
             }
             const target: MCVersion = MCVersion.versionObject;
-            const source: MCVersion = JSON.parse(fs.readFileSync(`${installer}/version.json`).toString());
+            const source: MCVersion = JSON.parse(fs.readFileSync(`${installerPath}/version.json`).toString());
             const result = merge(target, source);
             MCVersion.versionObject = result;
             await MCVersion.completeLibraries(source.libraries);
@@ -104,7 +105,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                         for (const k in outputs) {
                             if (Object.prototype.hasOwnProperty.call(outputs, k)) {
                                 const v = outputs[k];
-                                res &&= await checkFile(this.transformArguments(k, MCVersion, metadata), this.transformArguments(v, MCVersion, metadata));
+                                res &&= await checkFile(this.transformArguments(k, installerPath, MCVersion, metadata), this.transformArguments(v, installerPath, MCVersion, metadata));
                             }
                         }
                     }
@@ -115,7 +116,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
                             return `${this.launcher.rootPath}/libraries/${expandMavenId(i)}`;
                         }).join(nodePath.delimiter)}${nodePath.delimiter}${jar}`,
                         await getMainClass(jar),
-                        ...item.args.map((v) => this.transformArguments(v, MCVersion, metadata))];
+                        ...item.args.map((v) => this.transformArguments(v, installerPath, MCVersion, metadata))];
                     execFileSync(this.launcher.usingJava, args);
                 }
             }
@@ -126,16 +127,17 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
             const result = merge(target, source);
             MCVersion.versionObject = result;
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
-            fsextra.copyFile(`${installer}/${metadata.install.filePath}`, `${this.launcher.rootPath}/libraries/${expandMavenId(metadata.install.path)}`);
+            fsextra.copyFile(`${installerPath}/${metadata.install.filePath}`, `${this.launcher.rootPath}/libraries/${expandMavenId(metadata.install.path)}`);
         }
+        fsPromises.rmdir(installerPath);
         return false;
     }
 
-    transformArguments (arg: string, MCVersion: MinecraftVersion, metadata: InstallerProfileNew): string {
+    transformArguments (arg: string, installerPath: string, MCVersion: MinecraftVersion, metadata: InstallerProfileNew): string {
         return arg.replaceAll(/\{(.+?)\}/g, (v, a) => {
             if (a === "SIDE") return "client";
             if (a === "MINECRAFT_JAR") return `${MCVersion.versionRoot}/${MCVersion.name}.jar`;
-            if (a === "BINPATCH") return `${tmpdir()}/${this.launcher.name}_forgelike_installer/data/client.lzma`;
+            if (a === "BINPATCH") return `${installerPath}/data/client.lzma`;
             return metadata.data[a].client;
         }).replaceAll(/\[(.+?)\]/g, (v, a) => `${this.launcher.rootPath}/libraries/${expandMavenId(a)}`);
     }
@@ -148,11 +150,10 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
         if(jarJarEntry) {
             const data: ForgeJarJarJson = JSON.parse(transformJSON((await zip.entryData(jarJarEntry)).toString()));
             for (const jarObj of data.jars) {
-                const jar = jarObj.path;
-                const paths = jar.split("/");
-                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
-                await zip.extract(jar, filename);
-                ret.push(...await this.findModInfos(filename));
+                const file = temp.createWriteStream();
+                streamPromises.pipeline(await zip.stream(jarObj.path), file);
+                file.close();
+                ret.push(...await this.findModInfos(file.path as string));
             }
         }
         const newEntry = await zip.entry("META-INF/mods.toml");

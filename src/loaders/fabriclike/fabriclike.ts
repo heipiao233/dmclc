@@ -1,7 +1,6 @@
 import fs from "fs";
 import got from "got";
 import StreamZip from "node-stream-zip";
-import { tmpdir } from "os";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -15,6 +14,9 @@ import { SemanticVersionImpl } from "./version/SemanticVersionImpl.js";
 import { VersionParser } from "./version/VersionParser.js";
 import { VersionPredicate } from "./version/VersionPredicate.js";
 import { VersionPredicateParser } from "./version/VersionPredicateParser.js";
+import * as streamPromises from "stream/promises";
+let temp = (await import("temp")).track();
+
 export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> implements Loader<M | FabricModJson> {
     abstract loaderMaven: string;
     abstract metaURL: string;
@@ -46,10 +48,10 @@ export abstract class FabricLikeLoader<T extends FabricLikeVersionInfo, M> imple
         const json: FabricModJson = JSON.parse(transformJSON((await zip.entryData(entry)).toString()));
         if(json.jars !== undefined){
             for (const jar of json.jars) {
-                const paths = jar.file.split("/");
-                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
-                await zip.extract(jar.file, filename);
-                result.push(...await this.findModInfos(filename));
+                const file = temp.createWriteStream();
+                streamPromises.pipeline(await zip.stream(jar.file), file);
+                file.close();
+                result.push(...await this.findModInfos(file.path as string));
             }
         }
         const info = new ModInfo(this.name, json, this.launcher);

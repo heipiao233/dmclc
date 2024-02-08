@@ -1,5 +1,4 @@
 import StreamZip from "node-stream-zip";
-import { tmpdir } from "os";
 import { Launcher } from "../../launcher.js";
 import { ModDisplayInfo, ModInfo } from "../../mods/mod.js";
 import { MCVersion } from "../../schemas.js";
@@ -10,6 +9,9 @@ import { FabricLikeLoader, checkMatch, formatDepVersion, normalizeVersion } from
 import { VersionParser } from "../fabriclike/version/VersionParser.js";
 import { ModLoadingIssue } from "../loader.js";
 import { DependencyObject, QuiltModJson, QuiltVersionInfo } from "./quilt_schemas.js";
+import * as streamPromises from "stream/promises";
+let temp = (await import("temp")).track();
+
 export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson> {
     metaURL = "https://meta.quiltmc.org/v3";
     loaderMaven = "https://maven.quiltmc.org/repository/release/";
@@ -42,10 +44,10 @@ export class QuiltLoader extends FabricLikeLoader<QuiltVersionInfo, QuiltModJson
         const result: ModInfo<QuiltModJson | FabricModJson>[] = await super.findModInfosInZip(zip);
         if(json.quilt_loader.jars !== undefined){
             for (const jar of json.quilt_loader.jars) {
-                const paths = jar.split("/");
-                const filename = `${tmpdir()}/${paths[paths.length-1]}`;
-                await zip.extract(jar, filename);
-                result.push(...await this.findModInfos(filename));
+                const file = temp.createWriteStream();
+                streamPromises.pipeline(await zip.stream(jar), file);
+                file.close();
+                result.push(...await this.findModInfos(file.path as string));
             }
         }
         const info = new ModInfo("quilt", json, this.launcher);
