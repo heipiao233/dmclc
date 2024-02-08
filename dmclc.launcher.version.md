@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-static readonly version = "4.4.0-alpha.1";
+static readonly version = "4.4.0-alpha.2";
 ```
