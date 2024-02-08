@@ -89,7 +89,7 @@ export class Launcher {
     };
     envPaths = envPaths("DMCLC");
     private realRootPath = "";
-    static readonly version = "4.4.0-alpha.1";
+    static readonly version = "4.4.0-alpha.2";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -156,7 +156,7 @@ export class Launcher {
 
     private async init(lang: string) {
         if (fs.existsSync(`${homedir()}/.dmclc`)) {
-            await fsPromise.rmdir(`${homedir()}/.dmclc`);
+            await fsPromise.rm(`${homedir()}/.dmclc`, {recursive: true, force: true});
         }
         if(os.platform() === "linux") {
             // Special thanks to HMCL. Sorry for I'm not able to check if this works properly.

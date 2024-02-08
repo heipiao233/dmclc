@@ -129,7 +129,7 @@ export abstract class ForgeLikeLoader implements Loader<StoreData | ForgeMcmodIn
             fs.writeFileSync(`${this.launcher.rootPath}/versions/${MCVersion.name}/${MCVersion.name}.json`, JSON.stringify(result));
             fsextra.copyFile(`${installerPath}/${metadata.install.filePath}`, `${this.launcher.rootPath}/libraries/${expandMavenId(metadata.install.path)}`);
         }
-        fsPromises.rmdir(installerPath);
+        fsPromises.rm(installerPath, {recursive: true, force: true});
         return false;
     }
 
