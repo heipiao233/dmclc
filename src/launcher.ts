@@ -27,8 +27,10 @@ import { ModpackFormat } from "./mods/modpack/Modpack.js";
 import { CurseForgeModpackFormat } from "./mods/modpack/curseforge/CurseForgeModpack.js";
 import { ModrinthModpackFormat } from "./mods/modpack/modrinth/ModrinthModpack.js";
 import { Library } from "./schemas.js";
-import { download } from "./utils/downloads.js";
+import { checkAndDownload, download } from "./utils/downloads.js";
 import { MinecraftVersion } from "./version.js";
+import envPaths from "env-paths";
+import * as fsPromise from "fs/promises";
 
 export interface Progress {
     update(msg: string): void;
@@ -172,28 +174,31 @@ export class Launcher {
     }
 
     private async init(lang: string) {
-        // HMCL, pioneer of cross-architecture launcher.
-        const dir = `${homedir()}/.dmclc`;
+        if (fs.existsSync(`${homedir()}/.dmclc`)) {
+            await fsPromise.rmdir(`${homedir()}/.dmclc`);
+        }
+        const dir = envPaths("DMCLC");
         if(os.platform() === "linux") {
+            // Special thanks to HMCL. Sorry for I'm not able to check if this works properly.
             if(process.arch !== "x64" && process.arch !== "ia32") {
-                await download("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", `${dir}/natives.json`, this);
-                const specialNatives = JSON.parse((await fs.promises.readFile(`${dir}/natives.json`)).toString())[this.getArchString()];
+                await checkAndDownload("https://raw.githubusercontent.com/huanghongxun/HMCL/javafx/HMCL/src/main/resources/assets/natives.json", `${dir.cache}/natives.json`, "", this);
+                const specialNatives = JSON.parse((await fs.promises.readFile(`${dir.cache}/natives.json`)).toString())[this.getArchString()];
                 this.archInfo = {
                     specialArch: process.arch,
                     specialNatives
                 };
             }
         }
-        if (!fs.existsSync(`${dir}/locales`)
-            || VersionParser.parseSemantic((await fs.promises.readFile(`${dir}/locales/version`)).toString().trim())
+        if (!fs.existsSync(`${dir.cache}/locales`)
+            || VersionParser.parseSemantic((await fs.promises.readFile(`${dir.cache}/locales/version`)).toString().trim())
                 .compareTo(VersionParser.parseSemantic(Launcher.version)) < 0) {
-            await download("https://heipiao233.github.io/dmclc/locales.tar.gz", `${dir}/locales.tar.gz`, this);
-            await compressing.tgz.uncompress(`${dir}/locales.tar.gz`, dir);
+            await download("https://heipiao233.github.io/dmclc/locales.tar.gz", `${dir.cache}/locales.tar.gz`, this);
+            await compressing.tgz.uncompress(`${dir.cache}/locales.tar.gz`, dir.cache);
         }
         this.i18n = await i18next.use(FsBackend).init<FsBackendOptions>({
             lng: lang,
             backend: {
-                loadPath: `${dir}/locales/{{lng}}.json`
+                loadPath: `${dir.cache}/locales/{{lng}}.json`
             }
         });
     }
@@ -307,7 +312,7 @@ export class Launcher {
                         token.text = token.text.replaceAll(url, pathToFileURL(file).toString());
                     }
                 } catch {
-                    self.launcherInterface.error(`图片 ${url} 加载失败`, "图片加载失败")
+                    self.launcherInterface.error(self.i18n("image_load_fail_detail", { url }), "image_load_fail_title")
                 }
             },
             gfm: true,

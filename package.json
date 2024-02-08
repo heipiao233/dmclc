@@ -32,6 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "compressing": "^1.9.1",
+    "env-paths": "^3.0.0",
     "fs-extra": "^10.1.0",
     "got": "^12.6.1",
     "i18next": "^22.5.1",
