@@ -9,8 +9,15 @@ Complete this version installation. Fix wrong libraries, asset files and version
 **Signature:**
 
 ```typescript
-completeVersionInstall(): Promise<boolean>;
+completeVersionInstall(alwaysDownloadNoDownloadsItems?: boolean): Promise<boolean>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  alwaysDownloadNoDownloadsItems | boolean | _(Optional)_ |
+
 **Returns:**
 
 Promise&lt;boolean&gt;

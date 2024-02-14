@@ -28,7 +28,7 @@ export declare class MinecraftVersion
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [completeVersionInstall()](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
+|  [completeVersionInstall(alwaysDownloadNoDownloadsItems)](./dmclc.version.completeversioninstall.md) |  | Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json. |
 |  [fromVersionName(launcher, name, enableIndependentGameDir)](./dmclc.version.fromversionname.md) | <code>static</code> | Creates a new version from name. |
 |  [getSuitableLoaderVersions(name)](./dmclc.version.getsuitableloaderversions.md) |  | Get all the installable loader versions on this Minecraft version. Doesn't consider loader conflicts. |
 |  [installContentVersion(contentVersion)](./dmclc.version.installcontentversion.md) |  |  |
