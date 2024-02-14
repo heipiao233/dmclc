@@ -143,7 +143,7 @@ export class MinecraftVersion {
             progress.update("version.progress.account_prepare");
             await account.prepareLaunch(this.versionLaunchWorkDir);
             progress.update("version.progress.complete");
-            await this.completeVersionInstall();
+            await this.completeVersionInstall(false);
             progress.update("version.progress.extract_native");
             await this.extractNative(this.versionObject, this.name);
             progress.update("version.progress.argument");
@@ -166,7 +166,7 @@ export class MinecraftVersion {
     /**
      * Complete this version installation. Fix wrong libraries, asset files and version.jar. Won't fix version.json.
      */
-    async completeVersionInstall(): Promise<boolean> {
+    async completeVersionInstall(alwaysDownloadNoDownloadsItems: boolean = true): Promise<boolean> {
         const promises = [];
         promises.push(checkAndDownload(this.versionObject.downloads.client.url, this.versionJarPath, this.versionObject.downloads.client.sha1, this.launcher));
         promises.push(this.completeAssets(this.versionObject.assetIndex));
@@ -199,18 +199,20 @@ export class MinecraftVersion {
      * @param liblist - All the libraries.
      * @internal
      */
-    async completeLibraries (liblist: Library[]): Promise<boolean> {
+    async completeLibraries (liblist: Library[], alwaysDownloadNoDownloadsItems: boolean = true): Promise<boolean> {
         const allDownloads: Map<string, Pair<string, PathLike>> = new Map();
         const used = liblist.filter((i) => {
             return i.rules === undefined || checkRules(i.rules);
         });
         for (const i of used) {
             if (!("downloads" in i)) {
-                const filePath = expandMavenId(i.name);
-                let url: string;
-                if (!("url" in i)) url = "https://libraries.minecraft.net/";
-                else url = i.url;
-                allDownloads.set(`${url}${filePath}`, new Pair("no", `${this.launcher.rootPath}/libraries/${filePath}`));
+                if (alwaysDownloadNoDownloadsItems) {
+                    const filePath = expandMavenId(i.name);
+                    let url: string;
+                    if (!("url" in i)) url = "https://libraries.minecraft.net/";
+                    else url = i.url;
+                    allDownloads.set(`${url}${filePath}`, new Pair("no", `${this.launcher.rootPath}/libraries/${filePath}`));
+                }
             } else {
                 const artifacts: LibraryArtifact[]=[];
                 if ("artifact" in i.downloads) {

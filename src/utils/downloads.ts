@@ -68,7 +68,6 @@ export async function download(url: string, filename: fs.PathLike, launcher: Lau
     const dir = path.dirname(filename.toString());
     await ensureDir(dir);
     let realURL = transformURL(url, launcher.mirror);
-    realURL = realURL.replaceAll("http://", "https://");
     if (launcher.downloader) await launcher.downloader(realURL, filename, url);
     else await downloader(realURL, filename, url);
     return true;
@@ -77,7 +76,6 @@ export async function download(url: string, filename: fs.PathLike, launcher: Lau
 export async function downloadIntoStream(url: string, out: NodeJS.WritableStream, launcher: Launcher): Promise<boolean> {
     if(url.length===0)return true;
     let realURL = transformURL(url, launcher.mirror);
-    realURL = realURL.replaceAll("http://", "https://");
     let failed = true;
     for (let i=0;i<10;i++) {
         try {
@@ -87,7 +85,6 @@ export async function downloadIntoStream(url: string, out: NodeJS.WritableStream
         } catch (e) {
             if(e instanceof HTTPError) {
                 if(e.response.statusCode === 404) {
-                    realURL = url.replaceAll("http://", "https://");
                     i--;
                 }
             }

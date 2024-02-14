@@ -89,7 +89,7 @@ export class Launcher {
     };
     envPaths = envPaths("DMCLC");
     private realRootPath = "";
-    static readonly version = "4.4.0-alpha.3";
+    static readonly version = "4.4.0-beta.1";
     /**
      * Create a new Launcher object.
      * @throws {@link FormattedError}
@@ -277,6 +277,7 @@ export class Launcher {
                         url = token.href;
                         let file = temp.createWriteStream();
                         await downloadIntoStream(url, file, self);
+                        file.close();
                         token.href = pathToFileURL(file.path as string).toString();
                     } else if (token.type == "html") {
                         if (!token.raw.includes("<img"))
@@ -286,6 +287,7 @@ export class Launcher {
                         url = m[1];
                         let file = temp.createWriteStream();
                         await downloadIntoStream(url, file, self);
+                        file.close();
                         token.raw = token.raw.replaceAll(url, pathToFileURL(file.path as string).toString());
                         token.text = token.text.replaceAll(url, pathToFileURL(file.path as string).toString());
                     }
