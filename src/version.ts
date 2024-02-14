@@ -170,7 +170,7 @@ export class MinecraftVersion {
         const promises = [];
         promises.push(checkAndDownload(this.versionObject.downloads.client.url, this.versionJarPath, this.versionObject.downloads.client.sha1, this.launcher));
         promises.push(this.completeAssets(this.versionObject.assetIndex));
-        promises.push(this.completeLibraries(this.versionObject.libraries));
+        promises.push(this.completeLibraries(this.versionObject.libraries, alwaysDownloadNoDownloadsItems));
         return !(await Promise.all(promises)).includes(false);
     }
     private async completeAssets (asset: AssetIndexInfo): Promise<boolean> {
